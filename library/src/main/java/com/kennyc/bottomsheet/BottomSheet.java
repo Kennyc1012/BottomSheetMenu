@@ -105,8 +105,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         mGrid = (GridView) view.findViewById(R.id.grid);
         mGrid.setOnItemClickListener(this);
         mTitle = (TextView) view.findViewById(R.id.title);
+        boolean hasTitle = !TextUtils.isEmpty(mBuilder.title);
 
-        if (!TextUtils.isEmpty(mBuilder.title)) {
+        if (hasTitle) {
             mTitle.setText(mBuilder.title);
             mTitle.setVisibility(View.VISIBLE);
             mTitle.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
@@ -116,9 +117,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         if (mBuilder.isGrid) {
             int gridPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding);
+            int topPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_dialog_padding);
             mGrid.setNumColumns(res.getInteger(R.integer.bs_num_columns));
             mGrid.setVerticalSpacing(res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_spacing));
-            mGrid.setPadding(0, 0, 0, gridPadding);
+            mGrid.setPadding(0, topPadding, 0, gridPadding);
+        } else {
+            int padding = res.getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
+            mGrid.setPadding(0, hasTitle ? 0 : padding, 0, padding);
         }
 
         setContentView(view);
