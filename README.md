@@ -53,7 +53,7 @@ new BottomSheet.Builder(getActivity(), R.menu.bottom_sheet)
 // Whether the BottomSheet will use the grid style
 grid()
 
-// Whether if BottomSheet will use a dark theme
+// Whether the BottomSheet will use a dark theme
 dark()
 
 // Whether the BottomSheet can be dismiss via the back button or pressing outside 
