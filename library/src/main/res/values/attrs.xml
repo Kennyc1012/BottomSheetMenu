@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="bottom_sheet_bg_color" format="color" />
+    <attr name="bottom_sheet_title_color" format="color" />
+    <attr name="bottom_sheet_list_item_color" format="color" />
+    <attr name="bottom_sheet_grid_item_color" format="color" />
+
+</resources>

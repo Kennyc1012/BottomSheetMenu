@@ -1,0 +1,15 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="BottomSheet.Custom">
+        <item name="bottom_sheet_bg_color">@android:color/holo_blue_light</item>
+        <item name="bottom_sheet_title_color">@android:color/holo_green_light</item>
+        <item name="bottom_sheet_list_item_color">@android:color/holo_red_light</item>
+        <item name="bottom_sheet_grid_item_color">@android:color/holo_red_light</item>
+    </style>
+
+</resources>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/ic_edit_grey_600_48dp"
+        android:title="Edit" />
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_content_copy_grey_600_48dp"
+        android:title="Copy" />
+
+    <item
+        android:id="@+id/save"
+        android:icon="@drawable/ic_save_grey_600_48dp"
+        android:title="Save" />
+
+    <item
+        android:id="@+id/mail"
+        android:icon="@drawable/ic_mail_grey_600_48dp"
+        android:title="Mail" />
+
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_delete_grey_600_48dp"
+        android:title="Delete" />
+
+    <item
+        android:id="@+id/cancel"
+        android:icon="@drawable/ic_close_grey_600_48dp"
+        android:title="Cancel" />
+
+</menu>

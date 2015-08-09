@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BottomSheet" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheetAnimationStyle</item>
+        <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg</item>
+        <item name="bottom_sheet_title_color">@color/black_55</item>
+        <item name="bottom_sheet_list_item_color">@color/black_85</item>
+        <item name="bottom_sheet_grid_item_color">@color/black_85</item>
+    </style>
+
+    <style name="BottomSheet.Dark">
+        <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg_dark</item>
+        <item name="bottom_sheet_title_color">@color/grey_55</item>
+        <item name="bottom_sheet_list_item_color">@color/grey_85</item>
+        <item name="bottom_sheet_grid_item_color">@color/grey_85</item>
+    </style>
+
+    <style name="BottomSheet.Title" parent="@android:style/Widget.TextView">
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
+        <item name="android:textAppearance">@style/BottomSheet.TextAppearance</item>
+        <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding</item>
+        <item name="android:paddingRight">@dimen/bottom_sheet_dialog_padding</item>
+    </style>
+
+    <style name="BottomSheet.ListItem" parent="BottomSheet.Title">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">@dimen/bottom_sheet_dialog_padding</item>
+    </style>
+
+    <style name="BottomSheet.GridItem" parent="BottomSheet.ListItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="BottomSheet.TextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="BottomSheetAnimationStyle">
+        <item name="android:windowEnterAnimation">@anim/bottom_sheet_show</item>
+        <item name="android:windowExitAnimation">@anim/bottom_sheet_hide</item>
+    </style>
+
+    <style name="BottomSheetActionButton">
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:background">@drawable/bs_list_selector</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+</resources>

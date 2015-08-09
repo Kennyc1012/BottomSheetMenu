@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/ic_share_grey_600_24dp"
+        android:title="Share" />
+
+    <item
+        android:id="@+id/upload"
+        android:icon="@drawable/ic_cloud_upload_grey_600_24dp"
+        android:title="Upload" />
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_content_copy_grey_600_24dp"
+        android:title="Copy" />
+
+    <item
+        android:id="@+id/print"
+        android:icon="@drawable/ic_print_grey_600_24dp"
+        android:title="Print" />
+
+</menu>
