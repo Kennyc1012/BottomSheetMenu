@@ -1,6 +1,8 @@
 # BottomSheet
 
 #Designed after the docs at [Google Material Design](http://www.google.com/design/spec/components/bottom-sheets.html#)
+![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/list.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/grid.png)
 
 #Features
 - Both list and grid style
