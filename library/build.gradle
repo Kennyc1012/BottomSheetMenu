@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'bintray-release'
 
 android {
     compileSdkVersion 22
@@ -23,4 +24,16 @@ android {
 
 dependencies {
     compile 'com.android.support:support-annotations:+'
+}
+
+publish {
+    bintrayUser = project.BINTRAY_USER
+    bintrayKey = project.BINTRAY_API_KEY
+    dryRun = false;
+    groupId = 'com.kennyc'
+    artifactId = 'bottomsheet'
+    version = project.VERSION
+    website = 'https://github.com/Kennyc1012/BottomSheet'
+    issueTracker = "${website}/issues"
+    repository = "${website}.git"
 }
