@@ -22,7 +22,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -79,7 +78,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Window window = getWindow();
 
         if (window != null) {
-            window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
+            window.setLayout(width <= 0 || mBuilder.isGrid ? ViewGroup.LayoutParams.MATCH_PARENT : width, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
         } else {
             Log.e(TAG, "Window came back as null, unable to set defaults");
@@ -118,7 +118,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (mBuilder.isGrid) {
             int gridPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding);
             int topPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_dialog_padding);
-            mGrid.setNumColumns(res.getInteger(R.integer.bs_num_columns));
+            mGrid.setNumColumns(res.getInteger(R.integer.bottomsheet_num_columns));
             mGrid.setVerticalSpacing(res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_spacing));
             mGrid.setPadding(0, topPadding, 0, gridPadding);
         } else {
