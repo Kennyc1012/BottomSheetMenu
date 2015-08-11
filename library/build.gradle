@@ -24,6 +24,7 @@ android {
 
 dependencies {
     compile 'com.android.support:support-annotations:+'
+    compile 'com.android.support:support-v4:22.2.1'
 }
 
 publish {
