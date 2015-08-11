@@ -107,7 +107,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.0'
+    compile 'com.kennyc:bottomsheet:1.1'
 }
 ```
 
