@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by kcampagna on 8/7/15.
  */
-public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener {
+public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener, CollapsingView.CollapseListener {
     private static final int NO_RESOURCE = -1;
 
     private static final String TAG = BottomSheet.class.getSimpleName();
@@ -101,7 +101,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Resources res = getContext().getResources();
         setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
-        view.setBackgroundColor(ta.getColor(0, Color.WHITE));
+        ((CollapsingView) view).setCollapseListener(this);
+        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
         mGrid = (GridView) view.findViewById(R.id.grid);
         mGrid.setOnItemClickListener(this);
         mTitle = (TextView) view.findViewById(R.id.title);
@@ -153,6 +154,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             mListener.onSheetItemSelected(item);
         }
 
+        dismiss();
+    }
+
+    @Override
+    public void onCollapse() {
         dismiss();
     }
 
