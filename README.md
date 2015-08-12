@@ -9,7 +9,7 @@
 - Both list and grid style
 - Light and Dark theme as well as custom themeing options
 - XML styls support
-- Support for API 14+
+- API 14+
 
 
 #Using BottomSheet
@@ -51,13 +51,13 @@ new BottomSheet.Builder(getActivity(), R.menu.bottom_sheet)
   
 ##Aditional Builder Fields
 ```java
-// Whether the BottomSheet will use the grid style
+// Sets the BottomSheet to use the grid style
 grid()
 
-// Whether the BottomSheet will use a dark theme
+// Sets the BottomSheet to use the dark theme
 dark()
 
-// Whether the BottomSheet can be dismiss via the back button or pressing outside 
+// If the BottomSheet can be dismiss via the back button or pressing outside 
 setCancelable(boolean)
 ```
 
