@@ -1,4 +1,5 @@
 #[BottomSheet](http://www.google.com/design/spec/components/bottom-sheets.html#)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BottomSheet-green.svg?style=flat)](https://android-arsenal.com/details/1/2315)
 
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/list.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/grid.png)
