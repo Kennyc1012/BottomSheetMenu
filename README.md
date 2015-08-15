@@ -9,7 +9,8 @@
 #Features
 - Both list and grid style
 - Light and Dark theme as well as custom themeing options
-- XML styls support
+- XML style support
+- Tablet support
 - API 14+
 
 
