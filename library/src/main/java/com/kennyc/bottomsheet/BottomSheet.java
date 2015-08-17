@@ -88,6 +88,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         TypedArray ta = getContext().obtainStyledAttributes(ATTRS);
         initLayout(ta);
         initMenu(ta);
+        ta.recycle();
         if (mListener != null) mListener.onSheetShown();
     }
 
@@ -164,7 +165,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     public static class Builder {
         @StyleRes
-        int style = R.style.BottomSheet;
+        int style = NO_RESOURCE;
 
         String title = null;
 
@@ -173,11 +174,20 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         boolean isGrid = false;
 
         @MenuRes
-        int sheetItems;
+        int sheetItems = NO_RESOURCE;
 
         Context context;
 
         BottomSheetListener listener;
+
+        /**
+         * Constructor for creating a {@link BottomSheet}, {@link #setSheet(int)} will need to be called to set the menu resource
+         *
+         * @param context App context
+         */
+        public Builder(Context context) {
+            this(context, -1, R.style.BottomSheet);
+        }
 
         /**
          * Constructor for creating a {@link BottomSheet}
@@ -186,8 +196,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @param sheetItems The menu resource for constructing the sheet
          */
         public Builder(Context context, @MenuRes int sheetItems) {
-            this.context = context;
-            this.sheetItems = sheetItems;
+            this(context, sheetItems, R.style.BottomSheet);
+
         }
 
         /**
@@ -198,7 +208,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @param style      The style for the sheet to use
          */
         public Builder(Context context, @MenuRes int sheetItems, @StyleRes int style) {
-            this(context, sheetItems);
+            this.context = context;
+            this.sheetItems = sheetItems;
             this.style = style;
         }
 
@@ -262,6 +273,28 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder dark() {
             style = R.style.BottomSheet_Dark;
+            return this;
+        }
+
+        /**
+         * Sets the style of the {@link BottomSheet}
+         *
+         * @param style
+         * @return
+         */
+        public Builder setStyle(@StyleRes int style) {
+            this.style = style;
+            return this;
+        }
+
+        /**
+         * Sets the menu resource to use for the {@link BottomSheet}
+         *
+         * @param sheetItems
+         * @return
+         */
+        public Builder setSheet(@MenuRes int sheetItems) {
+            this.sheetItems = sheetItems;
             return this;
         }
 
