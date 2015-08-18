@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
@@ -71,7 +72,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (mBuilder == null || mBuilder.sheetItems == NO_RESOURCE) {
+        if (mBuilder == null || !mBuilder.canCreateSheet()) {
             throw new IllegalStateException("Unable to create BottomSheet, missing params");
         }
 
@@ -132,17 +133,28 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     private void initMenu(TypedArray ta) {
-        // Bad hack to inflate a menu
-        Resources res = getContext().getResources();
-        PopupMenu m = new PopupMenu(getContext(), null);
-        m.inflate(mBuilder.sheetItems);
-        Menu menu = m.getMenu();
-        List<MenuItem> items = new ArrayList<>(menu.size());
+        final Menu menu;
+        final List<MenuItem> items;
 
-        for (int i = 0; i < menu.size(); i++) {
-            items.add(menu.getItem(i));
+        if (mBuilder.menuItems != null) {
+            items = mBuilder.menuItems;
+        } else {
+            if (mBuilder.menu != null) {
+                menu = mBuilder.menu;
+            } else {
+                // Bad hack to inflate a menu
+                PopupMenu m = new PopupMenu(getContext(), null);
+                m.inflate(mBuilder.sheetItems);
+                menu = m.getMenu();
+            }
+
+            items = new ArrayList<>(menu.size());
+            for (int i = 0; i < menu.size(); i++) {
+                items.add(menu.getItem(i));
+            }
         }
 
+        Resources res = getContext().getResources();
         int listColor = ta.getColor(2, res.getColor(R.color.black_85));
         int gridColor = ta.getColor(3, res.getColor(R.color.black_85));
         mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), items, mBuilder.isGrid, listColor, gridColor));
@@ -175,6 +187,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         @MenuRes
         int sheetItems = NO_RESOURCE;
+
+        Menu menu;
+        List<MenuItem> menuItems;
 
         Context context;
 
@@ -296,6 +311,32 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         public Builder setSheet(@MenuRes int sheetItems) {
             this.sheetItems = sheetItems;
             return this;
+        }
+
+        /**
+         * Sets the menu to use for the {@link BottomSheet}
+         *
+         * @param menu
+         * @return
+         */
+        public Builder setMenu(@Nullable Menu menu) {
+            this.menu = menu;
+            return this;
+        }
+
+        /**
+         * Sets the {@link List} of menu items to use for the {@link BottomSheet}
+         *
+         * @param menuItems
+         * @return
+         */
+        public Builder setMenuItems(@Nullable List<MenuItem> menuItems) {
+            this.menuItems = menuItems;
+            return this;
+        }
+
+        public boolean canCreateSheet() {
+            return (sheetItems != NO_RESOURCE || menu != null || menuItems != null);
         }
 
         /**
