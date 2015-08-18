@@ -60,10 +60,16 @@ grid()
 dark()
 
 // If the BottomSheet can be dismiss via the back button or pressing outside 
-setCancelable(boolean)
+setCancelable(boolean cancelable)
 
 // Sets the menu resource to be used
 setSheet(@MenuRes int sheetItems)
+
+// Sets the Menu to be used
+setMenu(Menu menu)
+
+// Sets the MenuItems to be used
+setMenuItems(List<MenuItem> items)
 
 // Sets the style 
 setStyle(@StyleRes int style)
@@ -115,7 +121,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.1.1'
+    compile 'com.kennyc:bottomsheet:1.1.2'
 }
 ```
 
