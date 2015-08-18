@@ -72,7 +72,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (mBuilder == null || !mBuilder.canCreateSheet()) {
+        if (!canCreateSheet()) {
             throw new IllegalStateException("Unable to create BottomSheet, missing params");
         }
 
@@ -133,31 +133,10 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     private void initMenu(TypedArray ta) {
-        final Menu menu;
-        final List<MenuItem> items;
-
-        if (mBuilder.menuItems != null) {
-            items = mBuilder.menuItems;
-        } else {
-            if (mBuilder.menu != null) {
-                menu = mBuilder.menu;
-            } else {
-                // Bad hack to inflate a menu
-                PopupMenu m = new PopupMenu(getContext(), null);
-                m.inflate(mBuilder.sheetItems);
-                menu = m.getMenu();
-            }
-
-            items = new ArrayList<>(menu.size());
-            for (int i = 0; i < menu.size(); i++) {
-                items.add(menu.getItem(i));
-            }
-        }
-
         Resources res = getContext().getResources();
         int listColor = ta.getColor(2, res.getColor(R.color.black_85));
         int gridColor = ta.getColor(3, res.getColor(R.color.black_85));
-        mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), items, mBuilder.isGrid, listColor, gridColor));
+        mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor));
     }
 
     @Override
@@ -168,6 +147,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         dismiss();
+    }
+
+    /**
+     * Returns if the {@link BottomSheet} can be created based on the {@link com.kennyc.bottomsheet.BottomSheet.Builder}
+     *
+     * @return
+     */
+    private boolean canCreateSheet() {
+        return mBuilder != null && mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty();
     }
 
     @Override
@@ -185,10 +173,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         boolean isGrid = false;
 
-        @MenuRes
-        int sheetItems = NO_RESOURCE;
-
-        Menu menu;
         List<MenuItem> menuItems;
 
         Context context;
@@ -201,7 +185,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @param context App context
          */
         public Builder(Context context) {
-            this(context, -1, R.style.BottomSheet);
+            this(context, NO_RESOURCE, R.style.BottomSheet);
         }
 
         /**
@@ -224,8 +208,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder(Context context, @MenuRes int sheetItems, @StyleRes int style) {
             this.context = context;
-            this.sheetItems = sheetItems;
             this.style = style;
+            if (sheetItems != NO_RESOURCE) setSheet(sheetItems);
         }
 
         /**
@@ -309,8 +293,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setSheet(@MenuRes int sheetItems) {
-            this.sheetItems = sheetItems;
-            return this;
+            PopupMenu menu = new PopupMenu(context, null);
+            menu.inflate(sheetItems);
+            return setMenu(menu.getMenu());
         }
 
         /**
@@ -320,7 +305,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setMenu(@Nullable Menu menu) {
-            this.menu = menu;
+            if (menu != null) {
+                List<MenuItem> items = new ArrayList<>(menu.size());
+
+                for (int i = 0; i < menu.size(); i++) {
+                    items.add(menu.getItem(i));
+                }
+
+                return setMenuItems(items);
+            }
+
             return this;
         }
 
@@ -333,10 +327,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         public Builder setMenuItems(@Nullable List<MenuItem> menuItems) {
             this.menuItems = menuItems;
             return this;
-        }
-
-        public boolean canCreateSheet() {
-            return (sheetItems != NO_RESOURCE || menu != null || menuItems != null);
         }
 
         /**
