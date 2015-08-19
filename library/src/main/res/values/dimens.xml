@@ -7,5 +7,7 @@
     <dimen name="bottom_sheet_grid_padding">24dp</dimen>
     <dimen name="bottom_sheet_list_padding">8dp</dimen>
     <dimen name="bottom_sheet_width">0dp</dimen>
+    <dimen name="bottom_sheet_list_icon_size">24dp</dimen>
+    <dimen name="bottom_sheet_grid_icon_size">48dp</dimen>
 
 </resources>

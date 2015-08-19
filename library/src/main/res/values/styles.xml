@@ -35,15 +35,18 @@
     </style>
 
     <style name="BottomSheet.ListItem" parent="BottomSheet.Title">
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:drawablePadding">@dimen/bottom_sheet_dialog_padding</item>
+        <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
     </style>
 
     <style name="BottomSheet.GridItem" parent="BottomSheet.ListItem">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
     <style name="BottomSheet.TextAppearance" parent="@android:style/TextAppearance">

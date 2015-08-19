@@ -1,7 +1,11 @@
 package com.kennyc.bottomsheet;
 
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -27,6 +31,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -51,7 +56,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private Builder mBuilder;
 
-    private GridAdapter mAdapter;
+    private BaseAdapter mAdapter;
 
     private GridView mGrid;
 
@@ -93,9 +98,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         TypedArray ta = getContext().obtainStyledAttributes(ATTRS);
         initLayout(ta);
-        initMenu(ta);
+
+        if (mBuilder.menuItems != null) {
+            initMenu(ta);
+            if (mListener != null) mListener.onSheetShown();
+        } else {
+            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
+        }
+
         ta.recycle();
-        if (mListener != null) mListener.onSheetShown();
     }
 
     @Override
@@ -154,9 +165,17 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (mListener != null) {
-            MenuItem item = mAdapter.getItem(position);
-            mListener.onSheetItemSelected(item);
+        if (mAdapter instanceof GridAdapter) {
+            if (mListener != null) {
+                MenuItem item = ((GridAdapter) mAdapter).getItem(position);
+                mListener.onSheetItemSelected(item);
+            }
+        } else if (mAdapter instanceof AppAdapter) {
+            AppAdapter.AppInfo info = ((AppAdapter) mAdapter).getItem(position);
+            Intent intent = new Intent(mBuilder.shareIntent);
+            intent.setComponent(new ComponentName(info.packageName, info.name));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
         }
 
         dismiss();
@@ -168,7 +187,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @return
      */
     private boolean canCreateSheet() {
-        return mBuilder != null && mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty();
+        return mBuilder != null && ((mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty()) || (mBuilder.apps != null && !mBuilder.apps.isEmpty()));
     }
 
     @Override
@@ -176,6 +195,117 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         dismiss();
     }
 
+    /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid) {
+        if (context == null || intent == null) return null;
+
+        PackageManager manager = context.getPackageManager();
+        List<ResolveInfo> apps = manager.queryIntentActivities(intent, 0);
+
+        if (apps != null && !apps.isEmpty()) {
+            List<AppAdapter.AppInfo> appResources = new ArrayList<>(apps.size());
+
+            for (ResolveInfo resolveInfo : apps) {
+                String title = resolveInfo.loadLabel(manager).toString();
+                String packageName = resolveInfo.activityInfo.packageName;
+                String name = resolveInfo.activityInfo.name;
+                Drawable drawable = resolveInfo.loadIcon(manager);
+                appResources.add(new AppAdapter.AppInfo(title, packageName, name, drawable));
+            }
+
+            Builder b = new Builder(context)
+                    .setApps(appResources, intent)
+                    .setTitle(shareTitle);
+
+            if (isGrid) b.grid();
+            return b.create();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title string resource for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid);
+    }
+
+    /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent. This will be List styled by default.<br>
+     * If grid style is desired, use {@link #createShareBottomSheet(Context, Intent, String, boolean)}<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle) {
+        return createShareBottomSheet(context, intent, shareTitle, false);
+    }
+
+    /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent. This will be list styled by default.<br>
+     * If grid style is desired, use {@link #createShareBottomSheet(Context, Intent, String, boolean)}<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), false);
+    }
+
+    /**
+     * Builder factory used for creating {@link BottomSheet}
+     */
     public static class Builder {
         @StyleRes
         int style = NO_RESOURCE;
@@ -187,11 +317,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         boolean isGrid = false;
 
         List<MenuItem> menuItems;
+
         int menuItemTintColor = Integer.MIN_VALUE;
 
         Context context;
 
         BottomSheetListener listener;
+
+        List<AppAdapter.AppInfo> apps;
+
+        Intent shareIntent;
 
         /**
          * Constructor for creating a {@link BottomSheet}, {@link #setSheet(int)} will need to be called to set the menu resource
@@ -366,6 +501,20 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
+         * Sets the apps to be used for a share intent. This is not a public facing method.<p>
+         * See {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean)} for creating a share intent {@link BottomSheet}
+         *
+         * @param apps   List of apps to use in the share intent
+         * @param intent The {@link Intent} used for creating the share intent
+         * @return
+         */
+        private Builder setApps(List<AppAdapter.AppInfo> apps, Intent intent) {
+            this.apps = apps;
+            shareIntent = intent;
+            return this;
+        }
+
+        /**
          * Creates the {@link BottomSheet} but does not show it.
          *
          * @return
@@ -382,8 +531,10 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
     }
 
+    /**
+     * Adapter used when creating a {@link BottomSheet} through the {@link com.kennyc.bottomsheet.BottomSheet.Builder} interface
+     */
     private static class GridAdapter extends BaseAdapter {
-        private final Builder mBuilder;
         private final List<MenuItem> mItems;
 
         private final LayoutInflater mInflater;
@@ -391,15 +542,18 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         private boolean mIsGrid;
 
         private int mListTextColor;
+
         private int mGridTextColor;
 
+        private int mTintColor;
+
         public GridAdapter(Context context, Builder builder, int listTextColor, int gridTextColor) {
-            mBuilder = builder;
-            mItems = mBuilder.menuItems;
-            mIsGrid = mBuilder.isGrid;
+            mItems = builder.menuItems;
+            mIsGrid = builder.isGrid;
             mInflater = LayoutInflater.from(context);
             mListTextColor = listTextColor;
             mGridTextColor = gridTextColor;
+            mTintColor = builder.menuItemTintColor;
         }
 
         @Override
@@ -420,24 +574,111 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MenuItem item = getItem(position);
-            TextView view;
+            ViewHolder holder;
 
             if (convertView == null) {
-                view = (TextView) mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
-                view.setTextColor(mIsGrid ? mGridTextColor : mListTextColor);
+                convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
+                holder = new ViewHolder(convertView);
+                holder.title.setTextColor(mIsGrid ? mGridTextColor : mListTextColor);
             } else {
-                view = (TextView) convertView;
+                holder = (ViewHolder) convertView.getTag();
             }
 
             Drawable menuIcon = item.getIcon();
-            if (mBuilder.menuItemTintColor != Integer.MIN_VALUE && menuIcon != null) {
+            if (mTintColor != Integer.MIN_VALUE && menuIcon != null) {
                 // mutate it, so we do not tint the original menu icon
                 menuIcon = menuIcon.mutate();
-                menuIcon.setColorFilter(new LightingColorFilter(Color.BLACK, mBuilder.menuItemTintColor));
+                menuIcon.setColorFilter(new LightingColorFilter(Color.BLACK, mTintColor));
             }
-            view.setCompoundDrawablesWithIntrinsicBounds(mIsGrid ? null : menuIcon, mIsGrid ? menuIcon : null, null, null);
-            view.setText(item.getTitle());
-            return view;
+
+            holder.icon.setImageDrawable(menuIcon);
+            holder.title.setText(item.getTitle());
+            return convertView;
+        }
+    }
+
+    /**
+     * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean)} is invoked
+     */
+    private static class AppAdapter extends BaseAdapter {
+        List<AppInfo> mApps;
+
+        private LayoutInflater mInflater;
+
+        private int mTextColor;
+
+        private boolean mIsGrid;
+
+        public AppAdapter(Context context, List<AppInfo> info, boolean isGrid) {
+            mApps = info;
+            mInflater = LayoutInflater.from(context);
+            mTextColor = context.getResources().getColor(R.color.black_85);
+            mIsGrid = isGrid;
+        }
+
+        @Override
+        public int getCount() {
+            return mApps.size();
+        }
+
+        @Override
+        public AppInfo getItem(int position) {
+            return mApps.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            AppInfo appInfo = getItem(position);
+            ViewHolder holder;
+
+            if (convertView == null) {
+                convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
+                holder = new ViewHolder(convertView);
+                holder.title.setTextColor(mTextColor);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.icon.setImageDrawable(appInfo.drawable);
+            holder.title.setText(appInfo.title);
+            return convertView;
+        }
+
+        private static class AppInfo {
+            public String title;
+
+            public String packageName;
+
+            public String name;
+
+            public Drawable drawable;
+
+            public AppInfo(String title, String packageName, String name, Drawable drawable) {
+                this.title = title;
+                this.packageName = packageName;
+                this.name = name;
+                this.drawable = drawable;
+            }
+        }
+    }
+
+    /**
+     * ViewHolder class for the adapters
+     */
+    private static class ViewHolder {
+        public TextView title;
+
+        public ImageView icon;
+
+        public ViewHolder(View view) {
+            title = (TextView) view.findViewById(R.id.title);
+            icon = (ImageView) view.findViewById(R.id.icon);
+            view.setTag(this);
         }
     }
 }

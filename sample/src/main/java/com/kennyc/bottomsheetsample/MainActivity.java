@@ -1,8 +1,10 @@
 package com.kennyc.bottomsheetsample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -72,6 +74,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show();
                 break;
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/*");
+                intent.putExtra(Intent.EXTRA_TEXT, "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet");
+                BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");
+                if (bottomSheet != null) bottomSheet.show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

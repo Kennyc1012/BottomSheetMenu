@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/BottomSheet.GridItem"
-    android:id="@+id/item"
-    tools:drawableTop="@android:drawable/ic_menu_share"
-    tools:text="List Item" />
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/bottom_sheet_grid_icon_size"
+        android:layout_height="@dimen/bottom_sheet_grid_icon_size"
+        android:layout_marginBottom="@dimen/bottom_sheet_dialog_padding"
+        tools:src="@android:drawable/ic_menu_share" />
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/BottomSheet.GridItem"
+        tools:text="List Item" />
+
+</LinearLayout>
