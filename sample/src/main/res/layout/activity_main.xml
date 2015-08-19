@@ -55,10 +55,22 @@
             android:text="Show runtime menu Bottom sheet" />
 
         <Button
-            android:id="@+id/bottomSheetRuntimeMenuItems"
+            android:id="@+id/gridSheetRuntimeMenuItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show runtime menu items Bottom sheet" />
+            android:text="Show runtime menu items Grid Bottom sheet" />
+
+        <Button
+            android:id="@+id/bottomSheetTintIcons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show tinted icons Bottom sheet" />
+
+        <Button
+            android:id="@+id/gridSheetTintIcons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show random tinted icons Grid Bottom sheet" />
 
     </LinearLayout>
 

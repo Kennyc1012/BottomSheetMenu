@@ -1,5 +1,6 @@
 package com.kennyc.bottomsheetsample;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.MenuRes;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import com.kennyc.bottomsheet.BottomSheetListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BottomSheetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -30,7 +32,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.customBottomSheet).setOnClickListener(this);
         findViewById(R.id.customGridBottomSheet).setOnClickListener(this);
         findViewById(R.id.bottomSheetRuntimeMenu).setOnClickListener(this);
-        findViewById(R.id.bottomSheetRuntimeMenuItems).setOnClickListener(this);
+        findViewById(R.id.gridSheetRuntimeMenuItems).setOnClickListener(this);
+        findViewById(R.id.bottomSheetTintIcons).setOnClickListener(this);
+        findViewById(R.id.gridSheetTintIcons).setOnClickListener(this);
     }
 
     @Override
@@ -85,13 +89,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setListener(this)
                         .show();
                 break;
-            case R.id.bottomSheetRuntimeMenuItems:
+            case R.id.gridSheetRuntimeMenuItems:
                 new BottomSheet.Builder(this)
+                        .grid()
+                        .setTitle("Randomized runtime menu items")
                         .setMenuItems(getMenuItemsFromRes(R.menu.list_sheet))
                         .setListener(this)
                         .show();
                 break;
+            case R.id.bottomSheetTintIcons:
+                new BottomSheet.Builder(this, R.menu.tint_sheet)
+                        .setMenuItemTintColorRes(R.color.palette_teal_500)
+                        .setListener(this)
+                        .show();
+                break;
+            case R.id.gridSheetTintIcons:
+                new BottomSheet.Builder(this, R.menu.grid_sheet)
+                        .grid()
+                        .setMenuItemTintColor(generateRandomColor())
+                        .setTitle("Random tinted icons")
+                        .setListener(this)
+                        .show();
+                break;
         }
+    }
+
+    private int generateRandomColor() {
+        final Random random = new Random(System.nanoTime());
+        return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
     }
 
     private Menu getMenuFromRes(@MenuRes int menuResId) {
