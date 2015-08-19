@@ -5,5 +5,6 @@
     <attr name="bottom_sheet_title_color" format="color" />
     <attr name="bottom_sheet_list_item_color" format="color" />
     <attr name="bottom_sheet_grid_item_color" format="color" />
+    <attr name="bottom_sheet_item_icon_color" format="color" />
 
 </resources>

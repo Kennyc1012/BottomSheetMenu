@@ -71,18 +71,24 @@ setMenu(Menu menu)
 // Sets the MenuItems to be used
 setMenuItems(List<MenuItem> items)
 
+// Sets the tint color of the MenuItem icons
+setMenuItemTintColor(@ColorInt int menuItemTintColor)
+setMenuItemTintColorRes(@ColorRes int colorRes)
+
 // Sets the style 
 setStyle(@StyleRes int style)
 ```
 
 #Styling
-BottomSheet comes with both a Light and Dark theme to accomidate most scenarios. However, if you want to customize the color more, you can create your own style and supply it to the builder.
+BottomSheet comes with both a Light and Dark theme to accommodate most scenarios. However, if you want to customize the color more, you can create your own style and supply it to the builder.
 ```xml
 <style name="MyBottomSheetStyle" parent="@style/BottomSheet">
         <item name="bottom_sheet_bg_color">@color/my_color</item>
         <item name="bottom_sheet_title_color">@color/my_color_2</item>
         <item name="bottom_sheet_list_item_color">@color/my_color_3</item>
         <item name="bottom_sheet_grid_item_color">@color/my_color_4</item>
+        <!-- Tints the menu item icon to the specified color -->
+        <item name="bottom_sheet_item_icon_color">@color/my_color_5</item>
 </style>
 ```
 

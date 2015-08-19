@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -41,7 +45,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             R.attr.bottom_sheet_bg_color,
             R.attr.bottom_sheet_title_color,
             R.attr.bottom_sheet_list_item_color,
-            R.attr.bottom_sheet_grid_item_color
+            R.attr.bottom_sheet_grid_item_color,
+            R.attr.bottom_sheet_item_icon_color
     };
 
     private Builder mBuilder;
@@ -136,7 +141,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Resources res = getContext().getResources();
         int listColor = ta.getColor(2, res.getColor(R.color.black_85));
         int gridColor = ta.getColor(3, res.getColor(R.color.black_85));
-        mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor));
+
+        if (mBuilder.menuItemTintColor == Integer.MIN_VALUE) {
+            int itemIconColor = ta.getColor(4, Integer.MIN_VALUE);
+            if (itemIconColor != Integer.MIN_VALUE) {
+                mBuilder.menuItemTintColor = itemIconColor;
+            }
+        }
+
+        mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder, listColor, gridColor));
     }
 
     @Override
@@ -174,6 +187,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         boolean isGrid = false;
 
         List<MenuItem> menuItems;
+        int menuItemTintColor = Integer.MIN_VALUE;
 
         Context context;
 
@@ -330,6 +344,28 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
+         * Resolves the color resource id and tints the menu item icons with the resolved color
+         *
+         * @param colorRes
+         * @return
+         */
+        public Builder setMenuItemTintColorRes(@ColorRes int colorRes) {
+            final int menuItemTintColor = context.getResources().getColor(colorRes);
+            return setMenuItemTintColor(menuItemTintColor);
+        }
+
+        /**
+         * Sets the color to use for tinting the menu item icons
+         *
+         * @param menuItemTintColor
+         * @return
+         */
+        public Builder setMenuItemTintColor(@ColorInt int menuItemTintColor) {
+            this.menuItemTintColor = menuItemTintColor;
+            return this;
+        }
+
+        /**
          * Creates the {@link BottomSheet} but does not show it.
          *
          * @return
@@ -347,19 +383,20 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     private static class GridAdapter extends BaseAdapter {
-        private List<MenuItem> mItems;
+        private final Builder mBuilder;
+        private final List<MenuItem> mItems;
+
+        private final LayoutInflater mInflater;
 
         private boolean mIsGrid;
 
-        private LayoutInflater mInflater;
-
         private int mListTextColor;
+        private int mGridTextColor;
 
-        int mGridTextColor;
-
-        public GridAdapter(Context context, List<MenuItem> items, boolean isGrid, int listTextColor, int gridTextColor) {
-            mItems = items;
-            mIsGrid = isGrid;
+        public GridAdapter(Context context, Builder builder, int listTextColor, int gridTextColor) {
+            mBuilder = builder;
+            mItems = mBuilder.menuItems;
+            mIsGrid = mBuilder.isGrid;
             mInflater = LayoutInflater.from(context);
             mListTextColor = listTextColor;
             mGridTextColor = gridTextColor;
@@ -392,7 +429,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                 view = (TextView) convertView;
             }
 
-            view.setCompoundDrawablesWithIntrinsicBounds(mIsGrid ? null : item.getIcon(), mIsGrid ? item.getIcon() : null, null, null);
+            Drawable menuIcon = item.getIcon();
+            if (mBuilder.menuItemTintColor != Integer.MIN_VALUE && menuIcon != null) {
+                // mutate it, so we do not tint the original menu icon
+                menuIcon = menuIcon.mutate();
+                menuIcon.setColorFilter(new LightingColorFilter(Color.BLACK, mBuilder.menuItemTintColor));
+            }
+            view.setCompoundDrawablesWithIntrinsicBounds(mIsGrid ? null : menuIcon, mIsGrid ? menuIcon : null, null, null);
             view.setText(item.getTitle());
             return view;
         }
