@@ -5,6 +5,8 @@
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/grid.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_list.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_grid.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_list.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_grid.png)
 
 #Features
 - Both list and grid style
@@ -75,6 +77,14 @@ setMenuItems(List<MenuItem> items)
 setMenuItemTintColor(@ColorInt int menuItemTintColor)
 setMenuItemTintColorRes(@ColorRes int colorRes)
 
+// Sets the color of the title, will be ingored if no title is set
+setTitleColor(@ColorInt int titleColor)
+setTitleColorRes(@ColorRes int colorRes)
+
+// Sets the color of the items, applies to both list and grid styles
+setItemColor(@ColorInt int itemColor)
+Builder setItemColorRes(@ColorRes int colorRes)
+
 // Sets the style 
 setStyle(@StyleRes int style)
 ```
@@ -102,6 +112,20 @@ new BottomSheet.Builder(getActivity(), R.menu.bottom_sheet, R.style.MyBottomShee
 ##Icon
 Based on the [Material Design Guidelines](http://www.google.com/design/spec/components/bottom-sheets.html#bottom-sheets-specs), icons for a linear list styled BottomSheet should be 24dp, where as a grid styled BottomSheet should be 48dp.
 
+#Share Intents
+BottomSheet can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
+```java
+// Create the intent for sharing
+Intent intent = new Intent(Intent.ACTION_SEND);
+intent.setType("text/*");
+intent.putExtra(Intent.EXTRA_TEXT, "My text to share");
+// Pass the intent into the createShareBottomSheet method to generate the BottomSheet.
+BottomSheet share = BottomSheet.createShareBottomSheet(getActivity(), intent, "My Title");
+// Make sure that it doesn't return null! If the system can not handle the intent, null will be returned.
+if (share != null) share.show();
+// By default, it will be styled as a list. For a grid, pass the boolean value true after the title parameter
+```
+
 #Callbacks
 BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
 ```java
@@ -127,7 +151,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.1.2'
+    compile 'com.kennyc:bottomsheet:1.2.0'
 }
 ```
 
