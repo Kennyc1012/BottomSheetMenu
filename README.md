@@ -71,6 +71,10 @@ setMenu(Menu menu)
 // Sets the MenuItems to be used
 setMenuItems(List<MenuItem> items)
 
+// Sets the tint color of the MenuItem icons
+setMenuItemTintColor(@ColorInt int menuItemTintColor)
+setMenuItemTintColorRes(@ColorRes int colorRes)
+
 // Sets the style 
 setStyle(@StyleRes int style)
 ```
