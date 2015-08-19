@@ -103,7 +103,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             initMenu(ta);
             if (mListener != null) mListener.onSheetShown();
         } else {
-            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
+            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder));
         }
 
         ta.recycle();
@@ -129,7 +129,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (hasTitle) {
             mTitle.setText(mBuilder.title);
             mTitle.setVisibility(View.VISIBLE);
-            mTitle.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
+
+            if (mBuilder.titleColor != Integer.MIN_VALUE) {
+                mTitle.setTextColor(mBuilder.titleColor);
+            } else {
+                mTitle.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
+            }
         } else {
             mTitle.setVisibility(View.GONE);
         }
@@ -150,14 +155,19 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private void initMenu(TypedArray ta) {
         Resources res = getContext().getResources();
-        int listColor = ta.getColor(2, res.getColor(R.color.black_85));
-        int gridColor = ta.getColor(3, res.getColor(R.color.black_85));
+        int listColor;
+        int gridColor;
+
+        if (mBuilder.itemColor != Integer.MIN_VALUE) {
+            listColor = mBuilder.itemColor;
+            gridColor = mBuilder.itemColor;
+        } else {
+            listColor = ta.getColor(2, res.getColor(R.color.black_85));
+            gridColor = ta.getColor(3, res.getColor(R.color.black_85));
+        }
 
         if (mBuilder.menuItemTintColor == Integer.MIN_VALUE) {
-            int itemIconColor = ta.getColor(4, Integer.MIN_VALUE);
-            if (itemIconColor != Integer.MIN_VALUE) {
-                mBuilder.menuItemTintColor = itemIconColor;
-            }
+            mBuilder.menuItemTintColor = ta.getColor(4, Integer.MIN_VALUE);
         }
 
         mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder, listColor, gridColor));
@@ -318,7 +328,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         List<MenuItem> menuItems;
 
+        @ColorInt
         int menuItemTintColor = Integer.MIN_VALUE;
+
+        @ColorInt
+        int titleColor = Integer.MIN_VALUE;
+
+        @ColorInt
+        int itemColor = Integer.MIN_VALUE;
 
         Context context;
 
@@ -501,6 +518,48 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
+         * Sets the color to use for the title. Will be ignored if {@link #setTitle(int)} or {@link #setTitle(String)} are not called
+         *
+         * @param titleColor
+         * @return
+         */
+        public Builder setTitleColor(@ColorInt int titleColor) {
+            this.titleColor = titleColor;
+            return this;
+        }
+
+        /**
+         * Sets the color resource id to use for the title. Will be ignored if {@link #setTitle(int)} or {@link #setTitle(String)} are not called
+         *
+         * @param colorRes
+         * @return
+         */
+        public Builder setTitleColorRes(@ColorRes int colorRes) {
+            return setTitleColor(context.getResources().getColor(colorRes));
+        }
+
+        /**
+         * Sets the color to use for the list item. Will apply to either list or grid style.
+         *
+         * @param itemColor
+         * @return
+         */
+        public Builder setItemColor(@ColorInt int itemColor) {
+            this.itemColor = itemColor;
+            return this;
+        }
+
+        /**
+         * Sets the color resource id to use for the list item. Will apply to either list or grid style.
+         *
+         * @param colorRes
+         * @return
+         */
+        public Builder setItemColorRes(@ColorRes int colorRes) {
+            return setItemColor(context.getResources().getColor(colorRes));
+        }
+
+        /**
          * Sets the apps to be used for a share intent. This is not a public facing method.<p>
          * See {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean)} for creating a share intent {@link BottomSheet}
          *
@@ -609,11 +668,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         private boolean mIsGrid;
 
-        public AppAdapter(Context context, List<AppInfo> info, boolean isGrid) {
-            mApps = info;
+        public AppAdapter(Context context, Builder builder) {
+            mApps = builder.apps;
             mInflater = LayoutInflater.from(context);
             mTextColor = context.getResources().getColor(R.color.black_85);
-            mIsGrid = isGrid;
+            mIsGrid = builder.isGrid;
         }
 
         @Override
