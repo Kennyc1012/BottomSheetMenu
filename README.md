@@ -61,7 +61,7 @@ grid()
 // Sets the BottomSheet to use the dark theme
 dark()
 
-// If the BottomSheet can be dismiss via the back button or pressing outside 
+// If the BottomSheet can be dismissed via the back button or pressing outside 
 setCancelable(boolean cancelable)
 
 // Sets the menu resource to be used
@@ -83,7 +83,7 @@ setTitleColorRes(@ColorRes int colorRes)
 
 // Sets the color of the items, applies to both list and grid styles
 setItemColor(@ColorInt int itemColor)
-Builder setItemColorRes(@ColorRes int colorRes)
+setItemColorRes(@ColorRes int colorRes)
 
 // Sets the style 
 setStyle(@StyleRes int style)
