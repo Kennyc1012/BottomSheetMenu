@@ -1,14 +1,20 @@
 package com.kennyc.bottomsheetsample;
 
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.kennyc.bottomsheet.BottomSheet;
 import com.kennyc.bottomsheet.BottomSheetListener;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BottomSheetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -23,6 +29,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.darkGridBottomSheet).setOnClickListener(this);
         findViewById(R.id.customBottomSheet).setOnClickListener(this);
         findViewById(R.id.customGridBottomSheet).setOnClickListener(this);
+        findViewById(R.id.bottomSheetRuntimeMenu).setOnClickListener(this);
+        findViewById(R.id.bottomSheetRuntimeMenuItems).setOnClickListener(this);
     }
 
     @Override
@@ -71,7 +79,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setListener(this)
                         .show();
                 break;
+            case R.id.bottomSheetRuntimeMenu:
+                new BottomSheet.Builder(this)
+                        .setMenu(getMenuFromRes(R.menu.list_sheet))
+                        .setListener(this)
+                        .show();
+                break;
+            case R.id.bottomSheetRuntimeMenuItems:
+                new BottomSheet.Builder(this)
+                        .setMenuItems(getMenuItemsFromRes(R.menu.list_sheet))
+                        .setListener(this)
+                        .show();
+                break;
         }
+    }
+
+    private Menu getMenuFromRes(@MenuRes int menuResId) {
+        // inflate our menu
+        final PopupMenu popupMenu = new PopupMenu(this, null);
+        popupMenu.inflate(menuResId);
+        return popupMenu.getMenu();
+    }
+
+    private ArrayList<MenuItem> getMenuItemsFromRes(@MenuRes int menuResId) {
+        final ArrayList<MenuItem> menuItems = new ArrayList<>();
+        final Menu menu = getMenuFromRes(menuResId);
+
+        // get each menu item from our menu and add it to the list
+        final int menuSize = menu.size();
+        for (int i = 0; i < menuSize; i++) {
+            menuItems.add(menu.getItem(i));
+        }
+
+        // randomize it
+        Collections.shuffle(menuItems);
+
+        // remove first item
+        menuItems.remove(0);
+
+        return menuItems;
     }
 
     @Override
