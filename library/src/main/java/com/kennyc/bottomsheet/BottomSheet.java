@@ -45,7 +45,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             R.attr.bottom_sheet_bg_color,
             R.attr.bottom_sheet_title_color,
             R.attr.bottom_sheet_list_item_color,
-            R.attr.bottom_sheet_grid_item_color
+            R.attr.bottom_sheet_grid_item_color,
+            R.attr.bottom_sheet_item_icon_color
     };
 
     private Builder mBuilder;
@@ -140,6 +141,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Resources res = getContext().getResources();
         int listColor = ta.getColor(2, res.getColor(R.color.black_85));
         int gridColor = ta.getColor(3, res.getColor(R.color.black_85));
+
+        if (mBuilder.menuItemTintColor == Integer.MIN_VALUE) {
+            int itemIconColor = ta.getColor(4, Integer.MIN_VALUE);
+            if (itemIconColor != Integer.MIN_VALUE) {
+                mBuilder.menuItemTintColor = itemIconColor;
+            }
+        }
+
         mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder, listColor, gridColor));
     }
 
@@ -178,7 +187,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         boolean isGrid = false;
 
         List<MenuItem> menuItems;
-        int menuItemTintColor = -1;
+        int menuItemTintColor = Integer.MIN_VALUE;
 
         Context context;
 
@@ -421,7 +430,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             }
 
             Drawable menuIcon = item.getIcon();
-            if (mBuilder.menuItemTintColor != -1 && menuIcon != null) {
+            if (mBuilder.menuItemTintColor != Integer.MIN_VALUE && menuIcon != null) {
                 // mutate it, so we do not tint the original menu icon
                 menuIcon = menuIcon.mutate();
                 menuIcon.setColorFilter(new LightingColorFilter(Color.BLACK, mBuilder.menuItemTintColor));
