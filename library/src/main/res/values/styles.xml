@@ -26,7 +26,7 @@
         <item name="android:layout_height">56dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
         <item name="android:textAppearance">@style/BottomSheet.TextAppearance</item>
