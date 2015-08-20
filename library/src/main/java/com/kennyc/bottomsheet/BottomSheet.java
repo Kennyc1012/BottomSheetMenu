@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -459,9 +459,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setSheet(@MenuRes int sheetItems) {
-            PopupMenu menu = new PopupMenu(context, null);
-            menu.inflate(sheetItems);
-            return setMenu(menu.getMenu());
+            BottomSheetMenu menu = new BottomSheetMenu(context);
+            new MenuInflater(context).inflate(sheetItems, menu);
+            return setMenu(menu);
         }
 
         /**
@@ -492,6 +492,18 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder setMenuItems(@Nullable List<MenuItem> menuItems) {
             this.menuItems = menuItems;
+            return this;
+        }
+
+        /**
+         * Adds a {@link MenuItem} to the {@link BottomSheet}. For creating a {@link MenuItem}, see {@link BottomSheetMenuItem}
+         *
+         * @param item
+         * @return
+         */
+        public Builder addMenuItem(MenuItem item) {
+            if (menuItems == null) menuItems = new ArrayList<>();
+            menuItems.add(item);
             return this;
         }
 
