@@ -13,6 +13,7 @@
 - Light and Dark theme as well as custom themeing options
 - XML style support
 - Tablet support
+- Share Intent Picker
 - API 14+
 
 
@@ -72,6 +73,9 @@ setMenu(Menu menu)
 
 // Sets the MenuItems to be used
 setMenuItems(List<MenuItem> items)
+
+// Adds a MenuItem to the BottomSheet
+ addMenuItem(MenuItem item)
 
 // Sets the tint color of the MenuItem icons
 setMenuItemTintColor(@ColorInt int menuItemTintColor)
@@ -151,7 +155,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.2.0'
+    compile 'com.kennyc:bottomsheet:1.2.1'
 }
 ```
 
