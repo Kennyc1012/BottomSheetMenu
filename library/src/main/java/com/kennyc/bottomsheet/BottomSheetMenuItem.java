@@ -25,9 +25,6 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 
-/**
- * @hide
- */
 public class BottomSheetMenuItem implements MenuItem {
     private final int mId;
     private final int mGroup;

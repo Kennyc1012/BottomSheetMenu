@@ -28,9 +28,6 @@ import android.view.SubMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @hide
- */
 public class BottomSheetMenu implements Menu {
     private Context mContext;
 
