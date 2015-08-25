@@ -120,7 +120,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
-        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
+
+        if (mBuilder.backgroundColor != Integer.MIN_VALUE) {
+            view.findViewById(R.id.container).setBackgroundColor(mBuilder.backgroundColor);
+        } else {
+            view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
+        }
+
         mGrid = (GridView) view.findViewById(R.id.grid);
         mGrid.setOnItemClickListener(this);
         mTitle = (TextView) view.findViewById(R.id.title);
@@ -202,7 +208,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     @Override
     public void onCollapse() {
-        dismiss();
+        // Post a runnable for dismissing to avoid "Attempting to destroy the window while drawing!" error
+        mGrid.post(new Runnable() {
+            @Override
+            public void run() {
+                dismiss();
+            }
+        });
     }
 
     /**
@@ -337,7 +349,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         @ColorInt
         int itemColor = Integer.MIN_VALUE;
 
+        @ColorInt
+        int backgroundColor = Integer.MIN_VALUE;
+
         Context context;
+
+        Resources resources;
 
         BottomSheetListener listener;
 
@@ -375,6 +392,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         public Builder(Context context, @MenuRes int sheetItems, @StyleRes int style) {
             this.context = context;
             this.style = style;
+            this.resources = context.getResources();
             if (sheetItems != NO_RESOURCE) setSheet(sheetItems);
         }
 
@@ -396,7 +414,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setTitle(@StringRes int title) {
-            return setTitle(context.getString(title));
+            return setTitle(resources.getString(title));
         }
 
         /**
@@ -514,7 +532,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setMenuItemTintColorRes(@ColorRes int colorRes) {
-            final int menuItemTintColor = context.getResources().getColor(colorRes);
+            final int menuItemTintColor = resources.getColor(colorRes);
             return setMenuItemTintColor(menuItemTintColor);
         }
 
@@ -547,7 +565,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setTitleColorRes(@ColorRes int colorRes) {
-            return setTitleColor(context.getResources().getColor(colorRes));
+            return setTitleColor(resources.getColor(colorRes));
         }
 
         /**
@@ -568,7 +586,28 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public Builder setItemColorRes(@ColorRes int colorRes) {
-            return setItemColor(context.getResources().getColor(colorRes));
+            return setItemColor(resources.getColor(colorRes));
+        }
+
+        /**
+         * Sets the background color
+         *
+         * @param backgroundColor
+         * @return
+         */
+        public Builder setBackgroundColor(@ColorInt int backgroundColor) {
+            this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        /**
+         * Sets the color resource id of the background
+         *
+         * @param backgroundColor
+         * @return
+         */
+        public Builder setBackgroundColorRes(@ColorRes int backgroundColor) {
+            return setBackgroundColor(resources.getColor(backgroundColor));
         }
 
         /**
