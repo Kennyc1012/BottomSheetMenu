@@ -89,6 +89,10 @@ setTitleColorRes(@ColorRes int colorRes)
 setItemColor(@ColorInt int itemColor)
 setItemColorRes(@ColorRes int colorRes)
 
+// Sets the background color of the BottomSheet
+setBackgroundColor(@ColorInt int color)
+setBackgroundColorRes(@ColorRes int color)
+
 // Sets the style 
 setStyle(@StyleRes int style)
 ```
@@ -155,7 +159,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.2.1'
+    compile 'com.kennyc:bottomsheet:1.2.2'
 }
 ```
 
