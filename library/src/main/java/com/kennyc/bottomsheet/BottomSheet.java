@@ -35,6 +35,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -230,11 +231,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param intent     Intent to get apps for
      * @param shareTitle The optional title for the share intent
      * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @param appsFilter If provided share will be limited to contained packaged names
      * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
      * apps can handle the share intent
      */
     @Nullable
-    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid) {
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, ArrayList<String> appsFilter) {
         if (context == null || intent == null) return null;
 
         PackageManager manager = context.getPackageManager();
@@ -244,6 +246,10 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             List<AppAdapter.AppInfo> appResources = new ArrayList<>(apps.size());
 
             for (ResolveInfo resolveInfo : apps) {
+                if(appsFilter != null && appsFilter.size() > 0
+                        && !appsFilter.contains(resolveInfo.activityInfo.packageName)) {
+                    continue;
+                }
                 String title = resolveInfo.loadLabel(manager).toString();
                 String packageName = resolveInfo.activityInfo.packageName;
                 String name = resolveInfo.activityInfo.name;
@@ -280,7 +286,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid) {
-        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid);
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null);
     }
 
     /**
