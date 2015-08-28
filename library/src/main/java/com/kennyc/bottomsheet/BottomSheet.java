@@ -35,9 +35,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.String;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by kcampagna on 8/7/15.
@@ -236,7 +236,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * apps can handle the share intent
      */
     @Nullable
-    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, ArrayList<String> appsFilter) {
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, @Nullable Set<String> appsFilter) {
         if (context == null || intent == null) return null;
 
         PackageManager manager = context.getPackageManager();
@@ -244,14 +244,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         if (apps != null && !apps.isEmpty()) {
             List<AppAdapter.AppInfo> appResources = new ArrayList<>(apps.size());
+            boolean shouldCheckPackages = appsFilter != null && !appsFilter.isEmpty();
 
             for (ResolveInfo resolveInfo : apps) {
-                if(appsFilter != null && appsFilter.size() > 0
-                        && !appsFilter.contains(resolveInfo.activityInfo.packageName)) {
+                String packageName = resolveInfo.activityInfo.packageName;
+
+                if (shouldCheckPackages && !appsFilter.contains(resolveInfo.activityInfo.packageName)) {
                     continue;
                 }
+
                 String title = resolveInfo.loadLabel(manager).toString();
-                String packageName = resolveInfo.activityInfo.packageName;
                 String name = resolveInfo.activityInfo.name;
                 Drawable drawable = resolveInfo.loadIcon(manager);
                 appResources.add(new AppAdapter.AppInfo(title, packageName, name, drawable));
@@ -290,6 +292,26 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid) {
+        return createShareBottomSheet(context, intent, shareTitle, isGrid, null);
+    }
+
+    /**
      * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent. This will be List styled by default.<br>
      * If grid style is desired, use {@link #createShareBottomSheet(Context, Intent, String, boolean)}<p>
      * An example of an intent to pass is sharing some form of text:<br>
@@ -307,7 +329,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle) {
-        return createShareBottomSheet(context, intent, shareTitle, false);
+        return createShareBottomSheet(context, intent, shareTitle, false, null);
     }
 
     /**
@@ -328,7 +350,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle) {
-        return createShareBottomSheet(context, intent, context.getString(shareTitle), false);
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null);
     }
 
     /**
@@ -714,7 +736,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     /**
-     * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean)} is invoked
+     * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean, Set)} is invoked
      */
     private static class AppAdapter extends BaseAdapter {
         List<AppInfo> mApps;
