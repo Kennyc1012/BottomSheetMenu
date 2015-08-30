@@ -43,6 +43,8 @@ import java.util.Set;
  * Created by kcampagna on 8/7/15.
  */
 public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener, CollapsingView.CollapseListener {
+    private static final int MIN_LIST_TABLET_ITEMS = 6;
+
     private static final int NO_RESOURCE = -1;
 
     private static final String TAG = BottomSheet.class.getSimpleName();
@@ -88,17 +90,17 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         Window window = getWindow();
+        int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
 
         if (window != null) {
-            int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
-            window.setLayout(width <= 0 || mBuilder.isGrid ? ViewGroup.LayoutParams.MATCH_PARENT : width, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setLayout(width <= 0 ? ViewGroup.LayoutParams.MATCH_PARENT : width, ViewGroup.LayoutParams.WRAP_CONTENT);
             window.setGravity(Gravity.BOTTOM);
         } else {
             Log.e(TAG, "Window came back as null, unable to set defaults");
         }
 
         TypedArray ta = getContext().obtainStyledAttributes(ATTRS);
-        initLayout(ta);
+        initLayout(ta, width);
 
         if (mBuilder.menuItems != null) {
             initMenu(ta);
@@ -116,7 +118,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         super.dismiss();
     }
 
-    private void initLayout(TypedArray ta) {
+    private void initLayout(TypedArray ta, int width) {
         Resources res = getContext().getResources();
         setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
@@ -149,7 +151,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (mBuilder.isGrid) {
             int gridPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding);
             int topPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_dialog_padding);
-            mGrid.setNumColumns(res.getInteger(R.integer.bottomsheet_num_columns));
             mGrid.setVerticalSpacing(res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_spacing));
             mGrid.setPadding(0, topPadding, 0, gridPadding);
         } else {
@@ -157,7 +158,34 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             mGrid.setPadding(0, hasTitle ? 0 : padding, 0, padding);
         }
 
+        mGrid.setNumColumns(getNumColumns(res, width));
         setContentView(view);
+    }
+
+    /**
+     * Returns the number of columns the {@link BottomSheet} will use. If grid styled, it will load the
+     * value from resources. If list styled and a tablet, it will be grid styled (2 columns) if >= 6 items are in the list
+     *
+     * @param resources   System resources
+     * @param dialogWidth The width of the dialog. This will determine if it is a tablet. Anything > 0 is a tablet.
+     * @return
+     */
+    private int getNumColumns(Resources resources, int dialogWidth) {
+        if (mBuilder.isGrid) {
+            return resources.getInteger(R.integer.bottomsheet_num_columns);
+        }
+
+        // If a talbet with more than 6 items are present, split them into 2 columns
+        if (dialogWidth > 0) {
+            if (mBuilder.menuItems != null) {
+                return mBuilder.menuItems.size() >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
+            } else {
+                return mBuilder.apps.size() >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
+            }
+        }
+
+        // Regular phone, one column
+        return 1;
     }
 
     private void initMenu(TypedArray ta) {
@@ -229,7 +257,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      *
      * @param context    App context
      * @param intent     Intent to get apps for
-     * @param shareTitle The optional title for the share intent
+     * @param shareTitle The optional title string resource for the share intent
      * @param isGrid     If the share intent BottomSheet should be grid styled
      * @param appsFilter If provided share will be limited to contained packaged names
      * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
@@ -268,6 +296,28 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         return null;
+    }
+
+    /**
+     * Returns a {@link BottomSheet} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @param appsFilter If provided share will be limited to contained packaged names
+     * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid, @Nullable Set<String> appsFilter) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter);
     }
 
     /**
