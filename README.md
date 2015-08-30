@@ -6,7 +6,6 @@
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_list.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_grid.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_list.png)
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_grid.png)
 
 #Features
 - Both list and grid style
@@ -159,7 +158,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.2.3'
+    compile 'com.kennyc:bottomsheet:1.2.4'
 }
 ```
 
