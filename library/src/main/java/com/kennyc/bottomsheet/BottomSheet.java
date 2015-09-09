@@ -9,7 +9,6 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -32,8 +31,12 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.kennyc.bottomsheet.adapters.AppAdapter;
+import com.kennyc.bottomsheet.adapters.GridAdapter;
+import com.kennyc.bottomsheet.menu.BottomSheetMenu;
+import com.kennyc.bottomsheet.menu.BottomSheetMenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +109,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             initMenu(ta);
             if (mListener != null) mListener.onSheetShown();
         } else {
-            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder));
+            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
         }
 
         ta.recycle();
@@ -205,7 +208,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             mBuilder.menuItemTintColor = ta.getColor(4, Integer.MIN_VALUE);
         }
 
-        mGrid.setAdapter(mAdapter = new GridAdapter(getContext(), mBuilder, listColor, gridColor));
+        mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor, mBuilder.menuItemTintColor);
+        mGrid.setAdapter(mAdapter);
     }
 
     @Override
@@ -716,157 +720,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public void show() {
             create().show();
-        }
-    }
-
-    /**
-     * Adapter used when creating a {@link BottomSheet} through the {@link com.kennyc.bottomsheet.BottomSheet.Builder} interface
-     */
-    private static class GridAdapter extends BaseAdapter {
-        private final List<MenuItem> mItems;
-
-        private final LayoutInflater mInflater;
-
-        private boolean mIsGrid;
-
-        private int mListTextColor;
-
-        private int mGridTextColor;
-
-        private int mTintColor;
-
-        public GridAdapter(Context context, Builder builder, int listTextColor, int gridTextColor) {
-            mItems = builder.menuItems;
-            mIsGrid = builder.isGrid;
-            mInflater = LayoutInflater.from(context);
-            mListTextColor = listTextColor;
-            mGridTextColor = gridTextColor;
-            mTintColor = builder.menuItemTintColor;
-        }
-
-        @Override
-        public int getCount() {
-            return mItems.size();
-        }
-
-        @Override
-        public MenuItem getItem(int position) {
-            return mItems.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return getItem(position).getItemId();
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            MenuItem item = getItem(position);
-            ViewHolder holder;
-
-            if (convertView == null) {
-                convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
-                holder = new ViewHolder(convertView);
-                holder.title.setTextColor(mIsGrid ? mGridTextColor : mListTextColor);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            Drawable menuIcon = item.getIcon();
-            if (mTintColor != Integer.MIN_VALUE && menuIcon != null) {
-                // mutate it, so we do not tint the original menu icon
-                menuIcon = menuIcon.mutate();
-                menuIcon.setColorFilter(new LightingColorFilter(Color.BLACK, mTintColor));
-            }
-
-            holder.icon.setImageDrawable(menuIcon);
-            holder.title.setText(item.getTitle());
-            return convertView;
-        }
-    }
-
-    /**
-     * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean, Set)} is invoked
-     */
-    private static class AppAdapter extends BaseAdapter {
-        List<AppInfo> mApps;
-
-        private LayoutInflater mInflater;
-
-        private int mTextColor;
-
-        private boolean mIsGrid;
-
-        public AppAdapter(Context context, Builder builder) {
-            mApps = builder.apps;
-            mInflater = LayoutInflater.from(context);
-            mTextColor = context.getResources().getColor(R.color.black_85);
-            mIsGrid = builder.isGrid;
-        }
-
-        @Override
-        public int getCount() {
-            return mApps.size();
-        }
-
-        @Override
-        public AppInfo getItem(int position) {
-            return mApps.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            AppInfo appInfo = getItem(position);
-            ViewHolder holder;
-
-            if (convertView == null) {
-                convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
-                holder = new ViewHolder(convertView);
-                holder.title.setTextColor(mTextColor);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.icon.setImageDrawable(appInfo.drawable);
-            holder.title.setText(appInfo.title);
-            return convertView;
-        }
-
-        private static class AppInfo {
-            public String title;
-
-            public String packageName;
-
-            public String name;
-
-            public Drawable drawable;
-
-            public AppInfo(String title, String packageName, String name, Drawable drawable) {
-                this.title = title;
-                this.packageName = packageName;
-                this.name = name;
-                this.drawable = drawable;
-            }
-        }
-    }
-
-    /**
-     * ViewHolder class for the adapters
-     */
-    private static class ViewHolder {
-        public TextView title;
-
-        public ImageView icon;
-
-        public ViewHolder(View view) {
-            title = (TextView) view.findViewById(R.id.title);
-            icon = (ImageView) view.findViewById(R.id.icon);
-            view.setTag(this);
         }
     }
 }

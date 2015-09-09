@@ -1,4 +1,4 @@
-package com.kennyc.bottomsheet;
+package com.kennyc.bottomsheet.menu;
 /*
  * Copyright (C) 2010 The Android Open Source Project
  *
