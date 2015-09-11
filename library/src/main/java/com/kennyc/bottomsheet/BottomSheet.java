@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -103,13 +105,18 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         TypedArray ta = getContext().obtainStyledAttributes(ATTRS);
-        initLayout(ta, width);
 
-        if (mBuilder.menuItems != null) {
-            initMenu(ta);
-            if (mListener != null) mListener.onSheetShown();
+        if (mBuilder.view != null) {
+            initViewLayout(ta);
         } else {
-            mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
+            initLayout(ta, width);
+
+            if (mBuilder.menuItems != null) {
+                initMenu(ta);
+                if (mListener != null) mListener.onSheetShown();
+            } else {
+                mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
+            }
         }
 
         ta.recycle();
@@ -119,6 +126,22 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     public void dismiss() {
         if (mListener != null) mListener.onSheetDismissed();
         super.dismiss();
+    }
+
+    private void initViewLayout(TypedArray ta) {
+        CollapsingView collapsingView = new CollapsingView(getContext());
+        collapsingView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
+        collapsingView.setCollapseListener(this);
+
+        if (mBuilder.backgroundColor != Integer.MIN_VALUE) {
+            mBuilder.view.setBackgroundColor(mBuilder.backgroundColor);
+        } else {
+            mBuilder.view.setBackgroundColor(ta.getColor(0, Color.WHITE));
+        }
+
+        collapsingView.addView(mBuilder.view);
+        setContentView(collapsingView);
+        if (mListener != null) mListener.onSheetShown();
     }
 
     private void initLayout(TypedArray ta, int width) {
@@ -236,18 +259,20 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @return
      */
     private boolean canCreateSheet() {
-        return mBuilder != null && ((mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty()) || (mBuilder.apps != null && !mBuilder.apps.isEmpty()));
+        return mBuilder != null && ((mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty()) || (mBuilder.apps != null && !mBuilder.apps.isEmpty()) || mBuilder.view != null);
     }
 
     @Override
     public void onCollapse() {
         // Post a runnable for dismissing to avoid "Attempting to destroy the window while drawing!" error
-        mGrid.post(new Runnable() {
-            @Override
-            public void run() {
-                dismiss();
-            }
-        });
+        if (getWindow() != null) {
+            getWindow().getDecorView().post(new Runnable() {
+                @Override
+                public void run() {
+                    dismiss();
+                }
+            });
+        }
     }
 
     /**
@@ -443,6 +468,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         List<AppAdapter.AppInfo> apps;
 
         Intent shareIntent;
+
+        @Nullable
+        View view;
 
         /**
          * Constructor for creating a {@link BottomSheet}, {@link #setSheet(int)} will need to be called to set the menu resource
@@ -690,6 +718,27 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder setBackgroundColorRes(@ColorRes int backgroundColor) {
             return setBackgroundColor(resources.getColor(backgroundColor));
+        }
+
+        /**
+         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items will be ignored
+         *
+         * @param view The view to display
+         * @return
+         */
+        public Builder setView(View view) {
+            this.view = view;
+            return this;
+        }
+
+        /**
+         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items will be ignored
+         *
+         * @param view The view resource to display
+         * @return
+         */
+        public Builder setView(@LayoutRes int view) {
+            return setView(LayoutInflater.from(context).inflate(view, null));
         }
 
         /**
