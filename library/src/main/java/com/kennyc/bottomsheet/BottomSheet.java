@@ -265,13 +265,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     @Override
     public void onCollapse() {
         // Post a runnable for dismissing to avoid "Attempting to destroy the window while drawing!" error
-        if (getWindow() != null) {
+        if (getWindow() != null && getWindow().getDecorView() != null) {
             getWindow().getDecorView().post(new Runnable() {
                 @Override
                 public void run() {
                     dismiss();
                 }
             });
+        } else {
+            dismiss();
         }
     }
 
