@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.darkGridBottomSheet).setOnClickListener(this);
         findViewById(R.id.customBottomSheet).setOnClickListener(this);
         findViewById(R.id.customGridBottomSheet).setOnClickListener(this);
-        findViewById(R.id.customViewBottomSheet).setOnClickListener(this);
+        findViewById(R.id.messageBottomSheet).setOnClickListener(this);
     }
 
     @Override
@@ -76,22 +75,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .show();
                 break;
 
-            case R.id.customViewBottomSheet:
-                View customView = LayoutInflater.from(this).inflate(R.layout.custom_view, null);
-
-                final BottomSheet s = new BottomSheet.Builder(this)
+            case R.id.messageBottomSheet:
+                new BottomSheet.Builder(this)
+                        .setTitle("BottomSheet")
+                        .setMessage("With bottom sheet you can also display a simple message dialog")
+                        .setPositiveButton("Okay")
+                        .setNegativeButton("Close")
                         .setListener(this)
-                        .setView(customView)
-                        .create();
-
-                customView.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        s.dismiss();
-                    }
-                });
-
-                s.show();
+                        .show();
                 break;
         }
     }
@@ -128,7 +119,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSheetDismissed() {
-        Log.v(TAG, "onSheetDismissed");
+    public void onSheetDismissed(int which) {
+        Log.v(TAG, "onSheetDismissed " + which);
+
+        switch (which) {
+            case BottomSheet.BUTTON_POSITIVE:
+                Toast.makeText(getApplicationContext(), "Positive Button Clicked", Toast.LENGTH_SHORT).show();
+                break;
+
+            case BottomSheet.BUTTON_NEGATIVE:
+                Toast.makeText(getApplicationContext(), "Negative Button Clicked", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

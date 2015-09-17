@@ -5,4 +5,9 @@
         <item name="android:fontFamily">sans-serif</item>
     </style>
 
+    <style name="BottomSheet.TextAppearance.Medium" parent="android:TextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

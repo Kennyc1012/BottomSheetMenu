@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kennyc.bottomsheet.CollapsingView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:id="@id/container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/BottomSheet.Message.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Some sort of title" />
+
+        <TextView
+            android:id="@+id/message"
+            style="@style/BottomSheet.Message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black_85"
+            tools:text="Where the message will go" />
+
+        <LinearLayout
+            android:id="@+id/buttonContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/bottom_sheet_dialog_padding_message"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:orientation="horizontal"
+            android:layout_gravity="right"
+            android:layout_marginBottom="8dp">
+
+            <Button
+                android:id="@+id/neutral"
+                style="@style/BottomSheetActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                tools:text="Neutral"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/negative"
+                style="@style/BottomSheetActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                tools:text="Negative"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/positive"
+                style="@style/BottomSheetActionButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:visibility="gone"
+                tools:text="Positive"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.kennyc.bottomsheet.CollapsingView>

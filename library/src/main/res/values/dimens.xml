@@ -9,5 +9,6 @@
     <dimen name="bottom_sheet_width">0dp</dimen>
     <dimen name="bottom_sheet_list_icon_size">24dp</dimen>
     <dimen name="bottom_sheet_grid_icon_size">48dp</dimen>
+    <dimen name="bottom_sheet_dialog_padding_message">24dp</dimen>
 
 </resources>

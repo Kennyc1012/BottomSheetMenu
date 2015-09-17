@@ -10,9 +10,9 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.Nullable;
@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -68,9 +69,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private GridView mGrid;
 
-    private TextView mTitle;
-
     private BottomSheetListener mListener;
+
+    private int mWhich = Integer.MIN_VALUE;
 
     /**
      * Default constructor. It is recommended to use the {@link com.kennyc.bottomsheet.BottomSheet.Builder} for creating a BottomSheet
@@ -108,40 +109,100 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         if (mBuilder.view != null) {
             initViewLayout(ta);
+        } else if (!TextUtils.isEmpty(mBuilder.message)) {
+            initMessageLayout(ta);
         } else {
             initLayout(ta, width);
 
             if (mBuilder.menuItems != null) {
                 initMenu(ta);
-                if (mListener != null) mListener.onSheetShown();
             } else {
                 mGrid.setAdapter(mAdapter = new AppAdapter(getContext(), mBuilder.apps, mBuilder.isGrid));
             }
         }
 
         ta.recycle();
+        if (mListener != null) mListener.onSheetShown();
     }
 
     @Override
     public void dismiss() {
-        if (mListener != null) mListener.onSheetDismissed();
+        if (mListener != null) mListener.onSheetDismissed(mWhich);
         super.dismiss();
+    }
+
+    private void initMessageLayout(TypedArray ta) {
+        Resources res = getContext().getResources();
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
+        ((CollapsingView) view).setCollapseListener(this);
+        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
+
+        TextView title = (TextView) view.findViewById(R.id.title);
+        boolean hasTitle = !TextUtils.isEmpty(mBuilder.title) || mBuilder.icon != null;
+
+        if (hasTitle) {
+            title.setText(mBuilder.title);
+            title.setVisibility(View.VISIBLE);
+            title.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
+            title.setCompoundDrawablesWithIntrinsicBounds(mBuilder.icon, null, null, null);
+        } else {
+            title.setVisibility(View.GONE);
+        }
+
+        TextView message = (TextView) view.findViewById(R.id.message);
+        message.setText(mBuilder.message);
+
+        // TODO Style
+
+        if (!TextUtils.isEmpty(mBuilder.positiveBtn)) {
+            Button positive = (Button) view.findViewById(R.id.positive);
+            positive.setText(mBuilder.positiveBtn);
+            positive.setVisibility(View.VISIBLE);
+            positive.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mWhich = Dialog.BUTTON_POSITIVE;
+                    dismiss();
+                }
+            });
+        }
+
+        if (!TextUtils.isEmpty(mBuilder.negativeBtn)) {
+            Button negative = (Button) view.findViewById(R.id.negative);
+            negative.setText(mBuilder.negativeBtn);
+            negative.setVisibility(View.VISIBLE);
+            negative.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mWhich = Dialog.BUTTON_NEGATIVE;
+                    dismiss();
+                }
+            });
+        }
+
+        if (!TextUtils.isEmpty(mBuilder.neutralBtn)) {
+            Button neutral = (Button) view.findViewById(R.id.neutral);
+            neutral.setText(mBuilder.neutralBtn);
+            neutral.setVisibility(View.VISIBLE);
+            neutral.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mWhich = Dialog.BUTTON_NEUTRAL;
+                    dismiss();
+                }
+            });
+        }
+
+        setContentView(view);
     }
 
     private void initViewLayout(TypedArray ta) {
         CollapsingView collapsingView = new CollapsingView(getContext());
         collapsingView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         collapsingView.setCollapseListener(this);
-
-        if (mBuilder.backgroundColor != Integer.MIN_VALUE) {
-            mBuilder.view.setBackgroundColor(mBuilder.backgroundColor);
-        } else {
-            mBuilder.view.setBackgroundColor(ta.getColor(0, Color.WHITE));
-        }
-
+        mBuilder.view.setBackgroundColor(ta.getColor(0, Color.WHITE));
         collapsingView.addView(mBuilder.view);
         setContentView(collapsingView);
-        if (mListener != null) mListener.onSheetShown();
     }
 
     private void initLayout(TypedArray ta, int width) {
@@ -149,29 +210,19 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
-
-        if (mBuilder.backgroundColor != Integer.MIN_VALUE) {
-            view.findViewById(R.id.container).setBackgroundColor(mBuilder.backgroundColor);
-        } else {
-            view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
-        }
+        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
         mGrid = (GridView) view.findViewById(R.id.grid);
         mGrid.setOnItemClickListener(this);
-        mTitle = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) view.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(mBuilder.title);
 
         if (hasTitle) {
-            mTitle.setText(mBuilder.title);
-            mTitle.setVisibility(View.VISIBLE);
-
-            if (mBuilder.titleColor != Integer.MIN_VALUE) {
-                mTitle.setTextColor(mBuilder.titleColor);
-            } else {
-                mTitle.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
-            }
+            title.setText(mBuilder.title);
+            title.setVisibility(View.VISIBLE);
+            title.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
         } else {
-            mTitle.setVisibility(View.GONE);
+            title.setVisibility(View.GONE);
         }
 
         if (mBuilder.isGrid) {
@@ -218,20 +269,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Resources res = getContext().getResources();
         int listColor;
         int gridColor;
+        int tintColor;
 
-        if (mBuilder.itemColor != Integer.MIN_VALUE) {
-            listColor = mBuilder.itemColor;
-            gridColor = mBuilder.itemColor;
-        } else {
-            listColor = ta.getColor(2, res.getColor(R.color.black_85));
-            gridColor = ta.getColor(3, res.getColor(R.color.black_85));
-        }
-
-        if (mBuilder.menuItemTintColor == Integer.MIN_VALUE) {
-            mBuilder.menuItemTintColor = ta.getColor(4, Integer.MIN_VALUE);
-        }
-
-        mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor, mBuilder.menuItemTintColor);
+        listColor = ta.getColor(2, res.getColor(R.color.black_85));
+        gridColor = ta.getColor(3, res.getColor(R.color.black_85));
+        tintColor = ta.getColor(4, Integer.MIN_VALUE);
+        mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor, tintColor);
         mGrid.setAdapter(mAdapter);
     }
 
@@ -259,7 +302,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @return
      */
     private boolean canCreateSheet() {
-        return mBuilder != null && ((mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty()) || (mBuilder.apps != null && !mBuilder.apps.isEmpty()) || mBuilder.view != null);
+        return mBuilder != null
+                && ((mBuilder.menuItems != null && !mBuilder.menuItems.isEmpty())
+                || (mBuilder.apps != null && !mBuilder.apps.isEmpty())
+                || mBuilder.view != null
+                || !TextUtils.isEmpty(mBuilder.message));
     }
 
     @Override
@@ -449,18 +496,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         List<MenuItem> menuItems;
 
-        @ColorInt
-        int menuItemTintColor = Integer.MIN_VALUE;
-
-        @ColorInt
-        int titleColor = Integer.MIN_VALUE;
-
-        @ColorInt
-        int itemColor = Integer.MIN_VALUE;
-
-        @ColorInt
-        int backgroundColor = Integer.MIN_VALUE;
-
         Context context;
 
         Resources resources;
@@ -473,6 +508,17 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         @Nullable
         View view;
+
+        @Nullable
+        Drawable icon;
+
+        String message;
+
+        String neutralBtn;
+
+        String negativeBtn;
+
+        String positiveBtn;
 
         /**
          * Constructor for creating a {@link BottomSheet}, {@link #setSheet(int)} will need to be called to set the menu resource
@@ -638,92 +684,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
-         * Resolves the color resource id and tints the menu item icons with the resolved color
-         *
-         * @param colorRes
-         * @return
-         */
-        public Builder setMenuItemTintColorRes(@ColorRes int colorRes) {
-            final int menuItemTintColor = resources.getColor(colorRes);
-            return setMenuItemTintColor(menuItemTintColor);
-        }
-
-        /**
-         * Sets the color to use for tinting the menu item icons
-         *
-         * @param menuItemTintColor
-         * @return
-         */
-        public Builder setMenuItemTintColor(@ColorInt int menuItemTintColor) {
-            this.menuItemTintColor = menuItemTintColor;
-            return this;
-        }
-
-        /**
-         * Sets the color to use for the title. Will be ignored if {@link #setTitle(int)} or {@link #setTitle(String)} are not called
-         *
-         * @param titleColor
-         * @return
-         */
-        public Builder setTitleColor(@ColorInt int titleColor) {
-            this.titleColor = titleColor;
-            return this;
-        }
-
-        /**
-         * Sets the color resource id to use for the title. Will be ignored if {@link #setTitle(int)} or {@link #setTitle(String)} are not called
-         *
-         * @param colorRes
-         * @return
-         */
-        public Builder setTitleColorRes(@ColorRes int colorRes) {
-            return setTitleColor(resources.getColor(colorRes));
-        }
-
-        /**
-         * Sets the color to use for the list item. Will apply to either list or grid style.
-         *
-         * @param itemColor
-         * @return
-         */
-        public Builder setItemColor(@ColorInt int itemColor) {
-            this.itemColor = itemColor;
-            return this;
-        }
-
-        /**
-         * Sets the color resource id to use for the list item. Will apply to either list or grid style.
-         *
-         * @param colorRes
-         * @return
-         */
-        public Builder setItemColorRes(@ColorRes int colorRes) {
-            return setItemColor(resources.getColor(colorRes));
-        }
-
-        /**
-         * Sets the background color
-         *
-         * @param backgroundColor
-         * @return
-         */
-        public Builder setBackgroundColor(@ColorInt int backgroundColor) {
-            this.backgroundColor = backgroundColor;
-            return this;
-        }
-
-        /**
-         * Sets the color resource id of the background
-         *
-         * @param backgroundColor
-         * @return
-         */
-        public Builder setBackgroundColorRes(@ColorRes int backgroundColor) {
-            return setBackgroundColor(resources.getColor(backgroundColor));
-        }
-
-        /**
-         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items will be ignored
+         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items or show a simgple message will be ignored
          *
          * @param view The view to display
          * @return
@@ -734,13 +695,137 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
-         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items will be ignored
+         * Sets the view the {@link BottomSheet} will show. If called, any attempt to add menu items or show a simgple message will be ignored
          *
          * @param view The view resource to display
          * @return
          */
         public Builder setView(@LayoutRes int view) {
             return setView(LayoutInflater.from(context).inflate(view, null));
+        }
+
+        /**
+         * Sets the icon to be used for a message {@link BottomSheet}.
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param icon Icon to use
+         * @return
+         */
+        public Builder setIcon(Drawable icon) {
+            this.icon = icon;
+            return this;
+        }
+
+        /**
+         * Sets the icon to be used for a message {@link BottomSheet}. Passing a theme is not required and will be ignored if SDK < 21.
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param icon  Icon resource
+         * @param theme Optional theme for devices API 21+
+         * @return
+         */
+        public Builder setIcon(@DrawableRes int icon, @Nullable Resources.Theme theme) {
+            Drawable dr;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                dr = resources.getDrawable(icon, theme);
+            } else {
+                dr = resources.getDrawable(icon);
+            }
+
+            return setIcon(dr);
+        }
+
+        /**
+         * Sets the message to be used for the {@link BottomSheet}.
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param message Message to use
+         * @return
+         */
+        public Builder setMessage(String message) {
+            this.message = message;
+            return this;
+        }
+
+        /**
+         * Sets the message to be used for the {@link BottomSheet}.
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param message Message resource
+         * @return
+         */
+        public Builder setMessage(@StringRes int message) {
+            return setMessage(resources.getString(message));
+        }
+
+        /**
+         * Sets the text of the positive button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param positiveButton String of the positive button
+         * @return
+         */
+        public Builder setPositiveButton(String positiveButton) {
+            this.positiveBtn = positiveButton;
+            return this;
+        }
+
+        /**
+         * Sets the text of the positive button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param positiveButton String resource of the positive button
+         * @return
+         */
+        public Builder setPositiveButton(@StringRes int positiveButton) {
+            return setPositiveButton(resources.getString(positiveButton));
+        }
+
+        /**
+         * Sets the text of the negative button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param negativeButton String of the negative button
+         * @return
+         */
+        public Builder setNegativeButton(String negativeButton) {
+            this.negativeBtn = negativeButton;
+            return this;
+        }
+
+        /**
+         * Sets the text of the negative button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param negativeButton String resource of the negative button
+         * @return
+         */
+        public Builder setNegativeButton(@StringRes int negativeButton) {
+            return setNegativeButton(resources.getString(negativeButton));
+        }
+
+        /**
+         * Sets the text of the neutral button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param neutralButton String neutral of the negative button
+         * @return
+         */
+        public Builder setNeutralButton(String neutralButton) {
+            this.neutralBtn = neutralButton;
+            return this;
+        }
+
+        /**
+         * Sets the text of the neutral button for a message {@link BottomSheet}
+         * This parameter will be ignored if a {@link View} is supplied to {@link #setView(View)}
+         *
+         * @param neutralButton String resource neutral of the negative button
+         * @return
+         */
+        public Builder setNeutralButton(@StringRes int neutralButton) {
+            return setNeutralButton(resources.getString(neutralButton));
         }
 
         /**

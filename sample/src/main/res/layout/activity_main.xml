@@ -48,10 +48,10 @@
             android:text="Show custom Grid Bottom sheet" />
 
         <Button
-            android:id="@+id/customViewBottomSheet"
+            android:id="@+id/messageBottomSheet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Show custom viewsheet" />
+            android:text="Show Message Bottom Sheet" />
 
     </LinearLayout>
 </ScrollView>
