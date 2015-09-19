@@ -158,6 +158,13 @@ onSheetDismissed(int which)
 onSheetItemSelected(MenuItem item)
 ```
 
+#Upgrading From 1.x
+When upgrading to 2.x from a 1.x release, some changes will have to be made.
+- All of the builder methods for settings colors have been removed. All customzing should be done through themes.
+- The style attributes have been change to text appearances rather than colors.
+- The Builder constructor no longer takes a menu object. You will need to call ```setSheet(...)```.
+- The ```onSheetDismissed``` callback now takes an int as an argument for simple message support. 
+
 #Including in your project
 To include BottomSheet in your project, make the following changes to your build.gradle file
 
