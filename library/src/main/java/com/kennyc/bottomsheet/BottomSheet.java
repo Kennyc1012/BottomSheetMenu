@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
@@ -56,11 +57,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     private static final String TAG = BottomSheet.class.getSimpleName();
 
     private static final int[] ATTRS = new int[]{
-            R.attr.bottom_sheet_bg_color,
-            R.attr.bottom_sheet_title_color,
-            R.attr.bottom_sheet_list_item_color,
-            R.attr.bottom_sheet_grid_item_color,
-            R.attr.bottom_sheet_item_icon_color
+            R.attr.bottom_sheet_bg_color, // 0
+            R.attr.bottom_sheet_title_text_appearance, // 1
+            R.attr.bottom_sheet_list_text_appearance,// 2
+            R.attr.bottom_sheet_grid_text_appearance, // 3
+            R.attr.bottom_sheet_message_text_appearance, // 4
+            R.attr.bottom_sheet_message_title_text_appearance, // 5
+            R.attr.bottom_sheet_button_text_appearance, // 6
+            R.attr.bottom_sheet_item_icon_color // 7
     };
 
     private Builder mBuilder;
@@ -73,18 +77,23 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private int mWhich = Integer.MIN_VALUE;
 
+    private final Runnable dismissRunnable = new Runnable() {
+        @Override
+        public void run() {
+            dismiss();
+        }
+    };
+
     /**
      * Default constructor. It is recommended to use the {@link com.kennyc.bottomsheet.BottomSheet.Builder} for creating a BottomSheet
      *
-     * @param context  App context
-     * @param builder  {@link com.kennyc.bottomsheet.BottomSheet.Builder} with supplied options for the dialog
-     * @param style    Style resource for the dialog
-     * @param listener The optional {@link BottomSheetListener} for callbacks
+     * @param context App context
+     * @param builder {@link com.kennyc.bottomsheet.BottomSheet.Builder} with supplied options for the dialog
      */
-    BottomSheet(Context context, Builder builder, @StyleRes int style, BottomSheetListener listener) {
-        super(context, style);
+    BottomSheet(Context context, Builder builder) {
+        super(context, builder.style);
         mBuilder = builder;
-        mListener = listener;
+        mListener = builder.listener;
     }
 
     @Override
@@ -132,7 +141,6 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     private void initMessageLayout(TypedArray ta) {
-        Resources res = getContext().getResources();
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
         view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
@@ -143,16 +151,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (hasTitle) {
             title.setText(mBuilder.title);
             title.setVisibility(View.VISIBLE);
-            title.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
             title.setCompoundDrawablesWithIntrinsicBounds(mBuilder.icon, null, null, null);
+            Compat.setTextAppearance(title, ta.getResourceId(5, R.style.BottomSheet_Message_Title_TextAppearance));
         } else {
             title.setVisibility(View.GONE);
         }
 
         TextView message = (TextView) view.findViewById(R.id.message);
         message.setText(mBuilder.message);
-
-        // TODO Style
+        Compat.setTextAppearance(message, ta.getResourceId(4, R.style.BottomSheet_Message_TextAppearance));
 
         if (!TextUtils.isEmpty(mBuilder.positiveBtn)) {
             Button positive = (Button) view.findViewById(R.id.positive);
@@ -165,6 +172,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                     dismiss();
                 }
             });
+
+            Compat.setTextAppearance(positive, ta.getResourceId(6, R.style.BottomSheet_Button_TextAppearance));
         }
 
         if (!TextUtils.isEmpty(mBuilder.negativeBtn)) {
@@ -178,6 +187,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                     dismiss();
                 }
             });
+
+            Compat.setTextAppearance(negative, ta.getResourceId(6, R.style.BottomSheet_Button_TextAppearance));
         }
 
         if (!TextUtils.isEmpty(mBuilder.neutralBtn)) {
@@ -191,6 +202,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                     dismiss();
                 }
             });
+
+            Compat.setTextAppearance(neutral, ta.getResourceId(6, R.style.BottomSheet_Button_TextAppearance));
         }
 
         setContentView(view);
@@ -220,7 +233,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (hasTitle) {
             title.setText(mBuilder.title);
             title.setVisibility(View.VISIBLE);
-            title.setTextColor(ta.getColor(1, res.getColor(R.color.black_55)));
+            Compat.setTextAppearance(title, ta.getResourceId(1, R.style.BottomSheet_Title_TextAppearance));
         } else {
             title.setVisibility(View.GONE);
         }
@@ -266,15 +279,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     private void initMenu(TypedArray ta) {
-        Resources res = getContext().getResources();
-        int listColor;
-        int gridColor;
+        int listTextAppearance;
+        int gridTextAppearance;
         int tintColor;
 
-        listColor = ta.getColor(2, res.getColor(R.color.black_85));
-        gridColor = ta.getColor(3, res.getColor(R.color.black_85));
-        tintColor = ta.getColor(4, Integer.MIN_VALUE);
-        mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listColor, gridColor, tintColor);
+        listTextAppearance = ta.getResourceId(2, R.style.BottomSheet_ListItem_TextAppearance);
+        gridTextAppearance = ta.getResourceId(3, R.style.BottomSheet_GridItem_TextAppearance);
+        tintColor = ta.getColor(7, Integer.MIN_VALUE);
+        mAdapter = new GridAdapter(getContext(), mBuilder.menuItems, mBuilder.isGrid, listTextAppearance, gridTextAppearance, tintColor);
         mGrid.setAdapter(mAdapter);
     }
 
@@ -313,12 +325,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     public void onCollapse() {
         // Post a runnable for dismissing to avoid "Attempting to destroy the window while drawing!" error
         if (getWindow() != null && getWindow().getDecorView() != null) {
-            getWindow().getDecorView().post(new Runnable() {
-                @Override
-                public void run() {
-                    dismiss();
-                }
-            });
+            getWindow().getDecorView().post(dismissRunnable);
         } else {
             dismiss();
         }
@@ -521,37 +528,24 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         String positiveBtn;
 
         /**
-         * Constructor for creating a {@link BottomSheet}, {@link #setSheet(int)} will need to be called to set the menu resource
+         * Constructor for creating a {@link BottomSheet}
          *
          * @param context App context
          */
         public Builder(Context context) {
-            this(context, NO_RESOURCE, R.style.BottomSheet);
+            this(context, R.style.BottomSheet);
         }
 
         /**
          * Constructor for creating a {@link BottomSheet}
          *
-         * @param context    App context
-         * @param sheetItems The menu resource for constructing the sheet
+         * @param context App context
+         * @param style   The style the {@link BottomSheet} will use
          */
-        public Builder(Context context, @MenuRes int sheetItems) {
-            this(context, sheetItems, R.style.BottomSheet);
-
-        }
-
-        /**
-         * Constructor for creating a {@link BottomSheet}
-         *
-         * @param context    App context
-         * @param sheetItems The menu resource for constructing the sheet
-         * @param style      The style for the sheet to use
-         */
-        public Builder(Context context, @MenuRes int sheetItems, @StyleRes int style) {
+        public Builder(Context context, @StyleRes int style) {
             this.context = context;
             this.style = style;
             this.resources = context.getResources();
-            if (sheetItems != NO_RESOURCE) setSheet(sheetItems);
         }
 
         /**
@@ -848,7 +842,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          * @return
          */
         public BottomSheet create() {
-            return new BottomSheet(context, this, style, listener);
+            return new BottomSheet(context, this);
         }
 
         /**
@@ -856,6 +850,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public void show() {
             create().show();
+        }
+    }
+
+    private static class Compat {
+        public static void setTextAppearance(@NonNull TextView tv, @StyleRes int textAppearance) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                tv.setTextAppearance(textAppearance);
+            } else {
+                tv.setTextAppearance(tv.getContext(), textAppearance);
+            }
         }
     }
 }

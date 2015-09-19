@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,18 +26,20 @@ public class GridAdapter extends BaseAdapter {
 
     private boolean mIsGrid;
 
-    private int mListTextColor;
+    @StyleRes
+    private int mListStyle;
 
-    private int mGridTextColor;
+    @StyleRes
+    private int mGridStyle;
 
     private int mTintColor;
 
-    public GridAdapter(Context context, List<MenuItem> items, boolean isGrid, int listTextColor, int gridTextColor, int menuItemTintColor) {
+    public GridAdapter(Context context, List<MenuItem> items, boolean isGrid, @StyleRes int listStyle, @StyleRes int gridStyle, int menuItemTintColor) {
         mItems = items;
         mIsGrid = isGrid;
         mInflater = LayoutInflater.from(context);
-        mListTextColor = listTextColor;
-        mGridTextColor = gridTextColor;
+        mListStyle = listStyle;
+        mGridStyle = gridStyle;
         mTintColor = menuItemTintColor;
     }
 
@@ -62,7 +66,13 @@ public class GridAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
             holder = new ViewHolder(convertView);
-            holder.title.setTextColor(mIsGrid ? mGridTextColor : mListTextColor);
+            int textAppearance = mIsGrid ? mGridStyle : mListStyle;
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                holder.title.setTextAppearance(textAppearance);
+            } else {
+                holder.title.setTextAppearance(convertView.getContext(), textAppearance);
+            }
         } else {
             holder = (ViewHolder) convertView.getTag();
         }

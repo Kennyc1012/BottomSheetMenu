@@ -2,9 +2,12 @@
 <resources>
 
     <attr name="bottom_sheet_bg_color" format="color" />
-    <attr name="bottom_sheet_title_color" format="color" />
-    <attr name="bottom_sheet_list_item_color" format="color" />
-    <attr name="bottom_sheet_grid_item_color" format="color" />
+    <attr name="bottom_sheet_title_text_appearance" format="reference" />
+    <attr name="bottom_sheet_list_text_appearance" format="reference" />
+    <attr name="bottom_sheet_grid_text_appearance" format="reference" />
+    <attr name="bottom_sheet_message_text_appearance" format="reference" />
+    <attr name="bottom_sheet_message_title_text_appearance" format="reference" />
+    <attr name="bottom_sheet_button_text_appearance" format="reference" />
     <attr name="bottom_sheet_item_icon_color" format="color" />
 
 </resources>

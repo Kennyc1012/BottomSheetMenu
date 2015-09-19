@@ -10,16 +10,22 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimationStyle</item>
         <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg</item>
-        <item name="bottom_sheet_title_color">@color/black_55</item>
-        <item name="bottom_sheet_list_item_color">@color/black_85</item>
-        <item name="bottom_sheet_grid_item_color">@color/black_85</item>
+        <item name="bottom_sheet_title_text_appearance">@style/BottomSheet.Title.TextAppearance</item>
+        <item name="bottom_sheet_list_text_appearance">@style/BottomSheet.ListItem.TextAppearance</item>
+        <item name="bottom_sheet_grid_text_appearance">@style/BottomSheet.GridItem.TextAppearance</item>
+        <item name="bottom_sheet_message_text_appearance">@style/BottomSheet.Message.TextAppearance</item>
+        <item name="bottom_sheet_message_title_text_appearance">@style/BottomSheet.Message.Title.TextAppearance</item>
+        <item name="bottom_sheet_button_text_appearance">@style/BottomSheet.Button.TextAppearance</item>
     </style>
 
     <style name="BottomSheet.Dark">
         <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg_dark</item>
-        <item name="bottom_sheet_title_color">@color/grey_55</item>
-        <item name="bottom_sheet_list_item_color">@color/grey_85</item>
-        <item name="bottom_sheet_grid_item_color">@color/grey_85</item>
+        <item name="bottom_sheet_title_text_appearance">@style/BottomSheet.Title.TextAppearance.Dark</item>
+        <item name="bottom_sheet_list_text_appearance">@style/BottomSheet.ListItem.TextAppearance.Dark</item>
+        <item name="bottom_sheet_grid_text_appearance">@style/BottomSheet.GridItem.TextAppearance.Dark</item>
+        <item name="bottom_sheet_message_text_appearance">@style/BottomSheet.Message.TextAppearance.Dark</item>
+        <item name="bottom_sheet_message_title_text_appearance">@style/BottomSheet.Message.Title.TextAppearance.Dark</item>
+        <item name="bottom_sheet_button_text_appearance">@style/BottomSheet.Button.TextAppearance.Dark</item>
     </style>
 
     <style name="BottomSheet.Title" parent="@android:style/Widget.TextView">
@@ -28,8 +34,6 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
-        <item name="android:textAppearance">@style/BottomSheet.TextAppearance</item>
         <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding</item>
         <item name="android:paddingRight">@dimen/bottom_sheet_dialog_padding</item>
     </style>
@@ -49,16 +53,6 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
-    <style name="BottomSheet.TextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:typeface">sans</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="SnackBar.TextAppearance.Medium" parent="android:TextAppearance">
-        <item name="android:typeface">sans</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="BottomSheetAnimationStyle">
         <item name="android:windowEnterAnimation">@anim/bottom_sheet_show</item>
         <item name="android:windowExitAnimation">@anim/bottom_sheet_hide</item>
@@ -73,12 +67,9 @@
         <item name="android:paddingLeft">12dp</item>
         <item name="android:paddingRight">12dp</item>
         <item name="android:background">@drawable/bs_list_selector</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="BottomSheet.Message" parent="@android:style/Widget.TextView">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textAppearance">@style/BottomSheet.TextAppearance</item>
         <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding_message</item>
         <item name="android:paddingRight">@dimen/bottom_sheet_dialog_padding_message</item>
         <item name="android:layout_marginTop">20dp</item>
@@ -86,10 +77,70 @@
 
     <style name="BottomSheet.Message.Title">
         <item name="android:textSize">18sp</item>
-        <item name="android:textAppearance">@style/BottomSheet.TextAppearance.Medium</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="BottomSheet.TextAppearance.Medium" parent="android:TextAppearance">
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Light Styles -->
+    <style name="BottomSheet.Title.TextAppearance" parent="@android:style/TextAppearance">
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
+        <item name="android:textColor">@color/black_55</item>
+    </style>
+
+    <style name="BottomSheet.ListItem.TextAppearance" parent="android:TextAppearance">
+        <item name="android:textColor">@color/black_85</item>
+    </style>
+
+    <style name="BottomSheet.GridItem.TextAppearance" parent="android:TextAppearance">
+        <item name="android:textColor">@color/black_85</item>
+    </style>
+
+    <style name="BottomSheet.Message.TextAppearance" parent="BottomSheet.Title.TextAppearance">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black_85</item>
+    </style>
+
+    <style name="BottomSheet.Button.TextAppearance" parent="@style/BottomSheet.TextAppearance.Medium">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/black_55</item>
+    </style>
+
+    <style name="BottomSheet.Message.Title.TextAppearance" parent="@style/BottomSheet.TextAppearance.Medium">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black_55</item>
+    </style>
+
+    <!-- Dark Styles -->
+    <style name="BottomSheet.Title.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_55</item>
+    </style>
+
+    <style name="BottomSheet.ListItem.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_85</item>
+    </style>
+
+    <style name="BottomSheet.GridItem.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_85</item>
+    </style>
+
+    <style name="BottomSheet.Message.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_85</item>
+    </style>
+
+    <style name="BottomSheet.Button.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_55</item>
+    </style>
+
+    <style name="BottomSheet.Message.Title.TextAppearance.Dark">
+        <item name="android:textColor">@color/grey_55</item>
     </style>
 
 </resources>

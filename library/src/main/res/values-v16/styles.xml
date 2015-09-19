@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BottomSheet.TextAppearance" parent="@android:style/TextAppearance">
+    <style name="BottomSheet.Title.TextAppearance" parent="@android:style/TextAppearance">
         <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/black_55</item>
     </style>
 
     <style name="BottomSheet.TextAppearance.Medium" parent="android:TextAppearance">

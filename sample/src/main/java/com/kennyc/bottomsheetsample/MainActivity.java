@@ -32,13 +32,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.listBottomSheet:
-                new BottomSheet.Builder(this, R.menu.list_sheet)
+                new BottomSheet.Builder(this)
+                        .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .show();
                 break;
 
             case R.id.gridBottomSheet:
-                new BottomSheet.Builder(this, R.menu.grid_sheet)
+                new BottomSheet.Builder(this)
+                        .setSheet(R.menu.grid_sheet)
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
@@ -46,14 +48,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.darkBottomSheet:
-                new BottomSheet.Builder(this, R.menu.list_sheet)
+                new BottomSheet.Builder(this)
+                        .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .dark()
                         .show();
                 break;
 
             case R.id.darkGridBottomSheet:
-                new BottomSheet.Builder(this, R.menu.grid_sheet)
+                new BottomSheet.Builder(this)
+                        .setSheet(R.menu.grid_sheet)
                         .grid()
                         .dark()
                         .setTitle("Options")
@@ -62,13 +66,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.customBottomSheet:
-                new BottomSheet.Builder(this, R.menu.list_sheet, R.style.BottomSheet_Custom)
+                new BottomSheet.Builder(this, R.style.BottomSheet_Custom)
+                        .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .show();
                 break;
 
             case R.id.customGridBottomSheet:
-                new BottomSheet.Builder(this, R.menu.grid_sheet, R.style.BottomSheet_Custom)
+                new BottomSheet.Builder(this, R.style.BottomSheet_Custom)
+                        .setSheet(R.menu.grid_sheet)
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
