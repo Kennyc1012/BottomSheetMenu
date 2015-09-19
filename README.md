@@ -9,6 +9,8 @@
 
 #Features
 - Both list and grid style
+- Custom Views
+- Simple Messages
 - Light and Dark theme as well as custom themeing options
 - XML style support
 - Tablet support
@@ -47,76 +49,85 @@ To get started using BottomSheet, first you'll need to create a menu resource fi
 
 Then create a BottomSheet via the Builder interface
 ```java
-new BottomSheet.Builder(getActivity(), R.menu.bottom_sheet)
+new BottomSheet.Builder(getActivity())
+  .setSheet(R.menu.bottom_sheet)
   .setTitle(R.string.options)
   .setListener(myListener)
   .show();
   ```
-  
-##Aditional Builder Fields
+#Simple Messages
+BottomSheet can also display a simple message like a standard dialog. Setting one up is just as simple
 ```java
-// Sets the BottomSheet to use the grid style
-grid()
-
-// Sets the BottomSheet to use the dark theme
-dark()
-
-// If the BottomSheet can be dismissed via the back button or pressing outside 
-setCancelable(boolean cancelable)
-
-// Sets the menu resource to be used
-setSheet(@MenuRes int sheetItems)
-
-// Sets the Menu to be used
-setMenu(Menu menu)
-
-// Sets the MenuItems to be used
-setMenuItems(List<MenuItem> items)
-
-// Adds a MenuItem to the BottomSheet
- addMenuItem(MenuItem item)
-
-// Sets the tint color of the MenuItem icons
-setMenuItemTintColor(@ColorInt int menuItemTintColor)
-setMenuItemTintColorRes(@ColorRes int colorRes)
-
-// Sets the color of the title, will be ingored if no title is set
-setTitleColor(@ColorInt int titleColor)
-setTitleColorRes(@ColorRes int colorRes)
-
-// Sets the color of the items, applies to both list and grid styles
-setItemColor(@ColorInt int itemColor)
-setItemColorRes(@ColorRes int colorRes)
-
-// Sets the background color of the BottomSheet
-setBackgroundColor(@ColorInt int color)
-setBackgroundColorRes(@ColorRes int color)
-
-// Sets the style 
-setStyle(@StyleRes int style)
+new BottomSheet.Builder(this)
+    .setTitle(R.string.title)
+    .setMessage(R.string.message)
+    .setPositiveButton(R.string.ok)
+    .setNegativeButton(R.string.close)
+    .setIcon(R.drawable.my_icon)
+    .setListener(myListener)
+    .show();
 ```
+
+To handle which button was pressed, the [BottomSheetListener.onSheetDismissed(int)](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L29) specifies which button was pressed using the constant values BUTTON_POSITIVE, BUTTON_NEGATIVE, and BUTTON_NEUTRAL from the [Dialog](http://developer.android.com/reference/android/app/Dialog.html) class. If neither button was pressed and the dialog was just dismissed, which will be Integer.MIN_VALUE
+
+#Custom Views
+For even further customization, you can set the BottomSheet to use a custom view. 
+```java
+View v = ...
+
+new BottomSheet.Builder(this)
+    .setView(v)
+    .show();
+```
+There are a few limitations when using a custom view. First, it <b>MUST</b> have a background set or it will appear transparent. Second, the root layout dimensions should always be ```layout_width="match_parent``` and ```layout_height="wrap_content```. Lastly, you will need to manage any click events as the BottomSheetListener can not determine anything from your custom view. If setting a custom view, all other builder settings will be ignored. 
 
 #Styling
 BottomSheet comes with both a Light and Dark theme to accommodate most scenarios. However, if you want to customize the color more, you can create your own style and supply it to the builder.
+</br> Customizable attributes are:
 ```xml
+<attr name="bottom_sheet_bg_color" format="color" />
+    <attr name="bottom_sheet_title_text_appearance" format="reference" />
+    <attr name="bottom_sheet_list_text_appearance" format="reference" />
+    <attr name="bottom_sheet_grid_text_appearance" format="reference" />
+    <attr name="bottom_sheet_message_text_appearance" format="reference" />
+    <attr name="bottom_sheet_message_title_text_appearance" format="reference" />
+    <attr name="bottom_sheet_button_text_appearance" format="reference" />
+    <attr name="bottom_sheet_item_icon_color" format="color" />
+```
+    
+Then create a style and pass it into the Builder
+```xml  
 <style name="MyBottomSheetStyle" parent="@style/BottomSheet">
-        <item name="bottom_sheet_bg_color">@color/my_color</item>
-        <item name="bottom_sheet_title_color">@color/my_color_2</item>
-        <item name="bottom_sheet_list_item_color">@color/my_color_3</item>
-        <item name="bottom_sheet_grid_item_color">@color/my_color_4</item>
-        <!-- Tints the menu item icon to the specified color -->
-        <item name="bottom_sheet_item_icon_color">@color/my_color_5</item>
+    <item name="bottom_sheet_bg_color">@android:color/holo_blue_light</item>
+    <item name="bottom_sheet_title_text_appearance">@style/TitleAppearance</item>
+    <item name="bottom_sheet_list_text_appearance">@style/ListAppearance</item>
+    <item name="bottom_sheet_grid_text_appearance">@style/GridAppearance</item>
+</style>
+
+<style name="TitleAppearance" parent="BottomSheet.Title.TextAppearance">
+    <item name="android:textColor">@android:color/holo_green_light</item>
+</style>
+
+<style name="ListAppearance" parent="BottomSheet.ListItem.TextAppearance">
+    <item name="android:textColor">@android:color/holo_red_light</item>
+    <item name="android:textSize">18sp</item>
+</style>
+
+<style name="GridAppearance" parent="BottomSheet.GridItem.TextAppearance">
+    <item name="android:textColor">@android:color/holo_red_light</item>
+    <item name="android:textSize">20sp</item>
 </style>
 ```
 
 ```java
-new BottomSheet.Builder(getActivity(), R.menu.bottom_sheet, R.style.MyBottomSheetStyle)
+new BottomSheet.Builder(getActivity(), R.style.MyBottomSheetStyle)
+  .setSheet(R.menu.bottom_sheet)
   .setTitle(R.string.options)
   .setListener(myListener)
   .show();
 ```
 
-##Icon
+##Icons
 Based on the [Material Design Guidelines](http://www.google.com/design/spec/components/bottom-sheets.html#bottom-sheets-specs), icons for a linear list styled BottomSheet should be 24dp, where as a grid styled BottomSheet should be 48dp.
 
 #Share Intents
@@ -139,8 +150,9 @@ BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomS
 // Called when the BottomSheet it first displayed
 onSheetShown()
 
-// Called when the BottomSheet has been dismissed
-onSheetDismissed()
+// Called when the BottomSheet has been dismissed. Passed value represent which button was pressed if displaying
+// a simple message
+onSheetDismissed(int which)
 
 // Called when an item is selected from the BottomSheet
 onSheetItemSelected(MenuItem item)
@@ -158,7 +170,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:1.2.4'
+    compile 'com.kennyc:bottomsheet:2.0.0'
 }
 ```
 
