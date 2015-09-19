@@ -164,6 +164,7 @@ When upgrading to 2.x from a 1.x release, some changes will have to be made.
 - The style attributes have been change to text appearances rather than colors.
 - The Builder constructor no longer takes a menu object. You will need to call ```setSheet(...)```.
 - The ```onSheetDismissed``` callback now takes an int as an argument for simple message support. 
+- The gradle dependency has changed and needs to be updated. 
 
 #Including in your project
 To include BottomSheet in your project, make the following changes to your build.gradle file
@@ -171,13 +172,13 @@ To include BottomSheet in your project, make the following changes to your build
 ## Add repository 
 ```groovy
 repositories {
-    maven { url 'https://dl.bintray.com/kennyc1012/maven' }
+    maven { url "https://jitpack.io" }
 }
 ```
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.kennyc:bottomsheet:2.0.0'
+    compile 'com.github.Kennyc1012:BottomSheet:2.0.1'
 }
 ```
 
