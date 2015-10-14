@@ -27,17 +27,25 @@ import android.view.View;
 
 public class BottomSheetMenuItem implements MenuItem {
     private final int mId;
+
     private final int mGroup;
+
     private final int mCategoryOrder;
+
     private final int mOrdering;
 
     private CharSequence mTitle;
+
     private CharSequence mTitleCondensed;
+
     private Intent mIntent;
+
     private char mShortcutNumericChar;
+
     private char mShortcutAlphabeticChar;
 
     private Drawable mIconDrawable;
+
     private int mIconResId = NO_ICON;
 
     private Context mContext;
@@ -47,10 +55,15 @@ public class BottomSheetMenuItem implements MenuItem {
     private static final int NO_ICON = 0;
 
     private int mFlags = ENABLED;
+
     private static final int CHECKABLE = 0x00000001;
+
     private static final int CHECKED = 0x00000002;
+
     private static final int EXCLUSIVE = 0x00000004;
+
     private static final int HIDDEN = 0x00000008;
+
     private static final int ENABLED = 0x00000010;
 
     /**
@@ -218,8 +231,11 @@ public class BottomSheetMenuItem implements MenuItem {
     }
 
     public MenuItem setIcon(int iconRes) {
-        mIconResId = iconRes;
-        mIconDrawable = mContext.getResources().getDrawable(iconRes);
+        if (iconRes != NO_ICON) {
+            mIconResId = iconRes;
+            mIconDrawable = mContext.getResources().getDrawable(iconRes);
+        }
+
         return this;
     }
 

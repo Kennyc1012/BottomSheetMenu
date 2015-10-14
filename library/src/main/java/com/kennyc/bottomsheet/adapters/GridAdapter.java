@@ -85,6 +85,7 @@ public class GridAdapter extends BaseAdapter {
         }
 
         holder.icon.setImageDrawable(menuIcon);
+        holder.icon.setVisibility(menuIcon != null ? View.VISIBLE : View.GONE);
         holder.title.setText(item.getTitle());
         return convertView;
     }
