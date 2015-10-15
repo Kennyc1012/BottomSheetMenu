@@ -86,13 +86,13 @@ BottomSheet comes with both a Light and Dark theme to accommodate most scenarios
 </br> Customizable attributes are:
 ```xml
 <attr name="bottom_sheet_bg_color" format="color" />
-    <attr name="bottom_sheet_title_text_appearance" format="reference" />
-    <attr name="bottom_sheet_list_text_appearance" format="reference" />
-    <attr name="bottom_sheet_grid_text_appearance" format="reference" />
-    <attr name="bottom_sheet_message_text_appearance" format="reference" />
-    <attr name="bottom_sheet_message_title_text_appearance" format="reference" />
-    <attr name="bottom_sheet_button_text_appearance" format="reference" />
-    <attr name="bottom_sheet_item_icon_color" format="color" />
+<attr name="bottom_sheet_title_text_appearance" format="reference" />
+<attr name="bottom_sheet_list_text_appearance" format="reference" />
+<attr name="bottom_sheet_grid_text_appearance" format="reference" />
+<attr name="bottom_sheet_message_text_appearance" format="reference" />
+<attr name="bottom_sheet_message_title_text_appearance" format="reference" />
+<attr name="bottom_sheet_button_text_appearance" format="reference" />
+<attr name="bottom_sheet_item_icon_color" format="color" />
 ```
     
 Then create a style and pass it into the Builder
@@ -178,7 +178,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.0.1'
+    compile 'com.github.Kennyc1012:BottomSheet:2.0.2'
 }
 ```
 
