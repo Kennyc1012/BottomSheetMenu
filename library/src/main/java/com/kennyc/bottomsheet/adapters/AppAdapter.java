@@ -24,13 +24,13 @@ public class AppAdapter extends BaseAdapter {
 
     private int mTextColor;
 
-    private boolean mIsGrid;
+    private int mLayoutResource;
 
     public AppAdapter(Context context, List<AppInfo> apps, boolean isGrid) {
         mApps = apps;
         mInflater = LayoutInflater.from(context);
         mTextColor = context.getResources().getColor(R.color.black_85);
-        mIsGrid = isGrid;
+        mLayoutResource = isGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AppAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = mInflater.inflate(mIsGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item, parent, false);
+            convertView = mInflater.inflate(mLayoutResource, parent, false);
             holder = new ViewHolder(convertView);
             holder.title.setTextColor(mTextColor);
         } else {
