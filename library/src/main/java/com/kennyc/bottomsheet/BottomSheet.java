@@ -90,7 +90,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param context App context
      * @param builder {@link com.kennyc.bottomsheet.BottomSheet.Builder} with supplied options for the dialog
      */
-    BottomSheet(Context context, Builder builder) {
+    private BottomSheet(Context context, Builder builder) {
         super(context, builder.style);
         mBuilder = builder;
         mListener = builder.listener;
@@ -140,6 +140,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         super.dismiss();
     }
 
+    /**
+     * Initializes the layout for a message
+     *
+     * @param ta The {@link TypedArray} containing the style attributes
+     */
     private void initMessageLayout(TypedArray ta) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
@@ -209,6 +214,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         setContentView(view);
     }
 
+    /**
+     * Initializes the layout for custom view
+     *
+     * @param ta The {@link TypedArray} containing the style attributes
+     */
     private void initViewLayout(TypedArray ta) {
         CollapsingView collapsingView = new CollapsingView(getContext());
         collapsingView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
@@ -218,6 +228,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         setContentView(collapsingView);
     }
 
+    /**
+     * Initializes the layout a standard Bottomsheet Dialog
+     *
+     * @param ta    The {@link TypedArray} containing the style attributes
+     * @param width The width of the Dialog. Used for determining if the device is a tablet or not
+     */
     private void initLayout(TypedArray ta, int width) {
         Resources res = getContext().getResources();
         setCancelable(mBuilder.cancelable);
@@ -278,6 +294,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         return 1;
     }
 
+    /**
+     * Initializes the List based on the menu resource
+     *
+     * @param ta The {@link TypedArray} containing the style attributes
+     */
     private void initMenu(TypedArray ta) {
         int listTextAppearance;
         int gridTextAppearance;

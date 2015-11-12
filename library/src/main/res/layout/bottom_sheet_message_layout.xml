@@ -43,7 +43,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:layout_gravity="right"
                 android:visibility="gone"
                 tools:text="Neutral"
                 tools:visibility="visible" />
@@ -54,7 +53,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:layout_gravity="right"
                 android:visibility="gone"
                 tools:text="Negative"
                 tools:visibility="visible" />
@@ -64,7 +62,6 @@
                 style="@style/BottomSheetActionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
                 android:visibility="gone"
                 tools:text="Positive"
                 tools:visibility="visible" />
