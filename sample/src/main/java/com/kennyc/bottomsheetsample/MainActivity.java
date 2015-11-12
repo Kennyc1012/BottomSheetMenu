@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.customBottomSheet).setOnClickListener(this);
         findViewById(R.id.customGridBottomSheet).setOnClickListener(this);
         findViewById(R.id.messageBottomSheet).setOnClickListener(this);
+        findViewById(R.id.viewBottomSheet).setOnClickListener(this);
     }
 
     @Override
@@ -87,6 +88,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setMessage("With bottom sheet you can also display a simple message dialog")
                         .setPositiveButton("Okay")
                         .setNegativeButton("Close")
+                        .setListener(this)
+                        .show();
+                break;
+
+            case R.id.viewBottomSheet:
+                new BottomSheet.Builder(this)
+                        .setView(R.layout.custom_view)
                         .setListener(this)
                         .show();
                 break;

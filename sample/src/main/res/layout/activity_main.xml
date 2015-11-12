@@ -53,5 +53,11 @@
             android:layout_height="wrap_content"
             android:text="Show Message Bottom Sheet" />
 
+        <Button
+            android:id="@+id/viewBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Custom View Bottom Sheet" />
+
     </LinearLayout>
 </ScrollView>
