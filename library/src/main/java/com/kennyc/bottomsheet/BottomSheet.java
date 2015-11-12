@@ -52,8 +52,6 @@ import java.util.Set;
 public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener, CollapsingView.CollapseListener {
     private static final int MIN_LIST_TABLET_ITEMS = 6;
 
-    private static final int NO_RESOURCE = -1;
-
     private static final String TAG = BottomSheet.class.getSimpleName();
 
     private static final int[] ATTRS = new int[]{
@@ -281,7 +279,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             return resources.getInteger(R.integer.bottomsheet_num_columns);
         }
 
-        // If a talbet with more than 6 items are present, split them into 2 columns
+        // If a tablet with more than 6 items are present, split them into 2 columns
         if (dialogWidth > 0) {
             if (mBuilder.menuItems != null) {
                 return mBuilder.menuItems.size() >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
