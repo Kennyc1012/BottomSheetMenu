@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.LinearLayout;
 
 /**
  * Created by kcampagna on 8/11/15.
@@ -41,7 +43,11 @@ public class CollapsingView extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        return mDragHelper.shouldInterceptTouchEvent(event);
+        if (mDragHelper.shouldInterceptTouchEvent(event)) {
+            return true;
+        }
+
+        return super.onInterceptTouchEvent(event);
     }
 
     @Override
@@ -74,6 +80,15 @@ public class CollapsingView extends FrameLayout {
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
+            if (child instanceof LinearLayout && child.getId() == R.id.container) {
+                // Check that our GridView can't be scrolled up. If it can' don't allow the view to be captured
+                GridView gv = (GridView) child.findViewById(R.id.grid);
+
+                if (gv != null) {
+                    return !gv.canScrollVertically(-1);
+                }
+            }
+
             return true;
         }
 
