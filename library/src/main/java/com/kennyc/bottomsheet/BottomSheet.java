@@ -514,7 +514,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     public static class Builder {
         @StyleRes
-        int style = NO_RESOURCE;
+        int style = R.style.BottomSheet;
 
         String title = null;
 
