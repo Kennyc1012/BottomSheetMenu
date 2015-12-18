@@ -10,42 +10,22 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimationStyle</item>
         <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg</item>
-        <item name="bottom_sheet_title_text_appearance">@style/BottomSheet.Title.TextAppearance
-        </item>
-        <item name="bottom_sheet_list_text_appearance">@style/BottomSheet.ListItem.TextAppearance
-        </item>
-        <item name="bottom_sheet_grid_text_appearance">@style/BottomSheet.GridItem.TextAppearance
-        </item>
-        <item name="bottom_sheet_message_text_appearance">
-            @style/BottomSheet.Message.TextAppearance
-        </item>
-        <item name="bottom_sheet_message_title_text_appearance">
-            @style/BottomSheet.Message.Title.TextAppearance
-        </item>
-        <item name="bottom_sheet_button_text_appearance">@style/BottomSheet.Button.TextAppearance
-        </item>
+        <item name="bottom_sheet_title_text_appearance">@style/BottomSheet.Title.TextAppearance</item>
+        <item name="bottom_sheet_list_text_appearance">@style/BottomSheet.ListItem.TextAppearance</item>
+        <item name="bottom_sheet_grid_text_appearance">@style/BottomSheet.GridItem.TextAppearance</item>
+        <item name="bottom_sheet_message_text_appearance">@style/BottomSheet.Message.TextAppearance</item>
+        <item name="bottom_sheet_message_title_text_appearance">@style/BottomSheet.Message.Title.TextAppearance</item>
+        <item name="bottom_sheet_button_text_appearance">@style/BottomSheet.Button.TextAppearance</item>
     </style>
 
     <style name="BottomSheet.Dark">
         <item name="bottom_sheet_bg_color">@color/bottom_sheet_bg_dark</item>
-        <item name="bottom_sheet_title_text_appearance">
-            @style/BottomSheet.Title.TextAppearance.Dark
-        </item>
-        <item name="bottom_sheet_list_text_appearance">
-            @style/BottomSheet.ListItem.TextAppearance.Dark
-        </item>
-        <item name="bottom_sheet_grid_text_appearance">
-            @style/BottomSheet.GridItem.TextAppearance.Dark
-        </item>
-        <item name="bottom_sheet_message_text_appearance">
-            @style/BottomSheet.Message.TextAppearance.Dark
-        </item>
-        <item name="bottom_sheet_message_title_text_appearance">
-            @style/BottomSheet.Message.Title.TextAppearance.Dark
-        </item>
-        <item name="bottom_sheet_button_text_appearance">
-            @style/BottomSheet.Button.TextAppearance.Dark
-        </item>
+        <item name="bottom_sheet_title_text_appearance">@style/BottomSheet.Title.TextAppearance.Dark</item>
+        <item name="bottom_sheet_list_text_appearance">@style/BottomSheet.ListItem.TextAppearance.Dark</item>
+        <item name="bottom_sheet_grid_text_appearance">@style/BottomSheet.GridItem.TextAppearance.Dark</item>
+        <item name="bottom_sheet_message_text_appearance">@style/BottomSheet.Message.TextAppearance.Dark</item>
+        <item name="bottom_sheet_message_title_text_appearance">@style/BottomSheet.Message.Title.TextAppearance.Dark</item>
+        <item name="bottom_sheet_button_text_appearance">@style/BottomSheet.Button.TextAppearance.Dark</item>
     </style>
 
     <style name="BottomSheet.Title" parent="@android:style/Widget.TextView">
