@@ -93,6 +93,10 @@ BottomSheet comes with both a Light and Dark theme to accommodate most scenarios
 <attr name="bottom_sheet_message_title_text_appearance" format="reference" />
 <attr name="bottom_sheet_button_text_appearance" format="reference" />
 <attr name="bottom_sheet_item_icon_color" format="color" />
+<attr name="bottom_sheet_grid_spacing" format="dimension" />
+<attr name="bottom_sheet_grid_bottom_padding" format="dimension" />
+<attr name="bottom_sheet_grid_top_padding" format="dimension" />
+<attr name="bottom_sheet_selector" format="reference" />
 ```
     
 Then create a style and pass it into the Builder

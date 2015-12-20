@@ -62,7 +62,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             R.attr.bottom_sheet_message_text_appearance, // 4
             R.attr.bottom_sheet_message_title_text_appearance, // 5
             R.attr.bottom_sheet_button_text_appearance, // 6
-            R.attr.bottom_sheet_item_icon_color // 7
+            R.attr.bottom_sheet_item_icon_color, // 7
+            R.attr.bottom_sheet_grid_spacing, // 8
+            R.attr.bottom_sheet_grid_top_padding, // 9
+            R.attr.bottom_sheet_grid_bottom_padding, // 10
+            R.attr.bottom_sheet_selector // 11
     };
 
     private Builder mBuilder;
@@ -253,16 +257,21 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         if (mBuilder.isGrid) {
-            int gridPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding);
-            int topPadding = res.getDimensionPixelSize(R.dimen.bottom_sheet_dialog_padding);
-            mGrid.setVerticalSpacing(res.getDimensionPixelSize(R.dimen.bottom_sheet_grid_spacing));
-            mGrid.setPadding(0, topPadding, 0, gridPadding);
+            int spacing = ta.getDimensionPixelOffset(8, 0);
+            int topPadding = ta.getDimensionPixelOffset(9, 0);
+            int bottomPadding = ta.getDimensionPixelOffset(10, 0);
+            mGrid.setVerticalSpacing(spacing);
+            mGrid.setPadding(0, topPadding, 0, bottomPadding);
         } else {
             int padding = res.getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
             mGrid.setPadding(0, hasTitle ? 0 : padding, 0, padding);
         }
 
         mGrid.setNumColumns(getNumColumns(res, width));
+
+        int selector = ta.getResourceId(11, R.drawable.bs_list_selector);
+        mGrid.setSelector(selector);
+
         setContentView(view);
     }
 
