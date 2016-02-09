@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
@@ -52,6 +53,10 @@ import java.util.Set;
 public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener, CollapsingView.CollapseListener {
     private static final int MIN_LIST_TABLET_ITEMS = 6;
 
+    private static final int GRID_MIN_COLUMNS = 3;
+
+    private static final int GRID_MAX_COLUMN = 4;
+
     private static final String TAG = BottomSheet.class.getSimpleName();
 
     private static final int[] ATTRS = new int[]{
@@ -66,7 +71,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             R.attr.bottom_sheet_grid_spacing, // 8
             R.attr.bottom_sheet_grid_top_padding, // 9
             R.attr.bottom_sheet_grid_bottom_padding, // 10
-            R.attr.bottom_sheet_selector // 11
+            R.attr.bottom_sheet_selector, // 11
+            R.attr.bottom_sheet_column_count // 12
     };
 
     private Builder mBuilder;
@@ -108,6 +114,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
         Window window = getWindow();
         int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
+        boolean isTablet = width > 0;
 
         if (window != null) {
             window.setLayout(width <= 0 ? ViewGroup.LayoutParams.MATCH_PARENT : width, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -123,7 +130,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         } else if (!TextUtils.isEmpty(mBuilder.message)) {
             initMessageLayout(ta);
         } else {
-            initLayout(ta, width);
+            initLayout(ta, isTablet, mBuilder.columnCount);
 
             if (mBuilder.menuItems != null) {
                 initMenu(ta);
@@ -231,13 +238,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     /**
-     * Initializes the layout a standard Bottomsheet Dialog
+     * Initializes the layout a standard {@link BottomSheet}
      *
-     * @param ta    The {@link TypedArray} containing the style attributes
-     * @param width The width of the Dialog. Used for determining if the device is a tablet or not
+     * @param ta          The {@link TypedArray} containing the style attributes
+     * @param isTablet    If the device is a tablet
+     * @param columnCount The number of columns to be shown
      */
-    private void initLayout(TypedArray ta, int width) {
-        Resources res = getContext().getResources();
+    private void initLayout(TypedArray ta, boolean isTablet, int columnCount) {
         setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
@@ -263,11 +270,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             mGrid.setVerticalSpacing(spacing);
             mGrid.setPadding(0, topPadding, 0, bottomPadding);
         } else {
-            int padding = res.getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
+            int padding = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
             mGrid.setPadding(0, hasTitle ? 0 : padding, 0, padding);
         }
 
-        mGrid.setNumColumns(getNumColumns(res, width));
+        if (columnCount <= 0) {
+            columnCount = ta.getInteger(12, -1);
+            if (columnCount <= 0) columnCount = getNumColumns(isTablet);
+        }
+
+        mGrid.setNumColumns(columnCount);
 
         int selector = ta.getResourceId(11, R.drawable.bs_list_selector);
         mGrid.setSelector(selector);
@@ -276,26 +288,33 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     /**
-     * Returns the number of columns the {@link BottomSheet} will use. If grid styled, it will load the
-     * value from resources. If list styled and a tablet, it will be grid styled (2 columns) if >= 6 items are in the list
+     * Returns the number of columns used for the {@link BottomSheet}. A list style will use 1 column for a phone, where
+     * a tablet will use 2 if there are >= 6 items. When styled as a grid, a phone will use 3 columns, where a tablets will be
+     * adjusted based on how many items are to be displayed.
      *
-     * @param resources   System resources
-     * @param dialogWidth The width of the dialog. This will determine if it is a tablet. Anything > 0 is a tablet.
+     * @param isTablet If the device is a tablet
      * @return
      */
-    private int getNumColumns(Resources resources, int dialogWidth) {
+    private int getNumColumns(boolean isTablet) {
+        int numItems;
+
+        if (mBuilder.menuItems != null) {
+            numItems = mBuilder.menuItems.size();
+        } else {
+            numItems = mBuilder.apps.size();
+        }
+
         if (mBuilder.isGrid) {
-            return resources.getInteger(R.integer.bottomsheet_num_columns);
+            // Show 4 columns if a tablet and the number of its is 4 or >=7
+            if ((numItems >= 7 || numItems == GRID_MAX_COLUMN) && isTablet) {
+                return GRID_MAX_COLUMN;
+            } else {
+                return GRID_MIN_COLUMNS;
+            }
         }
 
         // If a tablet with more than 6 items are present, split them into 2 columns
-        if (dialogWidth > 0) {
-            if (mBuilder.menuItems != null) {
-                return mBuilder.menuItems.size() >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
-            } else {
-                return mBuilder.apps.size() >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
-            }
-        }
+        if (isTablet) return numItems >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
 
         // Regular phone, one column
         return 1;
@@ -522,6 +541,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     public static class Builder {
         @StyleRes
         int style = R.style.BottomSheet;
+
+        int columnCount = -1;
 
         String title = null;
 
@@ -848,6 +869,27 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder setNeutralButton(@StringRes int neutralButton) {
             return setNeutralButton(resources.getString(neutralButton));
+        }
+
+        /**
+         * Sets the number of columns that will be shown when set to a grid style
+         *
+         * @param columnCount Number of columns to show
+         * @return
+         */
+        public Builder setColumnCount(int columnCount) {
+            this.columnCount = columnCount;
+            return this;
+        }
+
+        /**
+         * Sets the number of columns that will be shown when set to a grid style
+         *
+         * @param columnCount Integer resource containing number of columns to show
+         * @return
+         */
+        public Builder setColumnCountResource(@IntegerRes int columnCount) {
+            return setColumnCount(resources.getInteger(columnCount));
         }
 
         /**

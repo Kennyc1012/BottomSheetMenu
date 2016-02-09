@@ -13,5 +13,6 @@
     <attr name="bottom_sheet_grid_bottom_padding" format="dimension" />
     <attr name="bottom_sheet_grid_top_padding" format="dimension" />
     <attr name="bottom_sheet_selector" format="reference" />
+    <attr name="bottom_sheet_column_count" format="integer" />
 
 </resources>
