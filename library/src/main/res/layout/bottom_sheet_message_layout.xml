@@ -23,7 +23,6 @@
             style="@style/BottomSheet.Message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             tools:text="Where the message will go" />
 
         <LinearLayout
@@ -34,7 +33,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:orientation="horizontal"
-            android:layout_gravity="right"
+            android:layout_gravity="right|end"
             android:layout_marginBottom="8dp">
 
             <Button
@@ -43,6 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:visibility="gone"
                 tools:text="Neutral"
                 tools:visibility="visible" />
@@ -53,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:visibility="gone"
                 tools:text="Negative"
                 tools:visibility="visible" />

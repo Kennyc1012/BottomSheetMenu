@@ -1,6 +1,7 @@
-<manifest package="com.kennyc.bottomsheet">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kennyc.bottomsheet">
 
-    <application>
+    <application android:supportsRtl="true">
 
     </application>
 
