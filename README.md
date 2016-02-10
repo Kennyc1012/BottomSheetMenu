@@ -85,18 +85,32 @@ There are a few limitations when using a custom view. First, it <b>MUST</b> have
 BottomSheet comes with both a Light and Dark theme to accommodate most scenarios. However, if you want to customize the color more, you can create your own style and supply it to the builder.
 </br> Customizable attributes are:
 ```xml
+<!-- The background color of the Bottomsheet -->
 <attr name="bottom_sheet_bg_color" format="color" />
+<!-- The text appearance of the title -->
 <attr name="bottom_sheet_title_text_appearance" format="reference" />
+<!-- The text appearance of the list items -->
 <attr name="bottom_sheet_list_text_appearance" format="reference" />
+<!-- The text appearance of the grid items -->
 <attr name="bottom_sheet_grid_text_appearance" format="reference" />
+<!-- The text appearance of the message -->
 <attr name="bottom_sheet_message_text_appearance" format="reference" />
+<!-- The text appearance of the title for a message Bottomsheet-->
 <attr name="bottom_sheet_message_title_text_appearance" format="reference" />
+<!-- The text appearance of the buttons -->
 <attr name="bottom_sheet_button_text_appearance" format="reference" />
+<!-- The color to tint the Bottomsheet icon -->
 <attr name="bottom_sheet_item_icon_color" format="color" />
+<!-- The spacing between grid items -->
 <attr name="bottom_sheet_grid_spacing" format="dimension" />
+<!-- The bottom padding of the grid -->
 <attr name="bottom_sheet_grid_bottom_padding" format="dimension" />
+<!-- The top padding of the grid -->
 <attr name="bottom_sheet_grid_top_padding" format="dimension" />
+<!-- The selector to be used for the items in the list/grid -->
 <attr name="bottom_sheet_selector" format="reference" />
+<!-- The number of columns to show when using the grid style -->
+<attr name="bottom_sheet_column_count" format="integer" />
 ```
     
 Then create a style and pass it into the Builder
@@ -182,7 +196,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.0.7'
+    compile 'com.github.Kennyc1012:BottomSheet:2.1.0'
 }
 ```
 
