@@ -115,6 +115,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         Window window = getWindow();
         int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
         boolean isTablet = width > 0;
+        setCancelable(mBuilder.cancelable);
 
         if (window != null) {
             window.setLayout(width <= 0 ? ViewGroup.LayoutParams.MATCH_PARENT : width, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -157,6 +158,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     private void initMessageLayout(TypedArray ta) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
+        ((CollapsingView) view).enableDrag(mBuilder.cancelable);
         view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -232,6 +234,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         CollapsingView collapsingView = new CollapsingView(getContext());
         collapsingView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         collapsingView.setCollapseListener(this);
+        collapsingView.enableDrag(mBuilder.cancelable);
         mBuilder.view.setBackgroundColor(ta.getColor(0, Color.WHITE));
         collapsingView.addView(mBuilder.view);
         setContentView(collapsingView);
@@ -245,9 +248,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param columnCount The number of columns to be shown
      */
     private void initLayout(TypedArray ta, boolean isTablet, int columnCount) {
-        setCancelable(mBuilder.cancelable);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
         ((CollapsingView) view).setCollapseListener(this);
+        ((CollapsingView) view).enableDrag(mBuilder.cancelable);
         view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
         mGrid = (GridView) view.findViewById(R.id.grid);

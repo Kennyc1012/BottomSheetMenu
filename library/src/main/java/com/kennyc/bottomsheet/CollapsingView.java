@@ -23,6 +23,8 @@ public class CollapsingView extends FrameLayout {
 
     private CollapseListener mListener;
 
+    private boolean mEnableDrag = true;
+
     public CollapsingView(Context context) {
         super(context);
     }
@@ -75,11 +77,17 @@ public class CollapsingView extends FrameLayout {
         mListener = listener;
     }
 
+    public void enableDrag(boolean drag) {
+        mEnableDrag = drag;
+    }
+
     private class DragCallback extends ViewDragHelper.Callback {
         private static final float CLOSE_VELOCITY = 800.0f;
 
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
+            if (!mEnableDrag) return false;
+
             if (child instanceof LinearLayout && child.getId() == R.id.container) {
                 // Check that our GridView can't be scrolled up. If it can' don't allow the view to be captured
                 GridView gv = (GridView) child.findViewById(R.id.grid);
