@@ -196,7 +196,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:-2.1.2-g26cb036-1'
+    compile 'com.github.Kennyc1012:BottomSheet:2.1.2'
 }
 ```
 
