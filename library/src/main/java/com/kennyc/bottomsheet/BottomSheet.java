@@ -384,11 +384,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     }
 
     /**
-     * Returns the root view of the {@link BottomSheet} dialog
+     * Returns the root view of the {@link BottomSheet} dialog. This should only be called <b><i>AFTER</i></b>
+     * the dialog has been inflated.
      *
      * @return
      */
-    @NonNull
     public View getLayout() {
         return collapsingView;
     }
