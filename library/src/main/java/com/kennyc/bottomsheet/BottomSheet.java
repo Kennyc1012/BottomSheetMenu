@@ -81,6 +81,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private GridView mGrid;
 
+    private CollapsingView collapsingView;
+
     private BottomSheetListener mListener;
 
     private int mWhich = Integer.MIN_VALUE;
@@ -156,12 +158,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param ta The {@link TypedArray} containing the style attributes
      */
     private void initMessageLayout(TypedArray ta) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
-        ((CollapsingView) view).setCollapseListener(this);
-        ((CollapsingView) view).enableDrag(mBuilder.cancelable);
-        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
+        collapsingView = (CollapsingView) LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_message_layout, null);
+        collapsingView.setCollapseListener(this);
+        collapsingView.enableDrag(mBuilder.cancelable);
+        collapsingView.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
-        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) collapsingView.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(mBuilder.title) || mBuilder.icon != null;
 
         if (hasTitle) {
@@ -173,12 +175,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             title.setVisibility(View.GONE);
         }
 
-        TextView message = (TextView) view.findViewById(R.id.message);
+        TextView message = (TextView) collapsingView.findViewById(R.id.message);
         message.setText(mBuilder.message);
         Compat.setTextAppearance(message, ta.getResourceId(4, R.style.BottomSheet_Message_TextAppearance));
 
         if (!TextUtils.isEmpty(mBuilder.positiveBtn)) {
-            Button positive = (Button) view.findViewById(R.id.positive);
+            Button positive = (Button) collapsingView.findViewById(R.id.positive);
             positive.setText(mBuilder.positiveBtn);
             positive.setVisibility(View.VISIBLE);
             positive.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +195,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         if (!TextUtils.isEmpty(mBuilder.negativeBtn)) {
-            Button negative = (Button) view.findViewById(R.id.negative);
+            Button negative = (Button) collapsingView.findViewById(R.id.negative);
             negative.setText(mBuilder.negativeBtn);
             negative.setVisibility(View.VISIBLE);
             negative.setOnClickListener(new View.OnClickListener() {
@@ -208,7 +210,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         if (!TextUtils.isEmpty(mBuilder.neutralBtn)) {
-            Button neutral = (Button) view.findViewById(R.id.neutral);
+            Button neutral = (Button) collapsingView.findViewById(R.id.neutral);
             neutral.setText(mBuilder.neutralBtn);
             neutral.setVisibility(View.VISIBLE);
             neutral.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +224,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             Compat.setTextAppearance(neutral, ta.getResourceId(6, R.style.BottomSheet_Button_TextAppearance));
         }
 
-        setContentView(view);
+        setContentView(collapsingView);
     }
 
     /**
@@ -231,7 +233,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param ta The {@link TypedArray} containing the style attributes
      */
     private void initViewLayout(TypedArray ta) {
-        CollapsingView collapsingView = new CollapsingView(getContext());
+        collapsingView = new CollapsingView(getContext());
         collapsingView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         collapsingView.setCollapseListener(this);
         collapsingView.enableDrag(mBuilder.cancelable);
@@ -248,14 +250,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param columnCount The number of columns to be shown
      */
     private void initLayout(TypedArray ta, boolean isTablet, int columnCount) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
-        ((CollapsingView) view).setCollapseListener(this);
-        ((CollapsingView) view).enableDrag(mBuilder.cancelable);
-        view.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
+        collapsingView = (CollapsingView) LayoutInflater.from(getContext()).inflate(R.layout.bottom_sheet_layout, null);
+        collapsingView.setCollapseListener(this);
+        collapsingView.enableDrag(mBuilder.cancelable);
+        collapsingView.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
-        mGrid = (GridView) view.findViewById(R.id.grid);
+        mGrid = (GridView) collapsingView.findViewById(R.id.grid);
         mGrid.setOnItemClickListener(this);
-        TextView title = (TextView) view.findViewById(R.id.title);
+        TextView title = (TextView) collapsingView.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(mBuilder.title);
 
         if (hasTitle) {
@@ -287,7 +289,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         int selector = ta.getResourceId(11, R.drawable.bs_list_selector);
         mGrid.setSelector(selector);
 
-        setContentView(view);
+        setContentView(collapsingView);
     }
 
     /**
@@ -379,6 +381,16 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         } else {
             dismiss();
         }
+    }
+
+    /**
+     * Returns the root view of the {@link BottomSheet} dialog
+     *
+     * @return
+     */
+    @NonNull
+    public View getLayout() {
+        return collapsingView;
     }
 
     /**
