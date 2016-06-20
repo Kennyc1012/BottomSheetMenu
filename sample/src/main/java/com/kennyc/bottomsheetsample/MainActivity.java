@@ -2,6 +2,7 @@ package com.kennyc.bottomsheetsample;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -123,17 +124,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSheetShown() {
+    public void onSheetShown(@NonNull BottomSheet bottomSheet) {
         Log.v(TAG, "onSheetShown");
     }
 
     @Override
-    public void onSheetItemSelected(MenuItem item) {
+    public void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item) {
         Toast.makeText(getApplicationContext(), item.getTitle() + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onSheetDismissed(int which) {
+    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, int which) {
         Log.v(TAG, "onSheetDismissed " + which);
 
         switch (which) {

@@ -141,12 +141,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         ta.recycle();
-        if (mListener != null) mListener.onSheetShown();
+        if (mListener != null) mListener.onSheetShown(this);
     }
 
     @Override
     public void dismiss() {
-        if (mListener != null) mListener.onSheetDismissed(mWhich);
+        if (mListener != null) mListener.onSheetDismissed(this, mWhich);
         super.dismiss();
     }
 
@@ -345,7 +345,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (mAdapter instanceof GridAdapter) {
             if (mListener != null) {
                 MenuItem item = ((GridAdapter) mAdapter).getItem(position);
-                mListener.onSheetItemSelected(item);
+                mListener.onSheetItemSelected(this, item);
             }
         } else if (mAdapter instanceof AppAdapter) {
             AppAdapter.AppInfo info = ((AppAdapter) mAdapter).getItem(position);
