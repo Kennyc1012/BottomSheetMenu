@@ -166,14 +166,14 @@ if (share != null) share.show();
 BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
 ```java
 // Called when the BottomSheet it first displayed
-onSheetShown()
+onSheetShown(BottomSheet bottomSheet)
 
 // Called when the BottomSheet has been dismissed. Passed value represent which button was pressed if displaying
 // a simple message
-onSheetDismissed(int which)
+onSheetDismissed(BottomSheet bottomSheet, int which)
 
 // Called when an item is selected from the BottomSheet
-onSheetItemSelected(MenuItem item)
+onSheetItemSelected(BottomSheet bottomSheet, MenuItem item)
 ```
 
 #Upgrading From 1.x
@@ -196,7 +196,7 @@ repositories {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.1.2'
+    compile 'com.github.Kennyc1012:BottomSheet:2.2.0'
 }
 ```
 
