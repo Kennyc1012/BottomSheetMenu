@@ -189,8 +189,11 @@ To include BottomSheet in your project, make the following changes to your build
 
 ## Add repository 
 ```groovy
-repositories {
-    maven { url "https://jitpack.io" }
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
 }
 ```
 ## Add dependency
