@@ -406,12 +406,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param intent     Intent to get apps for
      * @param shareTitle The optional title string resource for the share intent
      * @param isGrid     If the share intent BottomSheet should be grid styled
-     * @param appsFilter If provided share will be limited to contained packaged names
+     * @param appsFilter If provided, share will be limited to contained packaged names
+     * @param toExclude  If provided, share will exclude the given package names
      * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
      * apps can handle the share intent
      */
     @Nullable
-    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, @Nullable Set<String> appsFilter) {
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, @Nullable Set<String> appsFilter, @Nullable Set<String> toExclude) {
         if (context == null || intent == null) return null;
 
         PackageManager manager = context.getPackageManager();
@@ -424,7 +425,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             for (ResolveInfo resolveInfo : apps) {
                 String packageName = resolveInfo.activityInfo.packageName;
 
-                if (shouldCheckPackages && !appsFilter.contains(resolveInfo.activityInfo.packageName)) {
+                if (shouldCheckPackages && !appsFilter.contains(packageName)) {
                     continue;
                 }
 
@@ -432,6 +433,18 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                 String name = resolveInfo.activityInfo.name;
                 Drawable drawable = resolveInfo.loadIcon(manager);
                 appResources.add(new AppAdapter.AppInfo(title, packageName, name, drawable));
+            }
+
+            if (toExclude != null && !toExclude.isEmpty()) {
+                List<AppAdapter.AppInfo> toRemove = new ArrayList<>();
+
+                for (AppAdapter.AppInfo appInfo : appResources) {
+                    if (toExclude.contains(appInfo.packageName)) {
+                        toRemove.add(appInfo);
+                    }
+                }
+
+                if (!toRemove.isEmpty()) appResources.removeAll(toRemove);
             }
 
             Builder b = new Builder(context)
@@ -459,12 +472,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * @param shareTitle The optional title for the share intent
      * @param isGrid     If the share intent BottomSheet should be grid styled
      * @param appsFilter If provided share will be limited to contained packaged names
+     * @param toExclude  If provided, share will exclude the given package names
      * @return A {@link BottomSheet} with the apps that can handle the share intent. NULL maybe returned if no
      * apps can handle the share intent
      */
     @Nullable
-    public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid, @Nullable Set<String> appsFilter) {
-        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter);
+    public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid, @Nullable Set<String> appsFilter, @Nullable Set<String> toExclude) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter, toExclude);
     }
 
     /**
@@ -485,7 +499,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid) {
-        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null);
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null, null);
     }
 
     /**
@@ -505,7 +519,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      * apps can handle the share intent
      */
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid) {
-        return createShareBottomSheet(context, intent, shareTitle, isGrid, null);
+        return createShareBottomSheet(context, intent, shareTitle, isGrid, null, null);
     }
 
     /**
@@ -526,7 +540,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, String shareTitle) {
-        return createShareBottomSheet(context, intent, shareTitle, false, null);
+        return createShareBottomSheet(context, intent, shareTitle, false, null, null);
     }
 
     /**
@@ -547,7 +561,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     @Nullable
     public static BottomSheet createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle) {
-        return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null);
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null, null);
     }
 
     /**

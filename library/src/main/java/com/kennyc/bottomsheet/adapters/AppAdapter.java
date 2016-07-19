@@ -3,6 +3,7 @@ package com.kennyc.bottomsheet.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean, Set)} is invoked
+ * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean, Set, Set)} is invoked
  */
 public class AppAdapter extends BaseAdapter {
     List<AppInfo> mApps;
@@ -29,7 +30,7 @@ public class AppAdapter extends BaseAdapter {
     public AppAdapter(Context context, List<AppInfo> apps, boolean isGrid) {
         mApps = apps;
         mInflater = LayoutInflater.from(context);
-        mTextColor = context.getResources().getColor(R.color.black_85);
+        mTextColor = ContextCompat.getColor(context, R.color.black_85);
         mLayoutResource = isGrid ? R.layout.bottom_sheet_grid_item : R.layout.bottom_sheet_list_item;
     }
 

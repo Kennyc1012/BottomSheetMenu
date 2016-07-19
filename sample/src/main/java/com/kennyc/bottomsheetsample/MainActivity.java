@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra(Intent.EXTRA_TEXT, "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet");
                 BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");
                 if (bottomSheet != null) bottomSheet.show();
-                break;
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
