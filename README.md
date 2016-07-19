@@ -68,7 +68,7 @@ new BottomSheet.Builder(this)
     .show();
 ```
 
-To handle which button was pressed, the [BottomSheetListener.onSheetDismissed(int)](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L29) specifies which button was pressed using the constant values BUTTON_POSITIVE, BUTTON_NEGATIVE, and BUTTON_NEUTRAL from the [Dialog](http://developer.android.com/reference/android/app/Dialog.html) class. If neither button was pressed and the dialog was just dismissed, which will be Integer.MIN_VALUE
+To handle which button was pressed, the [onSheetDismissed(BottomSheet bottomSheet, @DismissEvent int dismissEvent)](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L53) will supply the [DismissEvent](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L24) that occurred. Possible values are: `DISMISS_EVENT_BUTTON_POSITIVE, DISMISS_EVENT_BUTTON_NEGATIVE, DISMISS_EVENT_BUTTON_NEUTRAL, DISMISS_EVENT_SWIPE, and DISMISS_EVENT_MANUAL` 
 
 #Custom Views
 For even further customization, you can set the BottomSheet to use a custom view. 
@@ -161,6 +161,8 @@ BottomSheet share = BottomSheet.createShareBottomSheet(getActivity(), intent, "M
 if (share != null) share.show();
 // By default, it will be styled as a list. For a grid, pass the boolean value true after the title parameter
 ```
+For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheet.java#L417)
+
 
 #Callbacks
 BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
@@ -168,9 +170,8 @@ BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomS
 // Called when the BottomSheet it first displayed
 onSheetShown(BottomSheet bottomSheet)
 
-// Called when the BottomSheet has been dismissed. Passed value represent which button was pressed if displaying
-// a simple message
-onSheetDismissed(BottomSheet bottomSheet, int which)
+// Called when the BottomSheet has been dismissed. Passed value of dismissEvent signifies how the BottomSheet was dismiss. see [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for possible values
+onSheetDismissed(BottomSheet bottomSheet, @DismissEvent int dismissEvent)
 
 // Called when an item is selected from the BottomSheet
 onSheetItemSelected(BottomSheet bottomSheet, MenuItem item)
@@ -199,7 +200,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.2.0'
+    compile 'com.github.Kennyc1012:BottomSheet:2.3.0'
 }
 ```
 
