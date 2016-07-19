@@ -134,15 +134,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, int which) {
-        Log.v(TAG, "onSheetDismissed " + which);
+    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, @DismissEvent int dismissEvent) {
+        Log.v(TAG, "onSheetDismissed " + dismissEvent);
 
-        switch (which) {
-            case BottomSheet.BUTTON_POSITIVE:
+        switch (dismissEvent) {
+            case BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE:
                 Toast.makeText(getApplicationContext(), "Positive Button Clicked", Toast.LENGTH_SHORT).show();
                 break;
 
-            case BottomSheet.BUTTON_NEGATIVE:
+            case BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE:
                 Toast.makeText(getApplicationContext(), "Negative Button Clicked", Toast.LENGTH_SHORT).show();
                 break;
         }

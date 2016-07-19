@@ -85,11 +85,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
 
     private BottomSheetListener listener;
 
-    private int which = Integer.MIN_VALUE;
+    private int which = BottomSheetListener.DISMISS_EVENT_MANUAL;
 
     private final Runnable dismissRunnable = new Runnable() {
         @Override
         public void run() {
+            which = BottomSheetListener.DISMISS_EVENT_SWIPE;
             dismiss();
         }
     };
@@ -186,7 +187,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             positive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = Dialog.BUTTON_POSITIVE;
+                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE;
                     dismiss();
                 }
             });
@@ -201,7 +202,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             negative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = Dialog.BUTTON_NEGATIVE;
+                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE;
                     dismiss();
                 }
             });
@@ -216,7 +217,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             neutral.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = Dialog.BUTTON_NEUTRAL;
+                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEUTRAL;
                     dismiss();
                 }
             });
@@ -379,6 +380,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (getWindow() != null && getWindow().getDecorView() != null) {
             getWindow().getDecorView().post(dismissRunnable);
         } else {
+            which = BottomSheetListener.DISMISS_EVENT_SWIPE;
             dismiss();
         }
     }
