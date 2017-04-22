@@ -5,7 +5,7 @@ group='com.github.Kennyc1012'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "26.0.0-rc1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 14
