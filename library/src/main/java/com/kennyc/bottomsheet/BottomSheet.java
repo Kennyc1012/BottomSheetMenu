@@ -150,7 +150,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     @Override
     public void dismiss() {
         if (listener != null) listener.onSheetDismissed(this, which);
-        super.dismiss();
+        try {
+            super.dismiss();
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, "Exception while trying to dismiss the bottom sheet");
+            e.printStackTrace();
+        }
     }
 
     /**
