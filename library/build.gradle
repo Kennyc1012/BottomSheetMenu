@@ -18,6 +18,6 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:27.0.1'
-    compile 'com.android.support:support-v4:27.0.1'
+    implementation 'com.android.support:support-annotations:27.0.1'
+    implementation 'com.android.support:support-v4:27.0.1'
 }
