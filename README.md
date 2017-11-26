@@ -53,6 +53,7 @@ new BottomSheet.Builder(getActivity())
   .setSheet(R.menu.bottom_sheet)
   .setTitle(R.string.options)
   .setListener(myListener)
+  .setObject(myObject)
   .show();
   ```
 #Simple Messages
@@ -65,6 +66,7 @@ new BottomSheet.Builder(this)
     .setNegativeButton(R.string.close)
     .setIcon(R.drawable.my_icon)
     .setListener(myListener)
+    .setObject(myObject)
     .show();
 ```
 
@@ -168,13 +170,13 @@ For further customization of the share intent including which apps will be eithe
 BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
 ```java
 // Called when the BottomSheet it first displayed
-onSheetShown(BottomSheet bottomSheet)
+onSheetShown(BottomSheet bottomSheet, Object object)
 
 // Called when the BottomSheet has been dismissed. Passed value of dismissEvent signifies how the BottomSheet was dismiss. see [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for possible values
-onSheetDismissed(BottomSheet bottomSheet, @DismissEvent int dismissEvent)
+onSheetDismissed(BottomSheet bottomSheet,Object, object, @DismissEvent int dismissEvent)
 
 // Called when an item is selected from the BottomSheet
-onSheetItemSelected(BottomSheet bottomSheet, MenuItem item)
+onSheetItemSelected(BottomSheet bottomSheet, MenuItem item, Object object)
 ```
 
 #Upgrading From 1.x
@@ -200,7 +202,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.3.4'
+    compile 'com.github.Kennyc1012:BottomSheet:2.4.0'
 }
 ```
 
