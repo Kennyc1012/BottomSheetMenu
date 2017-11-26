@@ -150,7 +150,15 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     @Override
     public void dismiss() {
         if (listener != null) listener.onSheetDismissed(this, which);
-        super.dismiss();
+
+        if (isShowing()) {
+            try {
+                super.dismiss();
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "DEVICE BUG: THE DEVICE COULD NOT DISMISS THE VIEW!!!");
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
