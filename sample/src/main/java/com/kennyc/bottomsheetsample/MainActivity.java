@@ -3,6 +3,7 @@ package com.kennyc.bottomsheetsample;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new BottomSheet.Builder(this)
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -54,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .dark()
+                        .object("Some object")
                         .show();
                 break;
 
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .dark()
                         .setTitle("Options")
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -71,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new BottomSheet.Builder(this, R.style.BottomSheet_Custom)
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -80,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -90,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .setPositiveButton("Okay")
                         .setNegativeButton("Close")
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
 
@@ -97,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 new BottomSheet.Builder(this)
                         .setView(R.layout.custom_view)
                         .setListener(this)
+                        .object("Some object")
                         .show();
                 break;
         }
@@ -124,17 +133,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSheetShown(@NonNull BottomSheet bottomSheet) {
-        Log.v(TAG, "onSheetShown");
+    public void onSheetShown(@NonNull BottomSheet bottomSheet, @Nullable Object object) {
+        Log.v(TAG, "onSheetShown with Object " + object);
     }
 
     @Override
-    public void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item) {
+    public void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item, @Nullable Object object) {
         Toast.makeText(getApplicationContext(), item.getTitle() + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, @DismissEvent int dismissEvent) {
+    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, @Nullable Object object, @DismissEvent int dismissEvent) {
         Log.v(TAG, "onSheetDismissed " + dismissEvent);
 
         switch (dismissEvent) {

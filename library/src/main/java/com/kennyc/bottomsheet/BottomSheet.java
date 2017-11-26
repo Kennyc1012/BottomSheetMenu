@@ -144,12 +144,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         ta.recycle();
-        if (listener != null) listener.onSheetShown(this);
+        if (listener != null) listener.onSheetShown(this, builder.object);
     }
 
     @Override
     public void dismiss() {
-        if (listener != null) listener.onSheetDismissed(this, which);
+        if (listener != null) listener.onSheetDismissed(this, builder.object, which);
 
         if (isShowing()) {
             try {
@@ -264,9 +264,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         collapsingView.enableDrag(builder.cancelable);
         collapsingView.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
-        grid = (GridView) collapsingView.findViewById(R.id.grid);
+        grid =  collapsingView.findViewById(R.id.grid);
         grid.setOnItemClickListener(this);
-        TextView title = (TextView) collapsingView.findViewById(R.id.title);
+        TextView title = collapsingView.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(builder.title);
 
         if (hasTitle) {
@@ -356,7 +356,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (adapter instanceof GridAdapter) {
             if (listener != null) {
                 MenuItem item = ((GridAdapter) adapter).getItem(position);
-                listener.onSheetItemSelected(this, item);
+                listener.onSheetItemSelected(this, item, builder.object);
             }
         } else if (adapter instanceof AppAdapter) {
             AppAdapter.AppInfo info = ((AppAdapter) adapter).getItem(position);
@@ -614,6 +614,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         String negativeBtn;
 
         String positiveBtn;
+
+        @Nullable
+        Object object;
 
         /**
          * Constructor for creating a {@link BottomSheet}
@@ -929,6 +932,17 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
          */
         public Builder setColumnCountResource(@IntegerRes int columnCount) {
             return setColumnCount(resources.getInteger(columnCount));
+        }
+
+        /**
+         * Sets the {@link Object} to be passed with the {@link BottomSheet}
+         *
+         * @param object Optional {@link Object}
+         * @return
+         */
+        public Builder object(@Nullable Object object) {
+            this.object = object;
+            return this;
         }
 
         /**

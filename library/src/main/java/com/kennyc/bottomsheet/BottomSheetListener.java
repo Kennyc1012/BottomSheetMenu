@@ -3,6 +3,7 @@ package com.kennyc.bottomsheet;
 import android.app.Dialog;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.MenuItem;
 
 /**
@@ -28,21 +29,24 @@ public interface BottomSheetListener {
      * Called when the {@link BottomSheet} is first displayed
      *
      * @param bottomSheet The {@link BottomSheet} that was shown
+     * @param object      Optional {@link Object} to pass to the {@link BottomSheet}
      */
-    void onSheetShown(@NonNull BottomSheet bottomSheet);
+    void onSheetShown(@NonNull BottomSheet bottomSheet, @Nullable Object object);
 
     /**
      * Called when an item is selected from the list/grid of the {@link BottomSheet}
      *
      * @param bottomSheet The {@link BottomSheet} that had an item selected
      * @param item        The item that was selected
+     * @param object      Optional {@link Object} to pass to the {@link BottomSheet}
      */
-    void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item);
+    void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item, @Nullable Object object);
 
     /**
      * Called when the {@link BottomSheet} has been dismissed
      *
      * @param bottomSheet  The {@link BottomSheet} that was dismissed
+     * @param object       Optional {@link Object} to pass to the {@link BottomSheet}
      * @param dismissEvent How the {@link BottomSheet} was dismissed. Possible values are: <br/>
      *                     <li>{@link #DISMISS_EVENT_SWIPE}</li>
      *                     <li>{@link #DISMISS_EVENT_MANUAL}</li>
@@ -50,5 +54,5 @@ public interface BottomSheetListener {
      *                     <li>{@link #DISMISS_EVENT_BUTTON_NEUTRAL}</li>
      *                     <li>{@link #DISMISS_EVENT_BUTTON_NEGATIVE}</li>
      */
-    void onSheetDismissed(@NonNull BottomSheet bottomSheet, @DismissEvent int dismissEvent);
+    void onSheetDismissed(@NonNull BottomSheet bottomSheet, @Nullable Object object, @DismissEvent int dismissEvent);
 }
