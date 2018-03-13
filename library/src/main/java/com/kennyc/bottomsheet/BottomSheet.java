@@ -726,6 +726,38 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         /**
+         * Sets the menu resource to use for the {@link BottomSheet}
+         * and notifies a listener after inflation is doen
+         *
+         * @param sheetItems
+         * @param menuInflationListener
+         * @return
+         */
+        public Builder setSheet(@MenuRes int sheetItems, IMenuInflationListener menuInflationListener) {
+            BottomSheetMenu menu = new BottomSheetMenu(context);
+            new MenuInflater(context).inflate(sheetItems, menu);
+            menuInflationListener.onMenuInflated(menu);
+            return setMenu(menu);
+        }
+
+        /**
+         * Sets the menu resource to use for the {@link BottomSheet}
+         *
+         * @param sheetItems
+         * @param menuInflater
+         * @param menuInflationListener
+         * @return
+         */
+        public Builder setSheet(@MenuRes int sheetItems, IMenuInflater menuInflater, IMenuInflationListener menuInflationListener) {
+            BottomSheetMenu menu = new BottomSheetMenu(context);
+            menuInflater.inflate(context, sheetItems, menu);
+            if (menuInflationListener != null) {
+                menuInflationListener.onMenuInflated(menu);
+            }
+            return setMenu(menu);
+        }
+
+        /**
          * Sets the menu to use for the {@link BottomSheet}
          *
          * @param menu
@@ -984,5 +1016,13 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                 tv.setTextAppearance(tv.getContext(), textAppearance);
             }
         }
+    }
+
+    public interface IMenuInflater {
+        void inflate(Context context, int menuId, Menu menu);
+    }
+
+    public interface IMenuInflationListener {
+        void onMenuInflated(Menu menu);
     }
 }

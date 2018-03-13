@@ -1,4 +1,4 @@
-#[BottomSheet](http://www.google.com/design/spec/components/bottom-sheets.html#)
+# [BottomSheet](http://www.google.com/design/spec/components/bottom-sheets.html#)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BottomSheet-green.svg?style=flat)](https://android-arsenal.com/details/1/2315)
 
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/list.png)
@@ -7,7 +7,7 @@
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_grid.png)
 ![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_list.png)
 
-#Features
+# Features
 - Both list and grid style
 - Custom Views
 - Simple Messages
@@ -18,7 +18,7 @@
 - API 14+
 
 
-#Using BottomSheet
+# Using BottomSheet
 To get started using BottomSheet, first you'll need to create a menu resource file with the defined actions. 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -56,7 +56,7 @@ new BottomSheet.Builder(getActivity())
   .setObject(myObject)
   .show();
   ```
-#Simple Messages
+# Simple Messages
 BottomSheet can also display a simple message like a standard dialog. Setting one up is just as simple
 ```java
 new BottomSheet.Builder(this)
@@ -72,7 +72,7 @@ new BottomSheet.Builder(this)
 
 To handle which button was pressed, the [onSheetDismissed(BottomSheet bottomSheet, @DismissEvent int dismissEvent)](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L53) will supply the [DismissEvent](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java#L24) that occurred. Possible values are: `DISMISS_EVENT_BUTTON_POSITIVE, DISMISS_EVENT_BUTTON_NEGATIVE, DISMISS_EVENT_BUTTON_NEUTRAL, DISMISS_EVENT_SWIPE, and DISMISS_EVENT_MANUAL` 
 
-#Custom Views
+# Custom Views
 For even further customization, you can set the BottomSheet to use a custom view. 
 ```java
 View v = ...
@@ -83,7 +83,7 @@ new BottomSheet.Builder(this)
 ```
 There are a few limitations when using a custom view. First, it <b>MUST</b> have a background set or it will appear transparent. Second, the root layout dimensions should always be ```layout_width="match_parent``` and ```layout_height="wrap_content```. Lastly, you will need to manage any click events as the BottomSheetListener can not determine anything from your custom view. If setting a custom view, all other builder settings will be ignored. 
 
-#Styling
+# Styling
 BottomSheet comes with both a Light and Dark theme to accommodate most scenarios. However, if you want to customize the color more, you can create your own style and supply it to the builder.
 </br> Customizable attributes are:
 ```xml
@@ -147,10 +147,10 @@ new BottomSheet.Builder(getActivity(), R.style.MyBottomSheetStyle)
   .show();
 ```
 
-##Icons
+## Icons
 Based on the [Material Design Guidelines](http://www.google.com/design/spec/components/bottom-sheets.html#bottom-sheets-specs), icons for a linear list styled BottomSheet should be 24dp, where as a grid styled BottomSheet should be 48dp.
 
-#Share Intents
+# Share Intents
 BottomSheet can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
 ```java
 // Create the intent for sharing
@@ -166,7 +166,7 @@ if (share != null) share.show();
 For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheet.java#L417)
 
 
-#Callbacks
+# Callbacks
 BottomSheet uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
 ```java
 // Called when the BottomSheet it first displayed
@@ -179,7 +179,7 @@ onSheetDismissed(BottomSheet bottomSheet,Object, object, @DismissEvent int dismi
 onSheetItemSelected(BottomSheet bottomSheet, MenuItem item, Object object)
 ```
 
-#Upgrading From 1.x
+# Upgrading From 1.x
 When upgrading to 2.x from a 1.x release, some changes will have to be made.
 - All of the builder methods for settings colors have been removed. All customzing should be done through themes.
 - The style attributes have been change to text appearances rather than colors.
@@ -187,7 +187,7 @@ When upgrading to 2.x from a 1.x release, some changes will have to be made.
 - The ```onSheetDismissed``` callback now takes an int as an argument for simple message support. 
 - The gradle dependency has changed and needs to be updated. 
 
-#Including in your project
+# Including in your project
 To include BottomSheet in your project, make the following changes to your build.gradle file
 
 ## Add repository 
@@ -206,7 +206,7 @@ dependencies {
 }
 ```
 
-#Contribution
+# Contribution
 Pull requests are welcomed and encouraged. If you experience any bugs, please file an [issue](https://github.com/Kennyc1012/BottomSheet/issues)
 
 License
