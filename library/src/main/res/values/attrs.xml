@@ -14,5 +14,7 @@
     <attr name="bottom_sheet_grid_top_padding" format="dimension" />
     <attr name="bottom_sheet_selector" format="reference" />
     <attr name="bottom_sheet_column_count" format="integer" />
+    <attr name="bottom_sheet_enter_animation" format="reference" />
+    <attr name="bottom_sheet_exit_animation" format="reference" />
 
 </resources>

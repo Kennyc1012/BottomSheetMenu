@@ -31,6 +31,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -72,7 +74,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             R.attr.bottom_sheet_grid_top_padding, // 9
             R.attr.bottom_sheet_grid_bottom_padding, // 10
             R.attr.bottom_sheet_selector, // 11
-            R.attr.bottom_sheet_column_count // 12
+            R.attr.bottom_sheet_column_count, // 12
+            R.attr.bottom_sheet_enter_animation, //13
+            R.attr.bottom_sheet_exit_animation //14
     };
 
     private Builder builder;
@@ -86,6 +90,8 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
     private BottomSheetListener listener;
 
     private int which = BottomSheetListener.DISMISS_EVENT_MANUAL;
+
+    private int exitAnimation;
 
     private final Runnable dismissRunnable = new Runnable() {
         @Override
@@ -115,8 +121,9 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             throw new IllegalStateException("Unable to create BottomSheet, missing params");
         }
 
+        Context context = getContext();
         Window window = getWindow();
-        int width = getContext().getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
+        int width = context.getResources().getDimensionPixelSize(R.dimen.bottom_sheet_width);
         boolean isTablet = width > 0;
         setCancelable(builder.cancelable);
 
@@ -127,7 +134,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             Log.e(TAG, "Window came back as null, unable to set defaults");
         }
 
-        TypedArray ta = getContext().obtainStyledAttributes(ATTRS);
+        TypedArray ta = context.obtainStyledAttributes(ATTRS);
 
         if (builder.view != null) {
             initViewLayout(ta);
@@ -142,6 +149,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
                 grid.setAdapter(adapter = new AppAdapter(getContext(), builder.apps, builder.isGrid));
             }
         }
+
+        exitAnimation = ta.getResourceId(14, R.anim.bottom_sheet_hide);
+        int enterAnimation = ta.getResourceId(13, R.anim.bottom_sheet_show);
+        Animation animation = AnimationUtils.loadAnimation(context, enterAnimation);
+        collapsingView.setAnimation(animation);
+        animation.start();
 
         ta.recycle();
         if (listener != null) listener.onSheetShown(this, builder.object);
@@ -161,6 +174,11 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        showExitAnimation();
+    }
+
     /**
      * Initializes the layout for a message
      *
@@ -172,7 +190,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         collapsingView.enableDrag(builder.cancelable);
         collapsingView.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
-        TextView title = (TextView) collapsingView.findViewById(R.id.title);
+        TextView title = collapsingView.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(builder.title) || builder.icon != null;
 
         if (hasTitle) {
@@ -184,19 +202,19 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             title.setVisibility(View.GONE);
         }
 
-        TextView message = (TextView) collapsingView.findViewById(R.id.message);
+        TextView message = collapsingView.findViewById(R.id.message);
         message.setText(builder.message);
         Compat.setTextAppearance(message, ta.getResourceId(4, R.style.BottomSheet_Message_TextAppearance));
 
         if (!TextUtils.isEmpty(builder.positiveBtn)) {
-            Button positive = (Button) collapsingView.findViewById(R.id.positive);
+            Button positive = collapsingView.findViewById(R.id.positive);
             positive.setText(builder.positiveBtn);
             positive.setVisibility(View.VISIBLE);
             positive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     which = BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE;
-                    dismiss();
+                    showExitAnimation();
                 }
             });
 
@@ -204,14 +222,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         if (!TextUtils.isEmpty(builder.negativeBtn)) {
-            Button negative = (Button) collapsingView.findViewById(R.id.negative);
+            Button negative = collapsingView.findViewById(R.id.negative);
             negative.setText(builder.negativeBtn);
             negative.setVisibility(View.VISIBLE);
             negative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE;
-                    dismiss();
+                    showExitAnimation();
                 }
             });
 
@@ -219,14 +237,14 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         }
 
         if (!TextUtils.isEmpty(builder.neutralBtn)) {
-            Button neutral = (Button) collapsingView.findViewById(R.id.neutral);
+            Button neutral = collapsingView.findViewById(R.id.neutral);
             neutral.setText(builder.neutralBtn);
             neutral.setVisibility(View.VISIBLE);
             neutral.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEUTRAL;
-                    dismiss();
+                    showExitAnimation();
                 }
             });
 
@@ -264,7 +282,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         collapsingView.enableDrag(builder.cancelable);
         collapsingView.findViewById(R.id.container).setBackgroundColor(ta.getColor(0, Color.WHITE));
 
-        grid =  collapsingView.findViewById(R.id.grid);
+        grid = collapsingView.findViewById(R.id.grid);
         grid.setOnItemClickListener(this);
         TextView title = collapsingView.findViewById(R.id.title);
         boolean hasTitle = !TextUtils.isEmpty(builder.title);
@@ -366,7 +384,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             getContext().startActivity(intent);
         }
 
-        dismiss();
+        showExitAnimation();
     }
 
     /**
@@ -401,6 +419,30 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
      */
     public View getLayout() {
         return collapsingView;
+    }
+
+    private void showExitAnimation() {
+        Animation animation = AnimationUtils.loadAnimation(getContext(), exitAnimation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                dismiss();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        collapsingView.clearAnimation();
+        collapsingView.setAnimation(animation);
+        animation.start();
     }
 
     /**
