@@ -202,7 +202,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:2.4.0'
+    compile 'com.github.Kennyc1012:BottomSheet:2.4.1'
 }
 ```
 
