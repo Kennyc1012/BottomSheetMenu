@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.kennyc.bottomsheetsample"
@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:$support_version"
-    compile project(':library')
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation project(':library')
 }

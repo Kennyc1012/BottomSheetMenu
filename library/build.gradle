@@ -1,12 +1,8 @@
 apply plugin: 'com.android.library'
 
-repositories {
-    google()
-}
-
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    buildToolsVersion "27.0.3"
     flavorDimensions "default"
 
     defaultConfig {
