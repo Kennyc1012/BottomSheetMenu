@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.StyleRes;
+import androidx.annotation.StyleRes;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
