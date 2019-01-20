@@ -52,6 +52,7 @@ import java.util.Set;
 /**
  * Created by kcampagna on 8/7/15.
  */
+@Deprecated
 public class BottomSheet extends Dialog implements AdapterView.OnItemClickListener, CollapsingView.CollapseListener {
     private static final int MIN_LIST_TABLET_ITEMS = 6;
 

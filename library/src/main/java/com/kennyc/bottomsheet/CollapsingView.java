@@ -1,14 +1,15 @@
 package com.kennyc.bottomsheet;
 
 import android.content.Context;
-import androidx.core.view.ViewCompat;
-import androidx.core.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+
+import androidx.core.view.ViewCompat;
+import androidx.customview.widget.ViewDragHelper;
 
 /**
  * Created by kcampagna on 8/11/15.
