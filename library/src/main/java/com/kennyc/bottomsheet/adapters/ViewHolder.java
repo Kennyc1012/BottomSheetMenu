@@ -12,8 +12,8 @@ public class ViewHolder {
     public ImageView icon;
 
     public ViewHolder(View view) {
-        title = (TextView) view.findViewById(R.id.title);
-        icon = (ImageView) view.findViewById(R.id.icon);
+        title = view.findViewById(R.id.title);
+        icon = view.findViewById(R.id.icon);
         view.setTag(this);
     }
 }

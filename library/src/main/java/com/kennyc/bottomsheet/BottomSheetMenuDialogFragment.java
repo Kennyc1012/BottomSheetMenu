@@ -23,6 +23,7 @@ import androidx.annotation.StringRes;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.kennyc.bottomsheet.adapters.GridAdapter;
 import com.kennyc.bottomsheet.menu.BottomSheetMenu;
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem;
 
@@ -31,6 +32,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
+    private static final int MIN_LIST_TABLET_ITEMS = 6;
+
+    private static final int GRID_MIN_COLUMNS = 3;
+
+    private static final int GRID_MAX_COLUMN = 4;
 
     private Builder builder;
 
@@ -61,13 +67,21 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void createUI() {
-        if (!TextUtils.isEmpty(builder.title)) {
+        boolean hasTitle = !TextUtils.isEmpty(builder.title);
+
+        if (hasTitle) {
             title.setText(builder.title);
         } else {
             title.setVisibility(View.GONE);
         }
 
-        // TODO Setup menu
+        if (!builder.isGrid) {
+            int padding = getResources().getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
+            gridView.setPadding(0, hasTitle ? 0 : padding, 0, padding);
+        }
+
+        gridView.setNumColumns(getNumberColumns());
+        gridView.setAdapter(new GridAdapter(requireActivity(), builder.menuItems, builder.isGrid));
     }
 
     @Override
@@ -76,6 +90,28 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
         gridView = null;
         container = null;
         super.onDestroyView();
+    }
+
+    private int getNumberColumns() {
+        if (builder.columnCount > 0) return builder.columnCount;
+        boolean isTablet = getResources().getBoolean(R.bool.bottom_sheet_menu_it_tablet);
+
+        int numItems = builder.menuItems.size();
+
+        if (builder.isGrid) {
+            // Show 4 columns if a tablet and the number of its is 4 or >=7
+            if ((numItems >= 7 || numItems == GRID_MAX_COLUMN) && isTablet) {
+                return GRID_MAX_COLUMN;
+            } else {
+                return GRID_MIN_COLUMNS;
+            }
+        }
+
+        // If a tablet with more than 6 items are present, split them into 2 columns
+        if (isTablet) return numItems >= MIN_LIST_TABLET_ITEMS ? 2 : 1;
+
+        // Regular phone, one column
+        return 1;
     }
 
     /**

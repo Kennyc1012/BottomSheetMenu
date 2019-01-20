@@ -366,7 +366,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         listTextAppearance = ta.getResourceId(2, R.style.BottomSheet_ListItem_TextAppearance);
         gridTextAppearance = ta.getResourceId(3, R.style.BottomSheet_GridItem_TextAppearance);
         tintColor = ta.getColor(7, Integer.MIN_VALUE);
-        adapter = new GridAdapter(getContext(), builder.menuItems, builder.isGrid, listTextAppearance, gridTextAppearance, tintColor);
+        adapter = new GridAdapter(getContext(), builder.menuItems, builder.isGrid);
         grid.setAdapter(adapter);
     }
 
