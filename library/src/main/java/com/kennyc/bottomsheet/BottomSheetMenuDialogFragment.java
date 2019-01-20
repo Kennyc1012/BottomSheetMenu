@@ -1,9 +1,14 @@
 package com.kennyc.bottomsheet;
 
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -14,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,11 +32,13 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.kennyc.bottomsheet.adapters.AppAdapter;
 import com.kennyc.bottomsheet.adapters.GridAdapter;
 import com.kennyc.bottomsheet.menu.BottomSheetMenu;
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem;
@@ -38,6 +46,7 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenuItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment implements GridView.OnItemClickListener {
     private static final int MIN_LIST_TABLET_ITEMS = 6;
@@ -56,9 +65,13 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
 
     private BottomSheetListener listener;
 
-    private GridAdapter adapter;
+    private BaseAdapter adapter;
 
     private int dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL;
+
+    public BottomSheetMenuDialogFragment() {
+
+    }
 
     private BottomSheetMenuDialogFragment(@NonNull Builder builder) {
         this.builder = builder;
@@ -113,7 +126,15 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
         container = view.findViewById(R.id.bottom_sheet_container);
         title = container.findViewById(R.id.bottom_sheet_title);
         gridView = container.findViewById(R.id.bottom_sheet_grid);
-        createUI();
+        initUi();
+
+        if (!builder.menuItems.isEmpty()) {
+            gridView.setAdapter(adapter = new GridAdapter(new ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid));
+            gridView.setOnItemClickListener(this);
+        } else {
+            adapter = new AppAdapter(new ContextThemeWrapper(requireActivity(), builder.style), builder.apps, builder.isGrid);
+            gridView.setAdapter(adapter);
+        }
 
         if (listener != null) listener.onSheetShown(this, builder.object);
     }
@@ -121,14 +142,24 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         dismissEvent = BottomSheetListener.DISMISS_EVENT_ITEM_SELECTED;
-        MenuItem item = adapter.getItem(position);
-        if (listener != null) listener.onSheetItemSelected(this, item, builder.object);
-        dismiss();
+
+        if (adapter instanceof GridAdapter) {
+            if (listener != null) {
+                MenuItem item = ((GridAdapter) adapter).getItem(position);
+                if (listener != null) listener.onSheetItemSelected(this, item, builder.object);
+                dismiss();
+            }
+        } else if (adapter instanceof AppAdapter) {
+            AppAdapter.AppInfo info = ((AppAdapter) adapter).getItem(position);
+            Intent intent = new Intent(builder.shareIntent);
+            intent.setComponent(new ComponentName(info.packageName, info.name));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            requireContext().startActivity(intent);
+        }
     }
 
-    private void createUI() {
+    private void initUi(){
         boolean hasTitle = !TextUtils.isEmpty(builder.title);
-
         if (hasTitle) {
             title.setText(builder.title);
         } else {
@@ -141,8 +172,6 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
         }
 
         gridView.setNumColumns(getNumberColumns());
-        gridView.setAdapter(adapter = new GridAdapter(new ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid));
-        gridView.setOnItemClickListener(this);
     }
 
     @Override
@@ -185,6 +214,177 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
     }
 
     /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title string resource for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @param appsFilter If provided, share will be limited to contained packaged names
+     * @param toExclude  If provided, share will exclude the given package names
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid, @Nullable Set<String> appsFilter, @Nullable Set<String> toExclude) {
+        if (context == null || intent == null) return null;
+
+        PackageManager manager = context.getPackageManager();
+        List<ResolveInfo> apps = manager.queryIntentActivities(intent, 0);
+
+        if (apps != null && !apps.isEmpty()) {
+            List<AppAdapter.AppInfo> appResources = new ArrayList<>(apps.size());
+            boolean shouldCheckPackages = appsFilter != null && !appsFilter.isEmpty();
+
+            for (ResolveInfo resolveInfo : apps) {
+                String packageName = resolveInfo.activityInfo.packageName;
+
+                if (shouldCheckPackages && !appsFilter.contains(packageName)) {
+                    continue;
+                }
+
+                String title = resolveInfo.loadLabel(manager).toString();
+                String name = resolveInfo.activityInfo.name;
+                Drawable drawable = resolveInfo.loadIcon(manager);
+                appResources.add(new AppAdapter.AppInfo(title, packageName, name, drawable));
+            }
+
+            if (toExclude != null && !toExclude.isEmpty()) {
+                List<AppAdapter.AppInfo> toRemove = new ArrayList<>();
+
+                for (AppAdapter.AppInfo appInfo : appResources) {
+                    if (toExclude.contains(appInfo.packageName)) {
+                        toRemove.add(appInfo);
+                    }
+                }
+
+                if (!toRemove.isEmpty()) appResources.removeAll(toRemove);
+            }
+
+            Builder b = new Builder(context)
+                    .setApps(appResources, intent)
+                    .setTitle(shareTitle);
+
+            if (isGrid) b.grid();
+            return b.create();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @param appsFilter If provided share will be limited to contained packaged names
+     * @param toExclude  If provided, share will exclude the given package names
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid, @Nullable Set<String> appsFilter, @Nullable Set<String> toExclude) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter, toExclude);
+    }
+
+    /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title string resource for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle, boolean isGrid) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null, null);
+    }
+
+    /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent.<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @param isGrid     If the share intent BottomSheet should be grid styled
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, String shareTitle, boolean isGrid) {
+        return createShareBottomSheet(context, intent, shareTitle, isGrid, null, null);
+    }
+
+    /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent. This will be List styled by default.<br>
+     * If grid style is desired, use {@link #createShareBottomSheet(Context, Intent, String, boolean)}<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, String shareTitle) {
+        return createShareBottomSheet(context, intent, shareTitle, false, null, null);
+    }
+
+    /**
+     * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent. This will be list styled by default.<br>
+     * If grid style is desired, use {@link #createShareBottomSheet(Context, Intent, String, boolean)}<p>
+     * An example of an intent to pass is sharing some form of text:<br>
+     * Intent intent = new Intent(Intent.ACTION_SEND);<br>
+     * intent.setType("text/*");<br>
+     * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
+     * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
+     * if (bottomSheet != null) bottomSheet.show();<br>
+     *
+     * @param context    App context
+     * @param intent     Intent to get apps for
+     * @param shareTitle The optional title for the share intent
+     * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
+     * apps can handle the share intent
+     */
+    @Nullable
+    public static DialogFragment createShareBottomSheet(Context context, Intent intent, @StringRes int shareTitle) {
+        return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null, null);
+    }
+
+    /**
      * Builder factory used for creating {@link BottomSheetMenuDialogFragment}
      */
     public static class Builder {
@@ -209,6 +409,10 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
 
         @Nullable
         Object object;
+
+        List<AppAdapter.AppInfo> apps = new ArrayList<>();
+
+        Intent shareIntent;
 
         /**
          * Constructor for creating a {@link BottomSheetMenuDialogFragment}
@@ -390,6 +594,21 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
             this.object = object;
             return this;
         }
+
+        /**
+         * Sets the apps to be used for a share intent. This is not a public facing method.<p>
+         * See {@link BottomSheetMenuDialogFragment#createShareBottomSheet(Context, Intent, String, boolean)} for creating a share intent {@link BottomSheetMenuDialogFragment}
+         *
+         * @param apps   List of apps to use in the share intent
+         * @param intent The {@link Intent} used for creating the share intent
+         * @return
+         */
+        private Builder setApps(List<AppAdapter.AppInfo> apps, Intent intent) {
+            this.apps = apps;
+            shareIntent = intent;
+            return this;
+        }
+
 
         /**
          * Creates the {@link BottomSheetMenuDialogFragment} but does not show it.
