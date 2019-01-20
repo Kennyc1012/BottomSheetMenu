@@ -185,7 +185,7 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
     }
 
     /**
-     * Builder factory used for creating {@link BottomSheet}
+     * Builder factory used for creating {@link BottomSheetMenuDialogFragment}
      */
     public static class Builder {
         @StyleRes

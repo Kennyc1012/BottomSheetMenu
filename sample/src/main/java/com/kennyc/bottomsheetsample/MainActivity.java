@@ -1,6 +1,5 @@
 package com.kennyc.bottomsheetsample;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kennyc.bottomsheet.BottomSheet;
 import com.kennyc.bottomsheet.BottomSheetListener;
 import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment;
 
@@ -102,11 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share:
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/*");
-                intent.putExtra(Intent.EXTRA_TEXT, "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet");
-                BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");
-                if (bottomSheet != null) bottomSheet.show();
+               // TODO
                 return true;
         }
 

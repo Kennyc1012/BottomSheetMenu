@@ -1,22 +1,20 @@
 package com.kennyc.bottomsheet.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.kennyc.bottomsheet.BottomSheet;
+import androidx.core.content.ContextCompat;
+
 import com.kennyc.bottomsheet.R;
 
 import java.util.List;
-import java.util.Set;
 
 /**
- * Adapter used when {@link BottomSheet#createShareBottomSheet(Context, Intent, String, boolean, Set, Set)} is invoked
+ * TODO
  */
 public class AppAdapter extends BaseAdapter {
     List<AppInfo> mApps;
