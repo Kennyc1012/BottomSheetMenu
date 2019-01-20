@@ -14,7 +14,7 @@
 
         <TextView
             android:id="@+id/title"
-            style="@style/BottomSheet.Title"
+            style="@style/BottomSheetMenu.Title"
             tools:drawableStart="@android:drawable/ic_menu_share"
             tools:drawableLeft="@android:drawable/ic_menu_share"
             tools:text="Title" />

@@ -291,7 +291,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (hasTitle) {
             title.setText(builder.title);
             title.setVisibility(View.VISIBLE);
-            Compat.setTextAppearance(title, ta.getResourceId(1, R.style.BottomSheet_Title_TextAppearance));
+            Compat.setTextAppearance(title, ta.getResourceId(1, R.style.BottomSheetMenu_Title_TextAppearance));
         } else {
             title.setVisibility(View.GONE);
         }

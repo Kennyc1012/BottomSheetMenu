@@ -16,7 +16,8 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/BottomSheet.ListItem"
+        style="@style/BottomSheetMenu.ListItem"
+        android:textAppearance="?bottom_sheet_menu_list_text_appearance"
         tools:text="List Item" />
 
 </LinearLayout>

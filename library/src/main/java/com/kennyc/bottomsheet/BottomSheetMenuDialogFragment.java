@@ -23,6 +23,8 @@ import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentManager;
 
@@ -72,7 +74,7 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+        BottomSheetDialog dialog = new BottomSheetDialog(requireActivity(), builder.style);
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -139,7 +141,7 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
         }
 
         gridView.setNumColumns(getNumberColumns());
-        gridView.setAdapter(adapter = new GridAdapter(requireActivity(), builder.menuItems, builder.isGrid));
+        gridView.setAdapter(adapter = new GridAdapter(new ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid));
         gridView.setOnItemClickListener(this);
     }
 
@@ -186,6 +188,9 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
      * Builder factory used for creating {@link BottomSheet}
      */
     public static class Builder {
+        @StyleRes
+        int style;
+
         int columnCount = -1;
 
         String title = null;
@@ -211,8 +216,40 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
          * @param context App context
          */
         public Builder(Context context) {
+            this(context, R.style.Theme_BottomSheetMenuDialog_Light);
+        }
+
+        /**
+         * Constructor for creating a {@link BottomSheetMenuDialogFragment}
+         *
+         * @param context App context
+         * @param style   The style the {@link BottomSheetMenuDialogFragment} will use
+         */
+        public Builder(Context context, @StyleRes int style) {
             this.context = context;
+            this.style = style;
             this.resources = context.getResources();
+        }
+
+        /**
+         * Sets the {@link BottomSheetMenuDialogFragment} to use a dark theme
+         *
+         * @return
+         */
+        public Builder dark() {
+            style = R.style.Theme_BottomSheetMenuDialog;
+            return this;
+        }
+
+        /**
+         * Sets the style of the {@link BottomSheetMenuDialogFragment}
+         *
+         * @param style
+         * @return
+         */
+        public Builder setStyle(@StyleRes int style) {
+            this.style = style;
+            return this;
         }
 
         /**

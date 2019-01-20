@@ -4,12 +4,12 @@
     android:id="@+id/bottom_sheet_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:background="@android:color/white">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/bottom_sheet_title"
-        style="@style/BottomSheet.Title"
+        style="@style/BottomSheetMenu.Title"
+        android:textAppearance="?bottom_sheet_title_text_appearance"
         tools:drawableLeft="@android:drawable/ic_menu_share"
         tools:drawableStart="@android:drawable/ic_menu_share"
         tools:text="Title" />
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
-        android:listSelector="@drawable/bs_list_selector"
+        android:listSelector="?bottom_sheet_menu_selector"
         android:stretchMode="columnWidth"
         tools:listitem="@layout/bottom_sheet_list_item" />
 
