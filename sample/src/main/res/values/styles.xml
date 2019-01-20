@@ -5,11 +5,10 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="BottomSheet.Custom">
-        <item name="bottom_sheet_bg_color">@android:color/holo_blue_light</item>
-        <item name="bottom_sheet_title_text_appearance">@style/TitleAppearance</item>
-        <item name="bottom_sheet_list_text_appearance">@style/ListAppearance</item>
-        <item name="bottom_sheet_grid_text_appearance">@style/GridAppearance</item>
+    <style name="Theme.BottomSheetMenuDialog.Custom">
+        <item name="bottom_sheet_menu_title_text_appearance">@style/TitleAppearance</item>
+        <item name="bottom_sheet_menu_list_text_appearance">@style/ListAppearance</item>
+        <item name="bottom_sheet_menu_grid_text_appearance">@style/GridAppearance</item>
     </style>
 
     <style name="TitleAppearance" parent="BottomSheetMenu.Title.TextAppearance">

@@ -29,86 +29,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.darkGridBottomSheet).setOnClickListener(this);
         findViewById(R.id.customBottomSheet).setOnClickListener(this);
         findViewById(R.id.customGridBottomSheet).setOnClickListener(this);
-        findViewById(R.id.messageBottomSheet).setOnClickListener(this);
-        findViewById(R.id.viewBottomSheet).setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.listBottomSheet:
-                new BottomSheet.Builder(this)
+                new BottomSheetMenuDialogFragment.Builder(this)
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
 
             case R.id.gridBottomSheet:
-                new BottomSheet.Builder(this)
+                new BottomSheetMenuDialogFragment.Builder(this)
                         .setSheet(R.menu.grid_sheet)
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
                         .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
 
             case R.id.darkBottomSheet:
-                new BottomSheet.Builder(this)
+                new BottomSheetMenuDialogFragment.Builder(this)
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .dark()
                         .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
 
             case R.id.darkGridBottomSheet:
-                new BottomSheet.Builder(this)
+                new BottomSheetMenuDialogFragment.Builder(this)
                         .setSheet(R.menu.grid_sheet)
                         .grid()
                         .dark()
                         .setTitle("Options")
                         .setListener(this)
                         .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
 
             case R.id.customBottomSheet:
-                new BottomSheet.Builder(this, R.style.BottomSheet_Custom)
+                new BottomSheetMenuDialogFragment.Builder(this, R.style.Theme_BottomSheetMenuDialog_Custom)
                         .setSheet(R.menu.list_sheet)
                         .setListener(this)
                         .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
 
             case R.id.customGridBottomSheet:
-                new BottomSheet.Builder(this, R.style.BottomSheet_Custom)
+                new BottomSheetMenuDialogFragment.Builder(this, R.style.Theme_BottomSheetMenuDialog_Custom)
                         .setSheet(R.menu.grid_sheet)
                         .grid()
                         .setTitle("Options")
                         .setListener(this)
                         .object("Some object")
-                        .show();
-                break;
-
-            case R.id.messageBottomSheet:
-                new BottomSheet.Builder(this)
-                        .setTitle("BottomSheet")
-                        .setMessage("With bottom sheet you can also display a simple message dialog")
-                        .setPositiveButton("Okay")
-                        .setNegativeButton("Close")
-                        .setListener(this)
-                        .object("Some object")
-                        .show();
-                break;
-
-            case R.id.viewBottomSheet:
-                new BottomSheet.Builder(this)
-                        .setView(R.layout.custom_view)
-                        .setListener(this)
-                        .object("Some object")
-                        .show();
+                        .show(getSupportFragmentManager());
                 break;
         }
     }
