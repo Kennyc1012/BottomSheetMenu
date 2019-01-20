@@ -2,17 +2,19 @@ package com.kennyc.bottomsheetsample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.kennyc.bottomsheet.BottomSheet;
 import com.kennyc.bottomsheet.BottomSheetListener;
+import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, BottomSheetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -133,27 +135,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onSheetShown(@NonNull BottomSheet bottomSheet, @Nullable Object object) {
+    public void onSheetShown(@NonNull BottomSheetMenuDialogFragment bottomSheet, @Nullable Object object) {
         Log.v(TAG, "onSheetShown with Object " + object);
     }
 
     @Override
-    public void onSheetItemSelected(@NonNull BottomSheet bottomSheet, MenuItem item, @Nullable Object object) {
+    public void onSheetItemSelected(@NonNull BottomSheetMenuDialogFragment bottomSheet, MenuItem item, @Nullable Object object) {
         Toast.makeText(getApplicationContext(), item.getTitle() + " Clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onSheetDismissed(@NonNull BottomSheet bottomSheet, @Nullable Object object, @DismissEvent int dismissEvent) {
+    public void onSheetDismissed(@NonNull BottomSheetMenuDialogFragment bottomSheet, @Nullable Object object, @DismissEvent int dismissEvent) {
         Log.v(TAG, "onSheetDismissed " + dismissEvent);
-
-        switch (dismissEvent) {
-            case BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE:
-                Toast.makeText(getApplicationContext(), "Positive Button Clicked", Toast.LENGTH_SHORT).show();
-                break;
-
-            case BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE:
-                Toast.makeText(getApplicationContext(), "Negative Button Clicked", Toast.LENGTH_SHORT).show();
-                break;
-        }
     }
 }

@@ -158,12 +158,12 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         animation.start();
 
         ta.recycle();
-        if (listener != null) listener.onSheetShown(this, builder.object);
+     //   if (listener != null) listener.onSheetShown(this, builder.object);
     }
 
     @Override
     public void dismiss() {
-        if (listener != null) listener.onSheetDismissed(this, builder.object, which);
+       // if (listener != null) listener.onSheetDismissed(this, builder.object, which);
 
         if (isShowing()) {
             try {
@@ -214,7 +214,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             positive.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE;
+               //     which = BottomSheetListener.DISMISS_EVENT_BUTTON_POSITIVE;
                     showExitAnimation();
                 }
             });
@@ -229,7 +229,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             negative.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE;
+                 //   which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEGATIVE;
                     showExitAnimation();
                 }
             });
@@ -244,7 +244,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
             neutral.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEUTRAL;
+                //    which = BottomSheetListener.DISMISS_EVENT_BUTTON_NEUTRAL;
                     showExitAnimation();
                 }
             });
@@ -375,7 +375,7 @@ public class BottomSheet extends Dialog implements AdapterView.OnItemClickListen
         if (adapter instanceof GridAdapter) {
             if (listener != null) {
                 MenuItem item = ((GridAdapter) adapter).getItem(position);
-                listener.onSheetItemSelected(this, item, builder.object);
+             //   listener.onSheetItemSelected(this, item, builder.object);
             }
         } else if (adapter instanceof AppAdapter) {
             AppAdapter.AppInfo info = ((AppAdapter) adapter).getItem(position);

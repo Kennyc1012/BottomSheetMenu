@@ -1,6 +1,8 @@
 package com.kennyc.bottomsheet;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,8 +23,11 @@ import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.kennyc.bottomsheet.adapters.GridAdapter;
 import com.kennyc.bottomsheet.menu.BottomSheetMenu;
@@ -31,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
+public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment implements GridView.OnItemClickListener {
     private static final int MIN_LIST_TABLET_ITEMS = 6;
 
     private static final int GRID_MIN_COLUMNS = 3;
@@ -46,14 +52,56 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
 
     private LinearLayout container;
 
+    private BottomSheetListener listener;
+
+    private GridAdapter adapter;
+
+    private int dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL;
+
     private BottomSheetMenuDialogFragment(@NonNull Builder builder) {
         this.builder = builder;
+        this.listener = builder.listener;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_menu, container, false);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        BottomSheetDialog dialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                if (container == null || container.getParent() == null) return;
+                CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) container.getParent()).getLayoutParams();
+                CoordinatorLayout.Behavior behavior = params.getBehavior();
+
+                // Should always be the case
+                if (behavior instanceof BottomSheetBehavior) {
+                    ((BottomSheetBehavior) behavior).setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int state) {
+                            if (state == BottomSheetBehavior.STATE_HIDDEN) {
+                                dismissEvent = BottomSheetListener.DISMISS_EVENT_SWIPE;
+                                dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffSet) {
+                            // NOOP
+                        }
+                    });
+                }
+            }
+        });
+
+        return dialog;
     }
 
     @Override
@@ -64,6 +112,16 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
         title = container.findViewById(R.id.bottom_sheet_title);
         gridView = container.findViewById(R.id.bottom_sheet_grid);
         createUI();
+
+        if (listener != null) listener.onSheetShown(this, builder.object);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        dismissEvent = BottomSheetListener.DISMISS_EVENT_ITEM_SELECTED;
+        MenuItem item = adapter.getItem(position);
+        if (listener != null) listener.onSheetItemSelected(this, item, builder.object);
+        dismiss();
     }
 
     private void createUI() {
@@ -81,7 +139,8 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
         }
 
         gridView.setNumColumns(getNumberColumns());
-        gridView.setAdapter(new GridAdapter(requireActivity(), builder.menuItems, builder.isGrid));
+        gridView.setAdapter(adapter = new GridAdapter(requireActivity(), builder.menuItems, builder.isGrid));
+        gridView.setOnItemClickListener(this);
     }
 
     @Override
@@ -90,6 +149,15 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment {
         gridView = null;
         container = null;
         super.onDestroyView();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (listener != null) {
+            listener.onSheetDismissed(BottomSheetMenuDialogFragment.this, builder.object, dismissEvent);
+        }
+
+        super.onDismiss(dialog);
     }
 
     private int getNumberColumns() {
