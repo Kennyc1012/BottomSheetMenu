@@ -1,11 +1,11 @@
 # BottomSheetMenu
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BottomSheet-green.svg?style=flat)](https://android-arsenal.com/details/1/2315)
 
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/list.png)
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/grid.png)
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_list.png)
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/tablet_grid.png)
-![screenshot](https://github.com/Kennyc1012/BottomSheet/blob/master/art/share_list.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/list.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/grid.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/tablet_list.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/tablet_grid.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/share_list.png)
 
 # Features
 - Both list and grid style
@@ -126,16 +126,16 @@ DialogFragment share = BottomSheetMenuDialogFragment.createShareBottomSheet(getA
 if (share != null) share.show(getSupportFragmentManager(), "MyTag");
 // By default, it will be styled as a list. For a grid, pass the boolean value true after the title parameter
 ```
-For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheet.java#L417)
+For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheet.java#L417)
 
 
 # Callbacks
-BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
+BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
 ```java
 // Called when the BottomSheetMenuDialogFragment it first displayed
 onSheetShown(BottomSheetMenuDialogFragment bottomSheet, Object object)
 
-// Called when the BottomSheetMenuDialogFragment has been dismissed. Passed value of dismissEvent signifies how the BottomSheetMenuDialogFragment was dismiss. see [BottomSheetListener](https://github.com/Kennyc1012/BottomSheet/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for possible values
+// Called when the BottomSheetMenuDialogFragment has been dismissed. Passed value of dismissEvent signifies how the BottomSheetMenuDialogFragment was dismiss. see [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for possible values
 onSheetDismissed(BottomSheetMenuDialogFragment bottomSheet,Object, object, @DismissEvent int dismissEvent)
 
 // Called when an item is selected from the BottomSheetMenuDialogFragment
