@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="bottom_sheet_menu_it_tablet">false</bool>
+
+</resources>

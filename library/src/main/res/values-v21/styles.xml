@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="BottomSheet.TextAppearance.Medium" parent="android:TextAppearance">
+    <style name="BottomSheetMenu.TextAppearance.Medium" parent="Base.BottomSheetMenu.Title.TextAppearance">
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 

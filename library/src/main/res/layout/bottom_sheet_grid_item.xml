@@ -8,15 +8,16 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="@dimen/bottom_sheet_grid_icon_size"
-        android:layout_height="@dimen/bottom_sheet_grid_icon_size"
-        android:layout_marginBottom="@dimen/bottom_sheet_dialog_padding"
-        android:layout_marginTop="@dimen/bottom_sheet_dialog_padding"
+        android:layout_width="@dimen/bottom_sheet_menu_grid_icon_size"
+        android:layout_height="@dimen/bottom_sheet_menu_grid_icon_size"
+        android:layout_marginTop="@dimen/bottom_sheet_menu_dialog_padding"
+        android:layout_marginBottom="@dimen/bottom_sheet_menu_dialog_padding"
         tools:src="@android:drawable/ic_menu_share" />
 
     <TextView
         android:id="@+id/title"
-        style="@style/BottomSheet.GridItem"
+        style="@style/BottomSheetMenu.GridItem"
+        android:textAppearance="?bottom_sheet_menu_grid_text_appearance"
         tools:text="List Item" />
 
 </LinearLayout>

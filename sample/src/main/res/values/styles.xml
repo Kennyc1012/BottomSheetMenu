@@ -5,22 +5,21 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="BottomSheet.Custom">
-        <item name="bottom_sheet_bg_color">@android:color/holo_blue_light</item>
-        <item name="bottom_sheet_title_text_appearance">@style/TitleAppearance</item>
-        <item name="bottom_sheet_list_text_appearance">@style/ListAppearance</item>
-        <item name="bottom_sheet_grid_text_appearance">@style/GridAppearance</item>
+    <style name="Theme.BottomSheetMenuDialog.Custom">
+        <item name="bottom_sheet_menu_title_text_appearance">@style/TitleAppearance</item>
+        <item name="bottom_sheet_menu_list_text_appearance">@style/ListAppearance</item>
+        <item name="bottom_sheet_menu_grid_text_appearance">@style/GridAppearance</item>
     </style>
 
-    <style name="TitleAppearance" parent="BottomSheet.Title.TextAppearance">
+    <style name="TitleAppearance" parent="BottomSheetMenu.Title.TextAppearance">
         <item name="android:textColor">@android:color/holo_green_light</item>
     </style>
 
-    <style name="ListAppearance" parent="BottomSheet.Title.TextAppearance">
+    <style name="ListAppearance" parent="BottomSheetMenu.Title.TextAppearance">
         <item name="android:textColor">@android:color/holo_red_light</item>
     </style>
 
-    <style name="GridAppearance" parent="BottomSheet.Title.TextAppearance">
+    <style name="GridAppearance" parent="BottomSheetMenu.Title.TextAppearance">
         <item name="android:textColor">@android:color/holo_red_light</item>
     </style>
 
