@@ -167,7 +167,7 @@ public class BottomSheetMenuDialogFragment extends BottomSheetDialogFragment imp
         }
 
         if (!builder.isGrid) {
-            int padding = getResources().getDimensionPixelSize(R.dimen.bottom_sheet_list_padding);
+            int padding = getResources().getDimensionPixelSize(R.dimen.bottom_sheet_menu_list_padding);
             gridView.setPadding(0, hasTitle ? 0 : padding, 0, padding);
         }
 

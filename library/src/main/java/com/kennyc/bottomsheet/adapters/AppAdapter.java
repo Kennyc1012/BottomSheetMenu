@@ -13,9 +13,7 @@ import com.kennyc.bottomsheet.R;
 
 import java.util.List;
 
-/**
- * TODO
- */
+
 public class AppAdapter extends BaseAdapter {
     List<AppInfo> mApps;
 

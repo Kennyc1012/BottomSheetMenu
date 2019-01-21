@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "27.0.3"
     flavorDimensions "default"
 
     defaultConfig {

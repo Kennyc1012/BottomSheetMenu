@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.BottomSheetMenuDialog.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="bottom_sheet_title_text_appearance">
+        <item name="bottom_sheet_menu_title_text_appearance">
             @style/BottomSheetMenu.Title.TextAppearance.Light
         </item>
         <item name="bottom_sheet_menu_list_text_appearance">
@@ -15,7 +15,7 @@
     </style>
 
     <style name="Theme.BottomSheetMenuDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="bottom_sheet_title_text_appearance">
+        <item name="bottom_sheet_menu_title_text_appearance">
             @style/BottomSheetMenu.Title.TextAppearance
         </item>
         <item name="bottom_sheet_menu_list_text_appearance">
@@ -28,7 +28,7 @@
     </style>
 
     <style name="Base.BottomSheetMenu.Title.TextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">@dimen/bottom_sheet_text_size</item>
+        <item name="android:textSize">@dimen/bottom_sheet_menu_text_size</item>
         <item name="android:typeface">sans</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/grey_55</item>
@@ -41,14 +41,14 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding</item>
-        <item name="android:paddingRight">@dimen/bottom_sheet_dialog_padding</item>
+        <item name="android:paddingLeft">@dimen/bottom_sheet_menu_dialog_padding</item>
+        <item name="android:paddingRight">@dimen/bottom_sheet_menu_dialog_padding</item>
     </style>
 
     <style name="BottomSheetMenu.ListItem" parent="BottomSheetMenu.Title">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:paddingLeft">@dimen/bottom_sheet_dialog_padding</item>
+        <item name="android:paddingLeft">@dimen/bottom_sheet_menu_dialog_padding</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:layout_gravity">center_vertical</item>
     </style>

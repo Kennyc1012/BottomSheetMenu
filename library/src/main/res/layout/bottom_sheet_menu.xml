@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/bottom_sheet_title"
         style="@style/BottomSheetMenu.Title"
-        android:textAppearance="?bottom_sheet_title_text_appearance"
+        android:textAppearance="?bottom_sheet_menu_title_text_appearance"
         tools:drawableLeft="@android:drawable/ic_menu_share"
         tools:drawableStart="@android:drawable/ic_menu_share"
         tools:text="Title" />
