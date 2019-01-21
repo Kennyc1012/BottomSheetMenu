@@ -126,7 +126,7 @@ DialogFragment share = BottomSheetMenuDialogFragment.createShareBottomSheet(getA
 if (share != null) share.show(getSupportFragmentManager(), "MyTag");
 // By default, it will be styled as a list. For a grid, pass the boolean value true after the title parameter
 ```
-For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheet.java#L417)
+For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetMenuDialogFragment.java#L300)
 
 
 # Callbacks
