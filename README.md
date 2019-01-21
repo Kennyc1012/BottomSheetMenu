@@ -172,7 +172,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-    compile 'com.github.Kennyc1012:BottomSheet:3.0.0'
+    compile 'com.github.Kennyc1012:BottomSheetMenu:3.0.0'
 }
 ```
 
