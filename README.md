@@ -148,6 +148,7 @@ onSheetItemSelected(BottomSheetMenuDialogFragment bottomSheet, MenuItem item, Ob
 - Many of the theme attributes have been removed or renamed. See the Styling section above for current values
 - CollaspingView has been removed. 
 - Migration to [AndroidX](https://developer.android.com/jetpack/androidx/) and [Google Material Components](https://github.com/material-components/material-components-android)
+- MinSdk is now 19, also targeting API 28
 
 # Upgrading From 1.x
 When upgrading to 2.x from a 1.x release, some changes will have to be made.
