@@ -10,7 +10,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kennyc.bottomsheet.BottomSheetListener
-import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment2
+import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListener {
@@ -30,13 +30,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.listBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.listBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     listener = this,
                     `object` = "some object",
                     sheet = R.menu.list_sheet)
                     .show(supportFragmentManager)
 
-            R.id.gridBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.gridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     sheet = R.menu.grid_sheet,
                     isGrid = true,
                     title = "Options",
@@ -44,14 +44,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                     `object` = "some object")
                     .show(supportFragmentManager)
 
-            R.id.darkBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.darkBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     sheet = R.menu.list_sheet,
                     listener = this,
                     `object` = "some object")
                     .dark()
                     .show(supportFragmentManager)
 
-            R.id.darkGridBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.darkGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     sheet = R.menu.grid_sheet,
                     isGrid = true,
                     title = "Options",
@@ -60,14 +60,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                     .dark()
                     .show(supportFragmentManager)
 
-            R.id.customBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.customBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     style = R.style.Theme_BottomSheetMenuDialog_Custom,
                     sheet = R.menu.list_sheet,
                     listener = this,
                     `object` = "some object")
                     .show(supportFragmentManager)
 
-            R.id.customGridBottomSheet -> BottomSheetMenuDialogFragment2.Builder(context = this,
+            R.id.customGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
                     style = R.style.Theme_BottomSheetMenuDialog_Custom,
                     sheet = R.menu.grid_sheet,
                     isGrid = true,
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/*"
                 intent.putExtra(Intent.EXTRA_TEXT, "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet")
-                BottomSheetMenuDialogFragment2.createShareBottomSheet(applicationContext, intent, "Share")?.show(supportFragmentManager, null)
+                BottomSheetMenuDialogFragment.createShareBottomSheet(applicationContext, intent, "Share")?.show(supportFragmentManager, null)
                 true
             }
 
@@ -97,15 +97,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
         }
     }
 
-    override fun onSheetShown(bottomSheet: BottomSheetMenuDialogFragment2, `object`: Any?) {
+    override fun onSheetShown(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?) {
         Log.v(TAG, "onSheetShown with Object " + `object`!!)
     }
 
-    override fun onSheetItemSelected(bottomSheet: BottomSheetMenuDialogFragment2, item: MenuItem, `object`: Any?) {
+    override fun onSheetItemSelected(bottomSheet: BottomSheetMenuDialogFragment, item: MenuItem, `object`: Any?) {
         Toast.makeText(applicationContext, item.title.toString() + " Clicked", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment2, `object`: Any?, dismissEvent: Int) {
+    override fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, dismissEvent: Int) {
         Log.v(TAG, "onSheetDismissed $dismissEvent")
     }
 }

@@ -26,7 +26,7 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
 import com.kennyc.bottomsheet.model.AppInfo
 import java.util.*
 
-class BottomSheetMenuDialogFragment2() : BottomSheetDialogFragment(), AdapterView.OnItemClickListener {
+class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView.OnItemClickListener {
 
     companion object {
         /**
@@ -557,8 +557,8 @@ class BottomSheetMenuDialogFragment2() : BottomSheetDialogFragment(), AdapterVie
          *
          * @return
          */
-        fun create(): BottomSheetMenuDialogFragment2 {
-            return BottomSheetMenuDialogFragment2(this)
+        fun create(): BottomSheetMenuDialogFragment {
+            return BottomSheetMenuDialogFragment(this)
         }
 
         /**
