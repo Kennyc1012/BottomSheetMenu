@@ -265,17 +265,15 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         when {
             builder.menuItems.isNotEmpty() -> {
                 adapter = GridAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid)
-                gridView.onItemClickListener = this
             }
 
             builder.apps.isNotEmpty() -> {
                 adapter = AppAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.apps, builder.isGrid)
-                gridView.adapter = adapter
             }
 
             else -> throw IllegalStateException("No items were passed to the builder")
         }
-
+        gridView.onItemClickListener = this
         gridView.adapter = adapter
         listener?.onSheetShown(this, builder.`object`)
         this.isCancelable = builder.cancelable
