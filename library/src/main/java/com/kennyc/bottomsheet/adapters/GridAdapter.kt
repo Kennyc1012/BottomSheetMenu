@@ -32,6 +32,7 @@ class GridAdapter(context: Context,
             icon.setImageDrawable(menuIcon)
             icon.visibility = if (menuIcon != null) View.VISIBLE else View.GONE
             title.text = item.title
+            title.isEnabled = item.isEnabled
         }.view
     }
 
@@ -40,4 +41,8 @@ class GridAdapter(context: Context,
     override fun getItemId(position: Int): Long = getItem(position).itemId.toLong()
 
     override fun getCount(): Int = items.size
+
+    override fun areAllItemsEnabled(): Boolean = false
+
+    override fun isEnabled(position: Int): Boolean = getItem(position).isEnabled
 }
