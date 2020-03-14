@@ -21,11 +21,10 @@ class AppAdapter(context: Context,
     @LayoutRes
     private val layoutResource: Int = if (isGrid) R.layout.bottom_sheet_grid_item else R.layout.bottom_sheet_list_item
 
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val appInfo = getItem(position)
 
-        val holder = when (convertView) {
+        return when (convertView) {
             null -> {
                 ViewHolder(inflater.inflate(layoutResource, parent, false)).apply {
                     title.setTextColor(textColor)
@@ -39,18 +38,12 @@ class AppAdapter(context: Context,
         }.apply {
             icon.setImageDrawable(appInfo.drawable)
             title.text = appInfo.title
-        }
-
-        return holder.view
+        }.view
     }
 
-    override fun getItem(position: Int): AppInfo {
-        return apps[position]
-    }
+    override fun getItem(position: Int): AppInfo = apps[position]
 
-    override fun getItemId(position: Int): Long {
-        return 0
-    }
+    override fun getItemId(position: Int): Long = 0
 
     override fun getCount(): Int {
         return apps.size

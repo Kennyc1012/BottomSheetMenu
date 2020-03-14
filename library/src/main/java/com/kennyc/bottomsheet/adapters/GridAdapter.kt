@@ -18,7 +18,7 @@ class GridAdapter(context: Context,
         val item = getItem(position)
         val menuIcon = item.icon
 
-        val holder = when (convertView) {
+        return when (convertView) {
             null -> {
                 val itemView = if (isGrid) R.layout.bottom_sheet_grid_item else R.layout.bottom_sheet_list_item
                 ViewHolder(inflater.inflate(itemView, parent, false)).apply {
@@ -32,21 +32,12 @@ class GridAdapter(context: Context,
             icon.setImageDrawable(menuIcon)
             icon.visibility = if (menuIcon != null) View.VISIBLE else View.GONE
             title.text = item.title
-        }
-
-
-        return holder.view
+        }.view
     }
 
-    override fun getItem(position: Int): MenuItem {
-        return items[position]
-    }
+    override fun getItem(position: Int): MenuItem = items[position]
 
-    override fun getItemId(position: Int): Long {
-        return getItem(position).itemId.toLong()
-    }
+    override fun getItemId(position: Int): Long = getItem(position).itemId.toLong()
 
-    override fun getCount(): Int {
-        return items.size
-    }
+    override fun getCount(): Int = items.size
 }

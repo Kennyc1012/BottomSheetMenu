@@ -78,24 +78,20 @@ class BottomSheetMenu(private val context: Context) : Menu {
     }
 
     override fun addSubMenu(title: CharSequence): SubMenu? {
-        // TODO Implement submenus
-        return null
+        throw UnsupportedOperationException("Not Supported")
     }
 
     override fun addSubMenu(titleRes: Int): SubMenu? {
-        // TODO Implement submenus
-        return null
+        throw UnsupportedOperationException("Not Supported")
     }
 
     override fun addSubMenu(groupId: Int, itemId: Int, order: Int,
                             title: CharSequence): SubMenu? {
-        // TODO Implement submenus
-        return null
+        throw UnsupportedOperationException("Not Supported")
     }
 
     override fun addSubMenu(groupId: Int, itemId: Int, order: Int, titleRes: Int): SubMenu? {
-        // TODO Implement submenus
-        return null
+        throw UnsupportedOperationException("Not Supported")
     }
 
     override fun clear() {

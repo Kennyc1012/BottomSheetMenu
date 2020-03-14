@@ -223,31 +223,29 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
     private var dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = BottomSheetDialog(requireActivity(), builder.style)
+        return BottomSheetDialog(requireActivity(), builder.style).apply {
+            setOnShowListener(DialogInterface.OnShowListener {
+                if (container.parent == null) return@OnShowListener
+                val params = (container.parent as View).layoutParams as CoordinatorLayout.LayoutParams
+                val behavior = params.behavior
 
-        dialog.setOnShowListener(DialogInterface.OnShowListener {
-            if (container.parent == null) return@OnShowListener
-            val params = (container.parent as View).layoutParams as CoordinatorLayout.LayoutParams
-            val behavior = params.behavior
-
-            // Should always be the case
-            if (behavior is BottomSheetBehavior<*>) {
-                behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-                    override fun onStateChanged(bottomSheet: View, state: Int) {
-                        if (state == BottomSheetBehavior.STATE_HIDDEN) {
-                            dismissEvent = BottomSheetListener.DISMISS_EVENT_SWIPE
-                            dismiss()
+                // Should always be the case
+                if (behavior is BottomSheetBehavior<*>) {
+                    behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                        override fun onStateChanged(bottomSheet: View, state: Int) {
+                            if (state == BottomSheetBehavior.STATE_HIDDEN) {
+                                dismissEvent = BottomSheetListener.DISMISS_EVENT_SWIPE
+                                dismiss()
+                            }
                         }
-                    }
 
-                    override fun onSlide(bottomSheet: View, slideOffSet: Float) {
-                        // NOOP
-                    }
-                })
-            }
-        })
-
-        return dialog
+                        override fun onSlide(bottomSheet: View, slideOffSet: Float) {
+                            // NOOP
+                        }
+                    })
+                }
+            })
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -262,13 +260,13 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         gridView = container.findViewById(R.id.bottom_sheet_grid)
         initUi()
 
-        when {
+        adapter = when {
             builder.menuItems.isNotEmpty() -> {
-                adapter = GridAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid)
+                GridAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid)
             }
 
             builder.apps.isNotEmpty() -> {
-                adapter = AppAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.apps, builder.isGrid)
+                AppAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.apps, builder.isGrid)
             }
 
             else -> throw IllegalStateException("No items were passed to the builder")
