@@ -45,16 +45,25 @@ To get started using BottomSheetMenu, first you'll need to create a menu resourc
 </menu>
 ```
 
-Then create a BottomSheetMenuDialogFragment via the Builder interface
+Then create a BottomSheetMenuDialogFragment via the Builder class using either the Builder method calls for java
+or named arguments for Kotlin 
 ```java
 new BottomSheetMenuDialogFragment.Builder(getActivity())
   .setSheet(R.menu.bottom_sheet)
   .setTitle(R.string.options)
   .setListener(myListener)
   .setObject(myObject)
-  .show();
+  .show(getSupportFragmentManager());
   ```
   
+  ```kotilin
+  BottomSheetMenuDialogFragment.Builder(context = this,
+        sheet = R.menu.bottom_sheet,
+        listener = myListener,
+        title = R.string.options,
+        `object` = myObject)
+        .show(supportFragmentManager)
+  ```
 # Styling
 BottomSheetMenu comes with both a Light and Dark theme to accommodate most scenarios. However, if you want to customize itr more, you can create your own style and supply it to the builder.
 </br> Customizable attributes are:
@@ -110,36 +119,62 @@ new BottomSheetMenuDialogFragment.Builder(getActivity(), R.style.MyBottomSheetSt
   .show();
 ```
 
+```kotlin
+BottomSheetMenuDialogFragment.Builder(context = this,
+        sheet = R.menu.bottom_sheet,
+        title = R.string.options,
+        listener = myListener,
+        style = R.style.MyBottomSheetStyle)
+        .show(supportFragmentManager)
+```
 ## Icons
 Based on the [Material Design Guidelines](http://www.google.com/design/spec/components/bottom-sheets.html#bottom-sheets-specs), icons for a linear list styled BottomSheet should be 24dp, where as a grid styled BottomSheet should be 48dp.
 
 # Share Intents
 BottomSheetMenu can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
-```java
-// Create the intent for sharing
-Intent intent = new Intent(Intent.ACTION_SEND);
-intent.setType("text/*");
-intent.putExtra(Intent.EXTRA_TEXT, "My text to share");
-// Pass the intent into the createShareBottomSheet method to generate the BottomSheet.
-DialogFragment share = BottomSheetMenuDialogFragment.createShareBottomSheet(getActivity(), intent, "My Title");
-// Make sure that it doesn't return null! If the system can not handle the intent, null will be returned.
-if (share != null) share.show(getSupportFragmentManager(), "MyTag");
-// By default, it will be styled as a list. For a grid, pass the boolean value true after the title parameter
+```kotlin
+Intent(Intent.ACTION_SEND).apply {
+    type = "text/*"
+    putExtra(Intent.EXTRA_TEXT, "My text to share"")
+    // Make sure to check that the createBottomSheet method does not return null!! 
+    // If the device can not handle the intent, null will be returned
+    BottomSheetMenuDialogFragment.createShareBottomSheet(context, this, "My Title")?.show(supportFragmentManager, null)
+}
 ```
-For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetMenuDialogFragment.java#L300)
+For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetMenuDialogFragment.kt#L50)
 
 
 # Callbacks
-BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for callbacks
-```java
-// Called when the BottomSheetMenuDialogFragment it first displayed
-onSheetShown(BottomSheetMenuDialogFragment bottomSheet, Object object)
+BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.kt) for callbacks
+```kotlin
+ /**
+     * Called when the [BottomSheetMenuDialogFragment] is first displayed
+     *
+     * @param bottomSheet The [BottomSheetMenuDialogFragment] that was shown
+     * @param object      Optional [Object] to pass to the [BottomSheetMenuDialogFragment]
+     */
+    fun onSheetShown(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?)
 
-// Called when the BottomSheetMenuDialogFragment has been dismissed. Passed value of dismissEvent signifies how the BottomSheetMenuDialogFragment was dismiss. see [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.java) for possible values
-onSheetDismissed(BottomSheetMenuDialogFragment bottomSheet,Object, object, @DismissEvent int dismissEvent)
+    /**
+     * Called when an item is selected from the list/grid of the [BottomSheetMenuDialogFragment]
+     *
+     * @param bottomSheet The [BottomSheetMenuDialogFragment] that had an item selected
+     * @param item        The item that was selected
+     * @param object      Optional [Object] to pass to the [BottomSheetMenuDialogFragment]
+     */
+    fun onSheetItemSelected(bottomSheet: BottomSheetMenuDialogFragment, item: MenuItem, `object`: Any?)
 
-// Called when an item is selected from the BottomSheetMenuDialogFragment
-onSheetItemSelected(BottomSheetMenuDialogFragment bottomSheet, MenuItem item, Object object)
+    /**
+     * Called when the [BottomSheetMenuDialogFragment] has been dismissed
+     *
+     * @param bottomSheet  The [BottomSheetMenuDialogFragment] that was dismissed
+     * @param object       Optional [Object] to pass to the [BottomSheetMenuDialogFragment]
+     * @param dismissEvent How the [BottomSheetMenuDialogFragment] was dismissed. Possible values are: <br></br>
+     *  * [.DISMISS_EVENT_SWIPE]
+     *  * [.DISMISS_EVENT_MANUAL]
+     *  * [.DISMISS_EVENT_ITEM_SELECTED]
+     */
+    fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, @DismissEvent dismissEvent: Int)
 ```
 
 # Upgrading to 3.X
@@ -173,7 +208,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-     implementation 'com.github.Kennyc1012:BottomSheetMenu:3.0.1'
+     implementation 'com.github.Kennyc1012:BottomSheetMenu:3.1.1'
 }
 ```
 
