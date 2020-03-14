@@ -14,6 +14,7 @@
 - Tablet support
 - Share Intent Picker
 - API 19+
+- Kotlin support
 
 
 # Using BottomSheetMenu
@@ -135,7 +136,7 @@ BottomSheetMenu can also be used to create a Share Intent Picker that will be st
 ```kotlin
 Intent(Intent.ACTION_SEND).apply {
     type = "text/*"
-    putExtra(Intent.EXTRA_TEXT, "My text to share"")
+    putExtra(Intent.EXTRA_TEXT, "My text to share")
     // Make sure to check that the createBottomSheet method does not return null!! 
     // If the device can not handle the intent, null will be returned
     BottomSheetMenuDialogFragment.createShareBottomSheet(context, this, "My Title")?.show(supportFragmentManager, null)
