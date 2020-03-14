@@ -466,6 +466,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         }
 
         /**
+         * Sets the menu resource to use for the [BottomSheetMenuDialogFragment]
+         *
+         * @param sheetItems The [BottomSheetListener] to receive callbacks for
+         * @return
+         */
+        fun setSheet(@MenuRes sheetItems: Int): Builder = setSheet(sheetItems, null)
+
+        /**
          * Sets the menu to use for the [BottomSheetMenuDialogFragment]
          *
          * @param menu
