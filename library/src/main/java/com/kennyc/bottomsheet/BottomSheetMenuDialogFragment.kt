@@ -353,7 +353,8 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
                                             title: String? = null,
                                             shareIntent: Intent? = null,
                                             listener: BottomSheetListener? = null,
-                                            `object`: Any? = null) {
+                                            `object`: Any? = null,
+                                            idsToDisable: Array<Int>? = null) {
 
         var style: Int = style; private set
         var columnCount: Int = columnCount; private set
@@ -367,7 +368,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         var `object`: Any? = `object`; private set
 
         init {
-            if (sheet != -1 && menuItems.isEmpty()) setSheet(sheet)
+            if (sheet != -1 && menuItems.isEmpty()) setSheet(sheet, idsToDisable)
         }
 
         /**
@@ -448,11 +449,19 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * Sets the menu resource to use for the [BottomSheetMenuDialogFragment]
          *
          * @param sheetItems The [BottomSheetListener] to receive callbacks for
+         * @param idsToDisable Ids of any MenuItems to set disabled
          * @return
          */
-        fun setSheet(@MenuRes sheetItems: Int): Builder {
+        fun setSheet(@MenuRes sheetItems: Int, idsToDisable: Array<Int>?): Builder {
             val menu = BottomSheetMenu(context)
             MenuInflater(context).inflate(sheetItems, menu)
+
+            idsToDisable?.let {
+                for (i in 0 until menu.size()) {
+                    val item = menu.getItem(i)
+                    if (it.contains(item.itemId)) item.isEnabled = false
+                }
+            }
             return setMenu(menu)
         }
 
@@ -462,16 +471,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @param menu
          * @return
          */
-        fun setMenu(menu: Menu?): Builder {
-            if (menu != null) {
-                val items = ArrayList<MenuItem>(menu.size())
+        fun setMenu(menu: Menu): Builder {
+            val items = ArrayList<MenuItem>(menu.size())
 
-                for (i in 0 until menu.size()) {
-                    items.add(menu.getItem(i))
-                }
-
-                return setMenuItems(items)
+            for (i in 0 until menu.size()) {
+                items.add(menu.getItem(i))
             }
+
+            return setMenuItems(items)
 
             return this
         }
@@ -482,8 +489,8 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @param menuItems
          * @return
          */
-        fun setMenuItems(menuItems: List<MenuItem>?): Builder {
-            this.menuItems.addAll(menuItems!!)
+        fun setMenuItems(menuItems: List<MenuItem>): Builder {
+            this.menuItems.addAll(menuItems)
             return this
         }
 
