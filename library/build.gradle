@@ -9,7 +9,7 @@ android {
         minSdkVersion 19
         targetSdkVersion sdk_version
         versionCode 29
-        versionName "3.1.1"
+        versionName "3.1.2"
     }
 
     lintOptions {
