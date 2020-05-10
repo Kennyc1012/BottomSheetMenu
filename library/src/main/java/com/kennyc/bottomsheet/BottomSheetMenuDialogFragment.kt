@@ -225,13 +225,16 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return BottomSheetDialog(requireActivity(), builder.style).apply {
             setOnShowListener(DialogInterface.OnShowListener {
+
                 if (container.parent == null) return@OnShowListener
                 val params = (container.parent as View).layoutParams as CoordinatorLayout.LayoutParams
                 val behavior = params.behavior
 
                 // Should always be the case
                 if (behavior is BottomSheetBehavior<*>) {
-                    behavior.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    if (builder.autoExpand) behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+                    behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                         override fun onStateChanged(bottomSheet: View, state: Int) {
                             if (state == BottomSheetBehavior.STATE_HIDDEN) {
                                 dismissEvent = BottomSheetListener.DISMISS_EVENT_SWIPE
@@ -275,6 +278,13 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         gridView.adapter = adapter
         listener?.onSheetShown(this, builder.`object`)
         this.isCancelable = builder.cancelable
+
+        dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)?.let {
+            BottomSheetBehavior.from(it).apply {
+                peekHeight = 200
+                state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
     }
 
     private fun initUi() {
@@ -348,6 +358,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
                                             @MenuRes sheet: Int = -1,
                                             cancelable: Boolean = true,
                                             isGrid: Boolean = false,
+                                            autoExpand: Boolean = true,
                                             menuItems: MutableList<MenuItem> = mutableListOf(),
                                             apps: MutableList<AppInfo> = mutableListOf(),
                                             title: String? = null,
@@ -361,6 +372,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         var title: String? = title; private set
         var cancelable: Boolean = cancelable; private set
         var isGrid: Boolean = isGrid; private set
+        var autoExpand: Boolean = autoExpand; private set
         var menuItems: MutableList<MenuItem> = menuItems; private set
         var apps: MutableList<AppInfo> = apps; private set
         var shareIntent: Intent? = shareIntent; private set
@@ -546,6 +558,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         }
 
         /**
+         * Sets if the [BottomSheetMenuDialogFragment] should auto expand when opened. Default value is true
+         */
+        fun setAutoExpand(autoExpand: Boolean): Builder {
+            this.autoExpand = autoExpand
+            return this
+        }
+
+        /**
          * Sets the apps to be used for a share intent. This is not a public facing method.
          *
          *
@@ -561,7 +581,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
             shareIntent = intent
             return this
         }
-
 
         /**
          * Creates the [BottomSheetMenuDialogFragment] but does not show it.
