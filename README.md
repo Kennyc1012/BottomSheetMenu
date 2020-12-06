@@ -180,7 +180,7 @@ BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/Bot
 
 # Upgrading to 3.X
 - `BottomSheet` has been renamed to `BottomSheetMenuDialogFragment`
-- Custom views and simple messages are no longer supported. Please use a [BottomSheetDialogFragment](https://developer.android.com/reference/android/support/design/widget/BottomSheetDialogFragment) and customize it from there
+- Custom views and simple messages are no longer supported. Please use a [BottomSheetDialogFragment](https://developer.android.com/reference/com/google/android/material/bottomsheet/BottomSheetDialogFragment) and customize it from there
 - Many of the theme attributes have been removed or renamed. See the Styling section above for current values
 - CollaspingView has been removed. 
 - Migration to [AndroidX](https://developer.android.com/jetpack/androidx/) and [Google Material Components](https://github.com/material-components/material-components-android)
