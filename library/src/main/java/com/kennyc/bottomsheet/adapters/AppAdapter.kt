@@ -6,10 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.annotation.LayoutRes
+import androidx.annotation.RestrictTo
 import androidx.core.content.ContextCompat
 import com.kennyc.bottomsheet.R
 import com.kennyc.bottomsheet.model.AppInfo
 
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class AppAdapter(context: Context,
                  private val apps: List<AppInfo>,
                  isGrid: Boolean) : BaseAdapter() {

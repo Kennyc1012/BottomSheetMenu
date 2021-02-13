@@ -26,7 +26,7 @@ import android.view.SubMenu
 import android.view.View
 import androidx.annotation.DrawableRes
 
-class BottomSheetMenuItem
+internal class BottomSheetMenuItem
 /**
  * Creates a MenuItem
  *

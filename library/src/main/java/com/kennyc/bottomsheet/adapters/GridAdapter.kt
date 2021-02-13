@@ -6,8 +6,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import androidx.annotation.RestrictTo
 import com.kennyc.bottomsheet.R
 
+@RestrictTo(RestrictTo.Scope.LIBRARY)
 class GridAdapter(context: Context,
                   private val items: List<MenuItem>,
                   private val isGrid: Boolean) : BaseAdapter() {
