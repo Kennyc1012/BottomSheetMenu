@@ -254,6 +254,6 @@ class BottomSheetMenu(private val context: Context) : Menu {
 
         fun setIcon(@DrawableRes icon: Int): MenuItemBuilder = setIcon(ResourcesCompat.getDrawable(context.resources, icon, context.theme))
 
-        fun build(): MenuItem = BottomSheetMenuItem(context, title, icon)
+        fun build(): MenuItem = BottomSheetMenuItem(context, id, title, icon)
     }
 }
