@@ -209,7 +209,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-     implementation 'com.github.Kennyc1012:BottomSheetMenu:3.1.3'
+     implementation 'com.github.Kennyc1012:BottomSheetMenu:3.2.0'
 }
 ```
 
