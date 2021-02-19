@@ -3,10 +3,14 @@ package com.kennyc.bottomsheet.menu
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.SubMenu
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 
 /*
  * Copyright (C) 2010 The Android Open Source Project
@@ -225,5 +229,31 @@ class BottomSheetMenu(private val context: Context) : Menu {
 
     override fun size(): Int {
         return items.size
+    }
+
+    class MenuItemBuilder(private val context: Context,
+                          id: Int,
+                          title: String = "NULL",
+                          icon: Drawable? = null) {
+
+        var title: String = title; private set
+        var icon: Drawable? = icon; private set
+        var id: Int = id; private set
+
+        fun setTitle(@StringRes title: Int): MenuItemBuilder = setTitle(context.getString(title))
+
+        fun setTitle(title: String): MenuItemBuilder {
+            this.title = title
+            return this
+        }
+
+        fun setIcon(icon: Drawable?): MenuItemBuilder {
+            this.icon = icon
+            return this
+        }
+
+        fun setIcon(@DrawableRes icon: Int): MenuItemBuilder = setIcon(ResourcesCompat.getDrawable(context.resources, icon, context.theme))
+
+        fun build(): MenuItem = BottomSheetMenuItem(context, title, icon)
     }
 }

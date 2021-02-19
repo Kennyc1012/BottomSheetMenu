@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.kennyc.bottomsheet.BottomSheetListener
 import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment
+import com.kennyc.bottomsheet.menu.BottomSheetMenu
+import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListener {
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
         findViewById<Button>(R.id.darkGridBottomSheet).setOnClickListener(this)
         findViewById<Button>(R.id.customBottomSheet).setOnClickListener(this)
         findViewById<Button>(R.id.customGridBottomSheet).setOnClickListener(this)
+        findViewById<Button>(R.id.dynamicBottomSheet).setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
@@ -75,6 +78,23 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                     listener = this,
                     `object` = "some object")
                     .show(supportFragmentManager)
+
+            R.id.dynamicBottomSheet -> {
+                val random = Random(50)
+                val items = mutableListOf<MenuItem>()
+
+                for (i in 1..5) {
+                    val menuItem = BottomSheetMenu.MenuItemBuilder(applicationContext, i, random.nextInt().toString())
+                            .build()
+                    items.add(menuItem)
+                }
+
+                BottomSheetMenuDialogFragment.Builder(context = this,
+                        listener = this,
+                        `object` = "some object",
+                        menuItems = items)
+                        .show(supportFragmentManager)
+            }
         }
     }
 

@@ -25,6 +25,7 @@ import android.view.MenuItem
 import android.view.SubMenu
 import android.view.View
 import androidx.annotation.DrawableRes
+import androidx.core.content.res.ResourcesCompat
 
 internal class BottomSheetMenuItem
 /**
@@ -78,7 +79,7 @@ internal class BottomSheetMenuItem
      * @param title   Title of the MenuItem
      * @param icon    Drawable of the MenuItem
      */
-    constructor(context: Context, title: CharSequence, icon: Drawable) : this(context, 0, 0, 0, 0, title) {
+    constructor(context: Context, title: CharSequence, icon: Drawable?) : this(context, 0, 0, 0, 0, title) {
         setIcon(icon)
     }
 
@@ -102,7 +103,7 @@ internal class BottomSheetMenuItem
      * @param title   Title of the MenuItem
      * @param icon    Drawable of the MenuItem
      */
-    constructor(context: Context, id: Int, title: CharSequence, icon: Drawable) : this(context, 0, id, 0, 0, title) {
+    constructor(context: Context, id: Int, title: CharSequence, icon: Drawable?) : this(context, 0, id, 0, 0, title) {
         setIcon(icon)
     }
 
@@ -195,7 +196,7 @@ internal class BottomSheetMenuItem
         return this
     }
 
-    override fun setIcon(icon: Drawable): MenuItem {
+    override fun setIcon(icon: Drawable?): MenuItem {
         iconDrawable = icon
         iconResId = NO_ICON
         return this
@@ -204,7 +205,7 @@ internal class BottomSheetMenuItem
     override fun setIcon(iconRes: Int): MenuItem {
         if (iconRes != NO_ICON) {
             iconResId = iconRes
-            iconDrawable = context.resources.getDrawable(iconRes)
+            iconDrawable = ResourcesCompat.getDrawable(context.resources, iconResId, context.theme)
         }
 
         return this
