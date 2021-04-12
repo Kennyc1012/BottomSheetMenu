@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion sdk_version
-        versionCode 32
-        versionName "3.2.2"
+        versionCode 33
+        versionName "3.2.3"
     }
 
     lintOptions {
