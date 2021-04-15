@@ -47,6 +47,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String, isGrid: Boolean, appsFilter: Set<String>?, toExclude: Set<String>?): DialogFragment? {
 
             val manager = context.packageManager
@@ -110,6 +111,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int, isGrid: Boolean, appsFilter: Set<String>?, toExclude: Set<String>?): DialogFragment? {
             return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter, toExclude)
         }
@@ -132,6 +134,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int, isGrid: Boolean): DialogFragment? {
             return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null, null)
         }
@@ -154,6 +157,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String, isGrid: Boolean): DialogFragment? {
             return createShareBottomSheet(context, intent, shareTitle, isGrid, null, null)
         }
@@ -176,6 +180,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String): DialogFragment? {
             return createShareBottomSheet(context, intent, shareTitle, false, null, null)
         }
@@ -198,6 +203,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @JvmStatic
         fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int): DialogFragment? {
             return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null, null)
         }
