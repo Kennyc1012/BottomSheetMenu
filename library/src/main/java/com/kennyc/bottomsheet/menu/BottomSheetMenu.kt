@@ -57,13 +57,13 @@ class BottomSheetMenu(private val context: Context) : Menu {
                                   outSpecificItems: Array<MenuItem>?): Int {
         val pm = context.packageManager
         val lri = pm.queryIntentActivityOptions(caller, specifics, intent, 0)
-        val N = lri?.size ?: 0
+        val size = lri.size
 
         if (flags and Menu.FLAG_APPEND_TO_GROUP == 0) {
             removeGroup(groupId)
         }
 
-        for (i in 0 until N) {
+        for (i in 0 until size) {
             val ri = lri[i]
             val rintent = Intent(
                     if (ri.specificIndex < 0) intent else specifics[ri.specificIndex])
@@ -78,7 +78,7 @@ class BottomSheetMenu(private val context: Context) : Menu {
             }
         }
 
-        return N
+        return size
     }
 
     override fun addSubMenu(title: CharSequence): SubMenu? {

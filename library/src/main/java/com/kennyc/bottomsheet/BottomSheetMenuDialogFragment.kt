@@ -608,16 +608,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
             create().show(manager, tag)
         }
     }
-    /**
-     * Constructor for creating a [BottomSheetMenuDialogFragment]
-     *
-     * @param context App context
-     */
-    /**
-     * Creates the [BottomSheetMenuDialogFragment] and shows it.
-     *
-     * @param manager [FragmentManager] the [BottomSheetMenuDialogFragment] will be added to
-     */
 }
 
 private const val MIN_LIST_TABLET_ITEMS = 6

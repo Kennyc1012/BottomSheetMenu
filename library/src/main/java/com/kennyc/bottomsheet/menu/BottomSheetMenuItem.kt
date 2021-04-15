@@ -313,16 +313,16 @@ internal class BottomSheetMenuItem
 
     companion object {
 
-        private val NO_ICON = 0
+        private const val NO_ICON = 0
 
-        private val CHECKABLE = 0x00000001
+        private const val CHECKABLE = 0x00000001
 
-        private val CHECKED = 0x00000002
+        private const val CHECKED = 0x00000002
 
-        private val EXCLUSIVE = 0x00000004
+        private const val EXCLUSIVE = 0x00000004
 
-        private val HIDDEN = 0x00000008
+        private const val HIDDEN = 0x00000008
 
-        private val ENABLED = 0x00000010
+        private const val ENABLED = 0x00000010
     }
 }
