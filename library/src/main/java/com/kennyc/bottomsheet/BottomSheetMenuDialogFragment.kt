@@ -229,6 +229,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
     private var dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        retainInstance = true
         return BottomSheetDialog(requireActivity(), builder.style).apply {
             setOnShowListener(DialogInterface.OnShowListener {
 
