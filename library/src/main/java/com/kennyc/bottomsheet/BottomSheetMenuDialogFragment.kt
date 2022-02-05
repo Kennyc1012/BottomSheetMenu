@@ -26,7 +26,8 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
 import com.kennyc.bottomsheet.model.AppInfo
 import java.util.*
 
-class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView.OnItemClickListener {
+class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
+    AdapterView.OnItemClickListener {
 
     companion object {
         /**
@@ -48,7 +49,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String, isGrid: Boolean, appsFilter: Set<String>?, toExclude: Set<String>?): DialogFragment? {
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            shareTitle: String,
+            isGrid: Boolean,
+            appsFilter: Set<String>?,
+            toExclude: Set<String>?
+        ): DialogFragment? {
 
             val manager = context.packageManager
             val apps = manager.queryIntentActivities(intent, 0)
@@ -80,12 +88,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
 
                 if (toRemove.isNotEmpty()) appResources.removeAll(toRemove)
 
-                return Builder(context = context,
-                        apps = appResources,
-                        shareIntent = intent,
-                        title = shareTitle,
-                        isGrid = isGrid)
-                        .create()
+                return Builder(
+                    context = context,
+                    apps = appResources,
+                    shareIntent = intent,
+                    title = shareTitle,
+                    isGrid = isGrid
+                )
+                    .create()
             }
 
             return null
@@ -112,8 +122,22 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int, isGrid: Boolean, appsFilter: Set<String>?, toExclude: Set<String>?): DialogFragment? {
-            return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, appsFilter, toExclude)
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            @StringRes shareTitle: Int,
+            isGrid: Boolean,
+            appsFilter: Set<String>?,
+            toExclude: Set<String>?
+        ): DialogFragment? {
+            return createShareBottomSheet(
+                context,
+                intent,
+                context.getString(shareTitle),
+                isGrid,
+                appsFilter,
+                toExclude
+            )
         }
 
         /**
@@ -135,8 +159,20 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int, isGrid: Boolean): DialogFragment? {
-            return createShareBottomSheet(context, intent, context.getString(shareTitle), isGrid, null, null)
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            @StringRes shareTitle: Int,
+            isGrid: Boolean
+        ): DialogFragment? {
+            return createShareBottomSheet(
+                context,
+                intent,
+                context.getString(shareTitle),
+                isGrid,
+                null,
+                null
+            )
         }
 
         /**
@@ -158,7 +194,12 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String, isGrid: Boolean): DialogFragment? {
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            shareTitle: String,
+            isGrid: Boolean
+        ): DialogFragment? {
             return createShareBottomSheet(context, intent, shareTitle, isGrid, null, null)
         }
 
@@ -181,7 +222,11 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, shareTitle: String): DialogFragment? {
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            shareTitle: String
+        ): DialogFragment? {
             return createShareBottomSheet(context, intent, shareTitle, false, null, null)
         }
 
@@ -204,8 +249,19 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          * apps can handle the share intent
          */
         @JvmStatic
-        fun createShareBottomSheet(context: Context, intent: Intent, @StringRes shareTitle: Int): DialogFragment? {
-            return createShareBottomSheet(context, intent, context.getString(shareTitle), false, null, null)
+        fun createShareBottomSheet(
+            context: Context,
+            intent: Intent,
+            @StringRes shareTitle: Int
+        ): DialogFragment? {
+            return createShareBottomSheet(
+                context,
+                intent,
+                context.getString(shareTitle),
+                false,
+                null,
+                null
+            )
         }
     }
 
@@ -234,14 +290,16 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
             setOnShowListener(DialogInterface.OnShowListener {
 
                 if (container.parent == null) return@OnShowListener
-                val params = (container.parent as View).layoutParams as CoordinatorLayout.LayoutParams
+                val params =
+                    (container.parent as View).layoutParams as CoordinatorLayout.LayoutParams
                 val behavior = params.behavior
 
                 // Should always be the case
                 if (behavior is BottomSheetBehavior<*>) {
                     if (builder.autoExpand) behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
-                    behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    behavior.addBottomSheetCallback(object :
+                        BottomSheetBehavior.BottomSheetCallback() {
                         override fun onStateChanged(bottomSheet: View, state: Int) {
                             if (state == BottomSheetBehavior.STATE_HIDDEN) {
                                 dismissEvent = BottomSheetListener.DISMISS_EVENT_SWIPE
@@ -258,7 +316,11 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.bottom_sheet_menu, container, false)
     }
 
@@ -272,11 +334,19 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
 
         adapter = when {
             builder.menuItems.isNotEmpty() -> {
-                GridAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.menuItems, builder.isGrid)
+                GridAdapter(
+                    ContextThemeWrapper(requireActivity(), builder.style),
+                    builder.menuItems,
+                    builder.isGrid
+                )
             }
 
             builder.apps.isNotEmpty() -> {
-                AppAdapter(ContextThemeWrapper(requireActivity(), builder.style), builder.apps, builder.isGrid)
+                AppAdapter(
+                    ContextThemeWrapper(requireActivity(), builder.style),
+                    builder.apps,
+                    builder.isGrid
+                )
             }
 
             else -> throw IllegalStateException("No items were passed to the builder")
@@ -286,12 +356,13 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
         listener?.onSheetShown(this, builder.`object`)
         this.isCancelable = builder.cancelable
 
-        dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)?.let {
-            BottomSheetBehavior.from(it).apply {
-                peekHeight = 200
-                state = BottomSheetBehavior.STATE_COLLAPSED
+        dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+            ?.let {
+                BottomSheetBehavior.from(it).apply {
+                    peekHeight = 200
+                    state = BottomSheetBehavior.STATE_COLLAPSED
+                }
             }
-        }
     }
 
     private fun initUi() {
@@ -359,20 +430,22 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
     /**
      * Builder factory used for creating [BottomSheetMenuDialogFragment]
      */
-    class Builder @JvmOverloads constructor(private val context: Context,
-                                            @StyleRes style: Int = R.style.Theme_BottomSheetMenuDialog_Light,
-                                            columnCount: Int = -1,
-                                            @MenuRes sheet: Int = -1,
-                                            cancelable: Boolean = true,
-                                            isGrid: Boolean = false,
-                                            autoExpand: Boolean = true,
-                                            menuItems: MutableList<MenuItem> = mutableListOf(),
-                                            apps: MutableList<AppInfo> = mutableListOf(),
-                                            title: String? = null,
-                                            shareIntent: Intent? = null,
-                                            listener: BottomSheetListener? = null,
-                                            `object`: Any? = null,
-                                            idsToDisable: Array<Int>? = null) {
+    class Builder @JvmOverloads constructor(
+        private val context: Context,
+        @StyleRes style: Int = R.style.Theme_BottomSheetMenuDialog_Light,
+        columnCount: Int = -1,
+        @MenuRes sheet: Int = -1,
+        cancelable: Boolean = true,
+        isGrid: Boolean = false,
+        autoExpand: Boolean = true,
+        menuItems: MutableList<MenuItem> = mutableListOf(),
+        apps: MutableList<AppInfo> = mutableListOf(),
+        title: String? = null,
+        shareIntent: Intent? = null,
+        listener: BottomSheetListener? = null,
+        `object`: Any? = null,
+        idsToDisable: Array<Int>? = null
+    ) {
 
         var style: Int = style; private set
         var columnCount: Int = columnCount; private set
@@ -397,6 +470,16 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(), AdapterView
          */
         fun dark(): Builder {
             style = R.style.Theme_BottomSheetMenuDialog
+            return this
+        }
+
+        /**
+         * Sets the [BottomSheetMenuDialogFragment] to use the DayNight theme
+         *
+         * @return
+         */
+        fun dayNight(): Builder {
+            style = R.style.Theme_BottomSheetMenuDialog_DayNight
             return this
         }
 

@@ -29,71 +29,94 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
         findViewById<Button>(R.id.customBottomSheet).setOnClickListener(this)
         findViewById<Button>(R.id.customGridBottomSheet).setOnClickListener(this)
         findViewById<Button>(R.id.dynamicBottomSheet).setOnClickListener(this)
+        findViewById<Button>(R.id.dayNightBottomSheet).setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
-            R.id.listBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    listener = this,
-                    `object` = "some object",
-                    sheet = R.menu.list_sheet)
-                    .show(supportFragmentManager)
+            R.id.listBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                listener = this,
+                `object` = "some object",
+                sheet = R.menu.list_sheet
+            ).show(supportFragmentManager)
 
-            R.id.gridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    sheet = R.menu.grid_sheet,
-                    isGrid = true,
-                    title = "Options",
-                    listener = this,
-                    `object` = "some object")
-                    .show(supportFragmentManager)
+            R.id.gridBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                sheet = R.menu.grid_sheet,
+                isGrid = true,
+                title = "Options",
+                listener = this,
+                `object` = "some object"
+            ).show(supportFragmentManager)
 
-            R.id.darkBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    sheet = R.menu.list_sheet,
-                    listener = this,
-                    `object` = "some object")
-                    .dark()
-                    .show(supportFragmentManager)
+            R.id.darkBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                sheet = R.menu.list_sheet,
+                listener = this,
+                `object` = "some object"
+            ).dark()
+                .show(supportFragmentManager)
 
-            R.id.darkGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    sheet = R.menu.grid_sheet,
-                    isGrid = true,
-                    title = "Options",
-                    listener = this,
-                    `object` = "some object")
-                    .dark()
-                    .show(supportFragmentManager)
+            R.id.darkGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                sheet = R.menu.grid_sheet,
+                isGrid = true,
+                title = "Options",
+                listener = this,
+                `object` = "some object"
+            ).dark()
+                .show(supportFragmentManager)
 
-            R.id.customBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    style = R.style.Theme_BottomSheetMenuDialog_Custom,
-                    sheet = R.menu.list_sheet,
-                    listener = this,
-                    `object` = "some object")
-                    .show(supportFragmentManager)
+            R.id.customBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                style = R.style.Theme_BottomSheetMenuDialog_Custom,
+                sheet = R.menu.list_sheet,
+                listener = this,
+                `object` = "some object"
+            ).show(supportFragmentManager)
 
-            R.id.customGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(context = this,
-                    style = R.style.Theme_BottomSheetMenuDialog_Custom,
-                    sheet = R.menu.grid_sheet,
-                    isGrid = true,
-                    title = "Options",
-                    listener = this,
-                    `object` = "some object")
-                    .show(supportFragmentManager)
+            R.id.customGridBottomSheet -> BottomSheetMenuDialogFragment.Builder(
+                context = this,
+                style = R.style.Theme_BottomSheetMenuDialog_Custom,
+                sheet = R.menu.grid_sheet,
+                isGrid = true,
+                title = "Options",
+                listener = this,
+                `object` = "some object"
+            ).show(supportFragmentManager)
 
             R.id.dynamicBottomSheet -> {
                 val random = Random(50)
                 val items = mutableListOf<MenuItem>()
 
                 for (i in 1..5) {
-                    val menuItem = BottomSheetMenu.MenuItemBuilder(applicationContext, i, random.nextInt().toString())
-                            .build()
+                    val menuItem = BottomSheetMenu.MenuItemBuilder(
+                        applicationContext,
+                        i,
+                        random.nextInt().toString()
+                    )
+                        .build()
                     items.add(menuItem)
                 }
 
-                BottomSheetMenuDialogFragment.Builder(context = this,
-                        listener = this,
-                        `object` = "some object",
-                        menuItems = items)
-                        .show(supportFragmentManager)
+                BottomSheetMenuDialogFragment.Builder(
+                    context = this,
+                    listener = this,
+                    `object` = "some object",
+                    menuItems = items
+                ).show(supportFragmentManager)
+            }
+
+            R.id.dayNightBottomSheet -> {
+                BottomSheetMenuDialogFragment.Builder(
+                    context = this,
+                    listener = this,
+                    `object` = "some object",
+                    title = "DayNight",
+                    sheet = R.menu.list_sheet
+                ).dayNight()
+                    .show(supportFragmentManager)
             }
         }
     }
@@ -108,8 +131,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
             R.id.share -> {
                 val intent = Intent(Intent.ACTION_SEND)
                 intent.type = "text/*"
-                intent.putExtra(Intent.EXTRA_TEXT, "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet")
-                BottomSheetMenuDialogFragment.createShareBottomSheet(applicationContext, intent, "Share")?.show(supportFragmentManager, null)
+                intent.putExtra(
+                    Intent.EXTRA_TEXT,
+                    "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet"
+                )
+                BottomSheetMenuDialogFragment.createShareBottomSheet(
+                    applicationContext,
+                    intent,
+                    "Share"
+                )?.show(supportFragmentManager, null)
                 true
             }
 
@@ -121,11 +151,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
         Log.v(TAG, "onSheetShown with Object " + `object`!!)
     }
 
-    override fun onSheetItemSelected(bottomSheet: BottomSheetMenuDialogFragment, item: MenuItem, `object`: Any?) {
-        Toast.makeText(applicationContext, item.title.toString() + " Clicked", Toast.LENGTH_SHORT).show()
+    override fun onSheetItemSelected(
+        bottomSheet: BottomSheetMenuDialogFragment,
+        item: MenuItem,
+        `object`: Any?
+    ) {
+        Toast.makeText(applicationContext, item.title.toString() + " Clicked", Toast.LENGTH_SHORT)
+            .show()
     }
 
-    override fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, dismissEvent: Int) {
+    override fun onSheetDismissed(
+        bottomSheet: BottomSheetMenuDialogFragment,
+        `object`: Any?,
+        dismissEvent: Int
+    ) {
         Log.v(TAG, "onSheetDismissed $dismissEvent")
     }
 }

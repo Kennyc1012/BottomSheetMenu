@@ -1,6 +1,7 @@
 package com.kennyc.bottomsheet.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,6 @@ class AppAdapter(context: Context,
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
 
-    private val textColor: Int = ContextCompat.getColor(context, R.color.black_85)
-
     @LayoutRes
     private val layoutResource: Int = if (isGrid) R.layout.bottom_sheet_grid_item else R.layout.bottom_sheet_list_item
 
@@ -29,7 +28,6 @@ class AppAdapter(context: Context,
         return when (convertView) {
             null -> {
                 ViewHolder(inflater.inflate(layoutResource, parent, false)).apply {
-                    title.setTextColor(textColor)
                     view.tag = this
                 }
             }

@@ -52,5 +52,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show Dynamic Bottom sheet" />
+
+        <Button
+            android:id="@+id/dayNightBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show DayNight Bottom sheet" />
     </LinearLayout>
 </ScrollView>

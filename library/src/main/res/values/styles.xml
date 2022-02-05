@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.BottomSheetMenuDialog.Light" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+    <style name="Theme.BottomSheetMenuDialog.Light" parent="Theme.Material3.Light.BottomSheetDialog">
         <item name="bottom_sheet_menu_title_text_appearance">
             @style/BottomSheetMenu.Title.TextAppearance.Light
         </item>
@@ -11,10 +11,9 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/BottomSheetMenu.GridItem.TextAppearance.Light
         </item>
-        <item name="bottom_sheet_menu_selector">@drawable/bs_list_selector</item>
     </style>
 
-    <style name="Theme.BottomSheetMenuDialog" parent="Theme.MaterialComponents.BottomSheetDialog">
+    <style name="Theme.BottomSheetMenuDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
         <item name="bottom_sheet_menu_title_text_appearance">
             @style/BottomSheetMenu.Title.TextAppearance
         </item>
@@ -24,16 +23,23 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/BottomSheetMenu.GridItem.TextAppearance
         </item>
-        <item name="bottom_sheet_menu_selector">@drawable/bs_list_selector</item>
     </style>
 
-    <style name="Base.BottomSheetMenu.Title.TextAppearance" parent="@android:style/TextAppearance">
-        <item name="android:textSize">@dimen/bottom_sheet_menu_text_size</item>
-        <item name="android:typeface">sans</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/grey_55</item>
+    <style name="Theme.BottomSheetMenuDialog.DayNight" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="bottom_sheet_menu_title_text_appearance">
+            @style/BottomSheetMenu.Title.TextAppearance
+        </item>
+        <item name="bottom_sheet_menu_list_text_appearance">
+            @style/BottomSheetMenu.ListItem.TextAppearance
+        </item>
+        <item name="bottom_sheet_menu_grid_text_appearance">
+            @style/BottomSheetMenu.GridItem.TextAppearance
+        </item>
     </style>
 
+    <style name="Base.BottomSheetMenu.Title.TextAppearance" parent="TextAppearance.Material3.TitleLarge"/>
+
+    <style name="Base.BottomSheetMenu.ListItem" parent="TextAppearance.Material3.BodyMedium"/>
 
     <style name="BottomSheetMenu.Title" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">56dp</item>
@@ -62,33 +68,18 @@
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
 
-
     <!-- Light Styles -->
-    <style name="BottomSheetMenu.Title.TextAppearance.Light" parent="Base.BottomSheetMenu.Title.TextAppearance">
-        <item name="android:textColor">@color/black_55</item>
-    </style>
+    <style name="BottomSheetMenu.Title.TextAppearance.Light" parent="Base.BottomSheetMenu.Title.TextAppearance"/>
 
-    <style name="BottomSheetMenu.ListItem.TextAppearance.Light" parent="android:TextAppearance">
-        <item name="android:textColor">@color/bottom_sheet_list_item_color_light</item>
-        <item name="android:textSize">16sp</item>
-    </style>
+    <style name="BottomSheetMenu.ListItem.TextAppearance.Light" parent="Base.BottomSheetMenu.ListItem"/>
 
-    <style name="BottomSheetMenu.GridItem.TextAppearance.Light" parent="android:TextAppearance">
-        <item name="android:textColor">@color/bottom_sheet_list_item_color_light</item>
-        <item name="android:textSize">14sp</item>
-    </style>
+    <style name="BottomSheetMenu.GridItem.TextAppearance.Light" parent="Base.BottomSheetMenu.ListItem"/>
 
     <!-- Dark style -->
     <style name="BottomSheetMenu.Title.TextAppearance" parent="Base.BottomSheetMenu.Title.TextAppearance" />
 
-    <style name="BottomSheetMenu.ListItem.TextAppearance" parent="android:TextAppearance">
-        <item name="android:textColor">@color/bottom_sheet_list_item_color_dark</item>
-        <item name="android:textSize">16sp</item>
-    </style>
+    <style name="BottomSheetMenu.ListItem.TextAppearance" parent="Base.BottomSheetMenu.ListItem"/>
 
-    <style name="BottomSheetMenu.GridItem.TextAppearance" parent="android:TextAppearance">
-        <item name="android:textColor">@color/bottom_sheet_list_item_color_dark</item>
-        <item name="android:textSize">14sp</item>
-    </style>
+    <style name="BottomSheetMenu.GridItem.TextAppearance" parent="Base.BottomSheetMenu.ListItem"/>
 
 </resources>
