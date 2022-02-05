@@ -9,11 +9,12 @@
 
 # Features
 - Both list and grid style
-- Light and Dark theme as well as custom themeing options
+- Light, Dark, and DayNight theme as well as custom themeing options
+- Material3 Theme support
 - XML style support
 - Tablet support
 - Share Intent Picker
-- API 19+
+- API 21+
 - Kotlin support
 
 
@@ -75,9 +76,6 @@ BottomSheetMenu comes with both a Light and Dark theme to accommodate most scena
 <!-- The number of columns to show when using the grid style -->
 <attr name="bottom_sheet_menu_column_count" format="integer" />
 
-<!-- The selector to be used for the items in the list/grid -->
-<attr name="bottom_sheet_menu_selector" format="reference" />
-
 <!-- The text appearance of the list items -->
 <attr name="bottom_sheet_menu_list_text_appearance" format="reference" />
 
@@ -107,7 +105,7 @@ Then create a style
     <item name="android:textSize">20sp</item>
 </style>
 ```
-Also note that each of these pre-defined styles also have a light theme. They are named similary with a `.Light` added to the end of the style name</br>
+Also note that each of these pre-defined styles also have a light and DayNight theme. They are named similary with a `.Light` or `DayNight` added to the end of the style name</br>
 `@style/Theme.BottomSheetMenuDialog.Light` `@style/BottomSheetMenu.Title.TextAppearance.Light` etc...
 
 
@@ -128,8 +126,6 @@ BottomSheetMenuDialogFragment.Builder(context = this,
         style = R.style.MyBottomSheetStyle)
         .show(supportFragmentManager)
 ```
-## Icons
-Based on the [Material Design Guidelines](http://www.google.com/design/spec/components/bottom-sheets.html#bottom-sheets-specs), icons for a linear list styled BottomSheet should be 24dp, where as a grid styled BottomSheet should be 48dp.
 
 # Share Intents
 BottomSheetMenu can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
