@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
-        android:listSelector="?bottom_sheet_menu_selector"
         android:stretchMode="columnWidth"
         tools:listitem="@layout/bottom_sheet_list_item" />
 

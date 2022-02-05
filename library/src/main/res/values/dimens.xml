@@ -2,7 +2,6 @@
 <resources>
 
     <dimen name="bottom_sheet_menu_dialog_padding">16dp</dimen>
-    <dimen name="bottom_sheet_menu_text_size">16sp</dimen>
     <dimen name="bottom_sheet_menu_list_padding">8dp</dimen>
     <dimen name="bottom_sheet_menu_list_icon_size">24dp</dimen>
     <dimen name="bottom_sheet_menu_grid_icon_size">48dp</dimen>
