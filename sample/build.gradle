@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.kennyc.bottomsheetsample"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion sdk_version
         versionCode 1
         versionName "1.0"

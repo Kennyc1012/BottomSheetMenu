@@ -6,7 +6,7 @@ android {
     flavorDimensions "default"
 
     defaultConfig {
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion sdk_version
         versionCode 34
         versionName "3.3.0"
