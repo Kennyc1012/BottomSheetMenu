@@ -174,6 +174,14 @@ BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/Bot
     fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, @DismissEvent dismissEvent: Int)
 ```
 
+# Upgrading to 4.X
+- Styles now extend Theme.Material3.* themes
+- An app's style should inherit from a MaterialComponent theme. Material3 themes are preferred but not required. 
+- Removed `bottom_sheet_menu_selector` attribute
+- Removed various resources
+- Java 11 is now required to compile project
+- MinSdk is now 21, also targeting API 31
+
 # Upgrading to 3.X
 - `BottomSheet` has been renamed to `BottomSheetMenuDialogFragment`
 - Custom views and simple messages are no longer supported. Please use a [BottomSheetDialogFragment](https://developer.android.com/reference/com/google/android/material/bottomsheet/BottomSheetDialogFragment) and customize it from there
