@@ -81,6 +81,12 @@ BottomSheetMenu comes with both a Light and Dark theme to accommodate most scena
 
 <!-- The text appearance of the grid items -->
 <attr name="bottom_sheet_menu_grid_text_appearance" format="reference" />
+
+<!-- The text appearance of the close title -->
+<attr name="bottom_sheet_menu_close_title_text_appearance" format="reference" />
+
+<!-- The icon used for the close button -->
+<attr name="bottom_sheet_menu_close_button_icon" format="reference" />
 ```
     
 Then create a style

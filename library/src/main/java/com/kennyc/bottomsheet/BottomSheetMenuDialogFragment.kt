@@ -272,11 +272,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
 
     private lateinit var builder: Builder
 
-    private lateinit var title: TextView
-
-    private lateinit var gridView: GridView
-
     private lateinit var container: LinearLayout
+
+    private lateinit var closeContainer: LinearLayout
 
     private var listener: BottomSheetListener? = null
 
@@ -308,7 +306,8 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
                         }
 
                         override fun onSlide(bottomSheet: View, slideOffSet: Float) {
-                            // NOOP
+                            closeContainer.alpha = if (slideOffSet > 0) slideOffSet else 0.0f
+
                         }
                     })
                 }
@@ -328,9 +327,11 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         super.onViewCreated(view, savedInstanceState)
         Objects.requireNonNull(builder)
         container = view.findViewById(R.id.bottom_sheet_container)
-        title = container.findViewById(R.id.bottom_sheet_title)
-        gridView = container.findViewById(R.id.bottom_sheet_grid)
-        initUi()
+        val title = container.findViewById<TextView>(R.id.bottom_sheet_title)
+        val gridView = container.findViewById<GridView>(R.id.bottom_sheet_grid)
+        closeContainer = container.findViewById(R.id.bottom_sheet_close_container)
+        val closeTitle = closeContainer.findViewById<TextView>(R.id.bottom_sheet_close_title)
+        initUi(title, closeTitle, gridView)
 
         adapter = when {
             builder.menuItems.isNotEmpty() -> {
@@ -356,17 +357,15 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         listener?.onSheetShown(this, builder.`object`)
         this.isCancelable = builder.cancelable
 
-        dialog?.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
-            ?.let {
-                BottomSheetBehavior.from(it).apply {
-                    peekHeight = 200
-                    state = BottomSheetBehavior.STATE_COLLAPSED
-                }
-            }
+        closeContainer.findViewById<ImageButton>(R.id.bottom_sheet_close).setOnClickListener {
+            dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
+            dismiss()
+        }
     }
 
-    private fun initUi() {
+    private fun initUi(title: TextView, closeTitle: TextView, gridView: GridView) {
         val hasTitle = !TextUtils.isEmpty(builder.title)
+
         if (hasTitle) {
             title.text = builder.title
         } else {
@@ -376,6 +375,12 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         if (!builder.isGrid) {
             val padding = resources.getDimensionPixelSize(R.dimen.bottom_sheet_menu_list_padding)
             gridView.setPadding(0, if (hasTitle) 0 else padding, 0, padding)
+        }
+
+        if (!TextUtils.isEmpty(builder.closeTitle)) {
+            closeTitle.text = builder.closeTitle
+        } else {
+            closeTitle.visibility = View.GONE
         }
 
         gridView.numColumns = getNumberColumns()
@@ -437,10 +442,11 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         @MenuRes sheet: Int = -1,
         cancelable: Boolean = true,
         isGrid: Boolean = false,
-        autoExpand: Boolean = true,
+        autoExpand: Boolean = false,
         menuItems: MutableList<MenuItem> = mutableListOf(),
         apps: MutableList<AppInfo> = mutableListOf(),
         title: String? = null,
+        closeTitle: String? = null,
         shareIntent: Intent? = null,
         listener: BottomSheetListener? = null,
         `object`: Any? = null,
@@ -458,6 +464,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         var shareIntent: Intent? = shareIntent; private set
         var listener: BottomSheetListener? = listener; private set
         var `object`: Any? = `object`; private set
+        var closeTitle: String? = closeTitle; private set
 
         init {
             if (sheet != -1 && menuItems.isEmpty()) setSheet(sheet, idsToDisable)
@@ -653,6 +660,25 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         fun setAutoExpand(autoExpand: Boolean): Builder {
             this.autoExpand = autoExpand
             return this
+        }
+
+        /**
+         * Sets the close title of the [BottomSheetMenuDialogFragment]
+         *
+         * @param closeTitle The text to be used for the close title
+         */
+        fun setCloseTitle(closeTitle: String): Builder {
+            this.closeTitle = closeTitle
+            return this
+        }
+
+        /**
+         * Sets the close title of the [BottomSheetMenuDialogFragment]
+         *
+         * @param closeTitle The text resource to be used for the close title
+         */
+        fun setCloseTitle(@StringRes closeTitle: Int): Builder {
+            return setCloseTitle(context.getString(closeTitle))
         }
 
         /**

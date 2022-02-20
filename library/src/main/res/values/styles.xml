@@ -11,6 +11,9 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/BottomSheetMenu.GridItem.TextAppearance.Light
         </item>
+        <item name="bottom_sheet_menu_close_title_text_appearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
+        <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
     </style>
 
     <style name="Theme.BottomSheetMenuDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
@@ -23,6 +26,9 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/BottomSheetMenu.GridItem.TextAppearance
         </item>
+        <item name="bottom_sheet_menu_close_title_text_appearance">@style/TextAppearance.Material3.HeadlineMedium</item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
+        <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
     </style>
 
     <style name="Theme.BottomSheetMenuDialog.DayNight" parent="Theme.Material3.DayNight.BottomSheetDialog">
@@ -35,20 +41,29 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/BottomSheetMenu.GridItem.TextAppearance
         </item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
+        <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
     </style>
 
     <style name="Base.BottomSheetMenu.Title.TextAppearance" parent="TextAppearance.Material3.TitleLarge"/>
 
     <style name="Base.BottomSheetMenu.ListItem" parent="TextAppearance.Material3.BodyMedium"/>
 
+    <style name="BottomSheetMenu.BottomSheetStyle" parent="Widget.Material3.BottomSheet">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="elevation">0dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
     <style name="BottomSheetMenu.Title" parent="@android:style/Widget.TextView">
         <item name="android:layout_height">56dp</item>
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
         <item name="android:paddingStart">@dimen/bottom_sheet_menu_dialog_padding</item>
         <item name="android:paddingEnd">@dimen/bottom_sheet_menu_dialog_padding</item>
+        <item name="android:background">?android:colorBackground</item>
     </style>
 
     <style name="BottomSheetMenu.ListItem" parent="BottomSheetMenu.Title">

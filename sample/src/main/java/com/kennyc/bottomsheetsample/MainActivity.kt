@@ -87,16 +87,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
             ).show(supportFragmentManager)
 
             R.id.dynamicBottomSheet -> {
-                val random = Random(50)
                 val items = mutableListOf<MenuItem>()
 
-                for (i in 1..5) {
+                for (i in 1..20) {
                     val menuItem = BottomSheetMenu.MenuItemBuilder(
                         applicationContext,
                         i,
-                        random.nextInt().toString()
-                    )
-                        .build()
+                        "Item $i",
+                    ) .build()
                     items.add(menuItem)
                 }
 
@@ -104,7 +102,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                     context = this,
                     listener = this,
                     `object` = "some object",
-                    menuItems = items
+                    menuItems = items,
+                    closeTitle = "Close"
                 ).show(supportFragmentManager)
             }
 

@@ -6,18 +6,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/bottom_sheet_close_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:alpha="0.0"
+        android:background="?android:colorBackground"
+        android:elevation="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/bottom_sheet_menu_dialog_padding">
+
+        <ImageButton
+            android:id="@+id/bottom_sheet_close"
+            style="?android:borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:src="?bottom_sheet_menu_close_button_icon" />
+
+        <TextView
+            android:id="@+id/bottom_sheet_close_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?bottom_sheet_menu_close_title_text_appearance"
+            tools:text="Close" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/bottom_sheet_title"
         style="@style/BottomSheetMenu.Title"
         android:textAppearance="?bottom_sheet_menu_title_text_appearance"
-        tools:drawableLeft="@android:drawable/ic_menu_share"
-        tools:drawableStart="@android:drawable/ic_menu_share"
         tools:text="Title" />
 
     <GridView
         android:id="@+id/bottom_sheet_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:colorBackground"
         android:drawSelectorOnTop="true"
         android:stretchMode="columnWidth"
         tools:listitem="@layout/bottom_sheet_list_item" />
