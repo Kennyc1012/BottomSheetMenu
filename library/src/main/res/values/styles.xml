@@ -3,51 +3,51 @@
 
     <style name="Theme.BottomSheetMenuDialog.Light" parent="Theme.Material3.Light.BottomSheetDialog">
         <item name="bottom_sheet_menu_title_text_appearance">
-            @style/BottomSheetMenu.Title.TextAppearance.Light
+            @style/TextAppearance.Material3.TitleLarge
         </item>
         <item name="bottom_sheet_menu_list_text_appearance">
-            @style/BottomSheetMenu.ListItem.TextAppearance.Light
+            @style/TextAppearance.Material3.BodyMedium
         </item>
         <item name="bottom_sheet_menu_grid_text_appearance">
-            @style/BottomSheetMenu.GridItem.TextAppearance.Light
+            @style/TextAppearance.Material3.BodyMedium
         </item>
-        <item name="bottom_sheet_menu_close_title_text_appearance">@style/TextAppearance.Material3.HeadlineMedium</item>
-        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
+        <item name="bottom_sheet_menu_close_title_text_appearance">
+            @style/TextAppearance.Material3.HeadlineMedium
+        </item>
         <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
     </style>
 
     <style name="Theme.BottomSheetMenuDialog" parent="Theme.Material3.Dark.BottomSheetDialog">
         <item name="bottom_sheet_menu_title_text_appearance">
-            @style/BottomSheetMenu.Title.TextAppearance
+            @style/TextAppearance.Material3.TitleLarge
         </item>
         <item name="bottom_sheet_menu_list_text_appearance">
-            @style/BottomSheetMenu.ListItem.TextAppearance
+            @style/TextAppearance.Material3.BodyMedium
         </item>
         <item name="bottom_sheet_menu_grid_text_appearance">
-            @style/BottomSheetMenu.GridItem.TextAppearance
+            @style/TextAppearance.Material3.BodyMedium
         </item>
-        <item name="bottom_sheet_menu_close_title_text_appearance">@style/TextAppearance.Material3.HeadlineMedium</item>
-        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
+        <item name="bottom_sheet_menu_close_title_text_appearance">
+            @style/TextAppearance.Material3.HeadlineMedium
+        </item>
         <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
     </style>
 
     <style name="Theme.BottomSheetMenuDialog.DayNight" parent="Theme.Material3.DayNight.BottomSheetDialog">
         <item name="bottom_sheet_menu_title_text_appearance">
-            @style/BottomSheetMenu.Title.TextAppearance
+            @style/TextAppearance.Material3.TitleLarge
         </item>
         <item name="bottom_sheet_menu_list_text_appearance">
-            @style/BottomSheetMenu.ListItem.TextAppearance
+            @style/TextAppearance.Material3.BodyMedium
         </item>
         <item name="bottom_sheet_menu_grid_text_appearance">
-            @style/BottomSheetMenu.GridItem.TextAppearance
+            @style/TextAppearance.Material3.BodyMedium
         </item>
-        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
         <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
+        <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
     </style>
-
-    <style name="Base.BottomSheetMenu.Title.TextAppearance" parent="TextAppearance.Material3.TitleLarge"/>
-
-    <style name="Base.BottomSheetMenu.ListItem" parent="TextAppearance.Material3.BodyMedium"/>
 
     <style name="BottomSheetMenu.BottomSheetStyle" parent="Widget.Material3.BottomSheet">
         <item name="backgroundTint">@android:color/transparent</item>
@@ -82,19 +82,5 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:layout_gravity">center_horizontal</item>
     </style>
-
-    <!-- Light Styles -->
-    <style name="BottomSheetMenu.Title.TextAppearance.Light" parent="Base.BottomSheetMenu.Title.TextAppearance"/>
-
-    <style name="BottomSheetMenu.ListItem.TextAppearance.Light" parent="Base.BottomSheetMenu.ListItem"/>
-
-    <style name="BottomSheetMenu.GridItem.TextAppearance.Light" parent="Base.BottomSheetMenu.ListItem"/>
-
-    <!-- Dark style -->
-    <style name="BottomSheetMenu.Title.TextAppearance" parent="Base.BottomSheetMenu.Title.TextAppearance" />
-
-    <style name="BottomSheetMenu.ListItem.TextAppearance" parent="Base.BottomSheetMenu.ListItem"/>
-
-    <style name="BottomSheetMenu.GridItem.TextAppearance" parent="Base.BottomSheetMenu.ListItem"/>
 
 </resources>

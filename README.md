@@ -97,16 +97,16 @@ Then create a style
     <item name="bottom_sheet_menu_grid_text_appearance">@style/GridAppearance</item>
 </style>
 
-<style name="TitleAppearance" parent="BottomSheetMenu.Title.TextAppearance">
+<style name="TitleAppearance" parent="TextAppearance.Material3.TitleLarge">
     <item name="android:textColor">@android:color/holo_green_light</item>
 </style>
 
-<style name="ListAppearance" parent="BottomSheetMenu.ListItem.TextAppearance">
+<style name="ListAppearance" parent="TextAppearance.Material3.BodyMedium">
     <item name="android:textColor">@android:color/holo_red_light</item>
     <item name="android:textSize">18sp</item>
 </style>
 
-<style name="GridAppearance" parent="BottomSheetMenu.GridItem.TextAppearance">
+<style name="GridAppearance" parent="TextAppearance.Material3.BodyMedium">
     <item name="android:textColor">@android:color/holo_red_light</item>
     <item name="android:textSize">20sp</item>
 </style>
