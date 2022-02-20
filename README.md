@@ -1,9 +1,9 @@
 # BottomSheetMenu
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-BottomSheet-green.svg?style=flat)](https://android-arsenal.com/details/1/2315)
 
-![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss3.gif)
-![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss2.gif)
-![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss1.gif)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss3.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss2.png)
+![screenshot](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/art/ss1.png)
 
 # Features
 - Both list and grid style
