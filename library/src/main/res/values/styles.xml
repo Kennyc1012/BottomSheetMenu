@@ -45,6 +45,9 @@
         <item name="bottom_sheet_menu_grid_text_appearance">
             @style/TextAppearance.Material3.BodyMedium
         </item>
+        <item name="bottom_sheet_menu_close_title_text_appearance">
+            @style/TextAppearance.Material3.HeadlineMedium
+        </item>
         <item name="bottom_sheet_menu_close_button_icon">@drawable/ic_baseline_close_24</item>
         <item name="bottomSheetStyle">@style/BottomSheetMenu.BottomSheetStyle</item>
     </style>
