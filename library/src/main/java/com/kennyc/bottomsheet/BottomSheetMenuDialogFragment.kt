@@ -1,12 +1,16 @@
 package com.kennyc.bottomsheet
 
+import android.Manifest
 import android.app.Dialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.annotation.IntegerRes
@@ -25,6 +29,8 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenu
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
 import com.kennyc.bottomsheet.model.AppInfo
 import java.util.*
+
+private const val TAG = "BottomSheetMenu"
 
 class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     AdapterView.OnItemClickListener {
@@ -47,8 +53,10 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @param toExclude  If provided, share will exclude the given package names
          * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
+         *
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -57,6 +65,16 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
             appsFilter: Set<String>?,
             toExclude: Set<String>?
         ): DialogFragment? {
+            Log.e(TAG, "createShareBottomSheet is deprecated and will be removed in future version")
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val hasPermission = context
+                    .checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED
+
+                if (!hasPermission) {
+                    Log.e(TAG, "QUERY_ALL_PACKAGES permission not present, results will be limited")
+                }
+            }
 
             val manager = context.packageManager
             val apps = manager.queryIntentActivities(intent, 0)
@@ -86,7 +104,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
                     }
                 }
 
-                if (toRemove.isNotEmpty()) appResources.removeAll(toRemove)
+                if (toRemove.isNotEmpty()) appResources.removeAll(toRemove.toSet())
 
                 return Builder(
                     context = context,
@@ -94,8 +112,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
                     shareIntent = intent,
                     title = shareTitle,
                     isGrid = isGrid
-                )
-                    .create()
+                ).create()
             }
 
             return null
@@ -122,6 +139,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * apps can handle the share intent
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -159,6 +177,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * apps can handle the share intent
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -194,6 +213,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * apps can handle the share intent
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -222,6 +242,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * apps can handle the share intent
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -249,6 +270,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * apps can handle the share intent
          */
         @JvmStatic
+        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
