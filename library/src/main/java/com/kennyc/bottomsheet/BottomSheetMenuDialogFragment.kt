@@ -1,5 +1,7 @@
 package com.kennyc.bottomsheet
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ComponentName
 import android.content.Context
@@ -11,6 +13,7 @@ import android.view.*
 import android.widget.*
 import androidx.annotation.IntegerRes
 import androidx.annotation.MenuRes
+import androidx.annotation.RequiresPermission
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -48,7 +51,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -121,7 +126,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -158,7 +165,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -193,7 +202,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -221,7 +232,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
@@ -248,7 +261,9 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
          * apps can handle the share intent
          */
+        @SuppressLint("InlinedApi")
         @JvmStatic
+        @RequiresPermission(Manifest.permission.QUERY_ALL_PACKAGES)
         fun createShareBottomSheet(
             context: Context,
             intent: Intent,
