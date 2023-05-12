@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion sdk_version
     flavorDimensions "default"
+    namespace "com.kennyc.bottomsheet"
 
     defaultConfig {
         minSdkVersion 21
