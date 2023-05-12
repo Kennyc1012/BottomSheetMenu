@@ -25,6 +25,10 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    packagingOptions {
+        exclude 'META-INF/library_release.kotlin_module'
+    }
 }
 
 dependencies {
