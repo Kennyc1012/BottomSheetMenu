@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion sdk_version
+    namespace "com.kennyc.bottomsheetsample"
 
     defaultConfig {
         applicationId "com.kennyc.bottomsheetsample"
