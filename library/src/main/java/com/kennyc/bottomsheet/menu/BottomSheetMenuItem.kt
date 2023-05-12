@@ -211,7 +211,7 @@ internal class BottomSheetMenuItem
         return this
     }
 
-    override fun setIntent(intent: Intent): MenuItem {
+    override fun setIntent(intent: Intent?): MenuItem {
         mIntent = intent
         return this
     }
@@ -221,7 +221,7 @@ internal class BottomSheetMenuItem
         return this
     }
 
-    override fun setOnMenuItemClickListener(menuItemClickListener: MenuItem.OnMenuItemClickListener): MenuItem {
+    override fun setOnMenuItemClickListener(menuItemClickListener: MenuItem.OnMenuItemClickListener?): MenuItem {
         clickListener = menuItemClickListener
         return this
     }
@@ -232,7 +232,7 @@ internal class BottomSheetMenuItem
         return this
     }
 
-    override fun setTitle(title: CharSequence): MenuItem {
+    override fun setTitle(title: CharSequence?): MenuItem {
         this.title = title
         return this
     }
@@ -269,7 +269,7 @@ internal class BottomSheetMenuItem
         // Do nothing. ActionMenuItems always show as action buttons.
     }
 
-    override fun setActionView(actionView: View): MenuItem {
+    override fun setActionView(actionView: View?): MenuItem {
         throw UnsupportedOperationException()
     }
 
@@ -285,7 +285,7 @@ internal class BottomSheetMenuItem
         return null
     }
 
-    override fun setActionProvider(actionProvider: ActionProvider): MenuItem {
+    override fun setActionProvider(actionProvider: ActionProvider?): MenuItem {
         throw UnsupportedOperationException()
     }
 
@@ -306,10 +306,12 @@ internal class BottomSheetMenuItem
         return false
     }
 
-    override fun setOnActionExpandListener(listener: MenuItem.OnActionExpandListener): MenuItem {
+    override fun setOnActionExpandListener(listener: MenuItem.OnActionExpandListener?): MenuItem {
         // No need to save the listener; ActionMenuItem does not support collapsing items.
         return this
     }
+
+
 
     companion object {
 
