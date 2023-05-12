@@ -132,6 +132,7 @@ BottomSheetMenuDialogFragment.Builder(context = this,
 ```
 
 # Share Intents
+## NOTE ## These methods are being removed in a future release and should no longer be used.
 BottomSheetMenu can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
 ```kotlin
 Intent(Intent.ACTION_SEND).apply {
@@ -217,7 +218,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-     implementation "com.github.Kennyc1012:BottomSheetMenu:4.2
+     implementation "com.github.Kennyc1012:BottomSheetMenu:4.3.1"
 ```
 
 # Contribution
