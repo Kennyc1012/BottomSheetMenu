@@ -1,16 +1,12 @@
 package com.kennyc.bottomsheet
 
-import android.Manifest
 import android.app.Dialog
 import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.annotation.IntegerRes
@@ -18,7 +14,6 @@ import androidx.annotation.MenuRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -30,262 +25,8 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
 import com.kennyc.bottomsheet.model.AppInfo
 import java.util.*
 
-private const val TAG = "BottomSheetMenu"
-
 class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     AdapterView.OnItemClickListener {
-
-    companion object {
-        /**
-         * Returns a {@link BottomSheetMenuDialogFragment} to be used as a share intent like Android 5.x+ Share Intent.<p>
-         * An example of an intent to pass is sharing some form of text:<br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br>
-         * intent.setType("text/`*`");<br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br>
-         * if (bottomSheet != null) bottomSheet.show();<br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title string resource for the share intent
-         * @param isGrid     If the share intent BottomSheet should be grid styled
-         * @param appsFilter If provided, share will be limited to contained packaged names
-         * @param toExclude  If provided, share will exclude the given package names
-         * @return A {@link BottomSheetMenuDialogFragment} with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         *
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            shareTitle: String,
-            isGrid: Boolean,
-            appsFilter: Set<String>?,
-            toExclude: Set<String>?
-        ): DialogFragment? {
-            Log.e(TAG, "createShareBottomSheet is deprecated and will be removed in future version")
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val hasPermission = context
-                    .checkSelfPermission(Manifest.permission.QUERY_ALL_PACKAGES) == PackageManager.PERMISSION_GRANTED
-
-                if (!hasPermission) {
-                    Log.e(TAG, "QUERY_ALL_PACKAGES permission not present, results will be limited")
-                }
-            }
-
-            val manager = context.packageManager
-            val apps = manager.queryIntentActivities(intent, 0)
-
-            if (apps.isNotEmpty()) {
-                val appResources = ArrayList<AppInfo>(apps.size)
-                val shouldCheckPackages = appsFilter?.isNotEmpty() == true
-
-                for (resolveInfo in apps) {
-                    val packageName = resolveInfo.activityInfo.packageName
-
-                    if (shouldCheckPackages && !appsFilter!!.contains(packageName)) {
-                        continue
-                    }
-
-                    val title = resolveInfo.loadLabel(manager).toString()
-                    val name = resolveInfo.activityInfo.name
-                    val drawable = resolveInfo.loadIcon(manager)
-                    appResources.add(AppInfo(title, packageName, name, drawable))
-                }
-
-                val toRemove = ArrayList<AppInfo>()
-
-                toExclude?.takeIf { it.isNotEmpty() }?.let { set ->
-                    appResources.forEach {
-                        if (set.contains(it.packageName)) toRemove.add(it)
-                    }
-                }
-
-                if (toRemove.isNotEmpty()) appResources.removeAll(toRemove.toSet())
-
-                return Builder(
-                    context = context,
-                    apps = appResources,
-                    shareIntent = intent,
-                    title = shareTitle,
-                    isGrid = isGrid
-                ).create()
-            }
-
-            return null
-        }
-
-        /**
-         * Returns a [BottomSheetMenuDialogFragment] to be used as a share intent like Android 5.x+ Share Intent.
-         *
-         *
-         * An example of an intent to pass is sharing some form of text:<br></br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br></br>
-         * intent.setType("text/`*`");<br></br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br></br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br></br>
-         * if (bottomSheet != null) bottomSheet.show();<br></br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title for the share intent
-         * @param isGrid     If the share intent BottomSheet should be grid styled
-         * @param appsFilter If provided share will be limited to contained packaged names
-         * @param toExclude  If provided, share will exclude the given package names
-         * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            @StringRes shareTitle: Int,
-            isGrid: Boolean,
-            appsFilter: Set<String>?,
-            toExclude: Set<String>?
-        ): DialogFragment? {
-            return createShareBottomSheet(
-                context,
-                intent,
-                context.getString(shareTitle),
-                isGrid,
-                appsFilter,
-                toExclude
-            )
-        }
-
-        /**
-         * Returns a [BottomSheetMenuDialogFragment] to be used as a share intent like Android 5.x+ Share Intent.
-         *
-         *
-         * An example of an intent to pass is sharing some form of text:<br></br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br></br>
-         * intent.setType("text/`*`");<br></br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br></br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br></br>
-         * if (bottomSheet != null) bottomSheet.show();<br></br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title string resource for the share intent
-         * @param isGrid     If the share intent BottomSheet should be grid styled
-         * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            @StringRes shareTitle: Int,
-            isGrid: Boolean
-        ): DialogFragment? {
-            return createShareBottomSheet(
-                context,
-                intent,
-                context.getString(shareTitle),
-                isGrid,
-                null,
-                null
-            )
-        }
-
-        /**
-         * Returns a [BottomSheetMenuDialogFragment] to be used as a share intent like Android 5.x+ Share Intent.
-         *
-         *
-         * An example of an intent to pass is sharing some form of text:<br></br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br></br>
-         * intent.setType("text/`*`");<br></br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br></br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br></br>
-         * if (bottomSheet != null) bottomSheet.show();<br></br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title for the share intent
-         * @param isGrid     If the share intent BottomSheet should be grid styled
-         * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            shareTitle: String,
-            isGrid: Boolean
-        ): DialogFragment? {
-            return createShareBottomSheet(context, intent, shareTitle, isGrid, null, null)
-        }
-
-        /**
-         * Returns a [BottomSheetMenuDialogFragment] to be used as a share intent like Android 5.x+ Share Intent. This will be List styled by default.<br></br>
-         * If grid style is desired, use [.createShareBottomSheet]
-         *
-         *
-         * An example of an intent to pass is sharing some form of text:<br></br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br></br>
-         * intent.setType("text/`*`");<br></br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br></br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br></br>
-         * if (bottomSheet != null) bottomSheet.show();<br></br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title for the share intent
-         * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            shareTitle: String
-        ): DialogFragment? {
-            return createShareBottomSheet(context, intent, shareTitle, false, null, null)
-        }
-
-        /**
-         * Returns a [BottomSheetMenuDialogFragment] to be used as a share intent like Android 5.x+ Share Intent. This will be list styled by default.<br></br>
-         * If grid style is desired, use [.createShareBottomSheet]
-         *
-         *
-         * An example of an intent to pass is sharing some form of text:<br></br>
-         * Intent intent = new Intent(Intent.ACTION_SEND);<br></br>
-         * intent.setType("text/`*`");<br></br>
-         * intent.putExtra(Intent.EXTRA_TEXT, "Some text to share");<br></br>
-         * BottomSheet bottomSheet = BottomSheet.createShareBottomSheet(this, intent, "Share");<br></br>
-         * if (bottomSheet != null) bottomSheet.show();<br></br>
-         *
-         * @param context    App context
-         * @param intent     Intent to get apps for
-         * @param shareTitle The optional title for the share intent
-         * @return A [BottomSheetMenuDialogFragment] with the apps that can handle the share intent. NULL maybe returned if no
-         * apps can handle the share intent
-         */
-        @JvmStatic
-        @Deprecated("To be removed in future release", replaceWith = ReplaceWith("Remove entirely"))
-        fun createShareBottomSheet(
-            context: Context,
-            intent: Intent,
-            @StringRes shareTitle: Int
-        ): DialogFragment? {
-            return createShareBottomSheet(
-                context,
-                intent,
-                context.getString(shareTitle),
-                false,
-                null,
-                null
-            )
-        }
-    }
 
     private constructor(builder: Builder) : this() {
         this.builder = builder

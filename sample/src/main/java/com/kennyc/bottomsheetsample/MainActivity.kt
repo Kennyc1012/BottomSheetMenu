@@ -120,32 +120,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.share -> {
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/*"
-                intent.putExtra(
-                    Intent.EXTRA_TEXT,
-                    "Hey, check out the BottomSheet library https://github.com/Kennyc1012/BottomSheet"
-                )
-                BottomSheetMenuDialogFragment.createShareBottomSheet(
-                    applicationContext,
-                    intent,
-                    "Share"
-                )?.show(supportFragmentManager, null)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onSheetShown(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?) {
         Log.v(TAG, "onSheetShown with Object " + `object`!!)
     }
