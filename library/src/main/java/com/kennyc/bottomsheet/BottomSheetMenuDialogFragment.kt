@@ -187,7 +187,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         menuItems: MutableList<MenuItem> = mutableListOf(),
         title: String? = null,
         closeTitle: String? = null,
-        shareIntent: Intent? = null,
         listener: BottomSheetListener? = null,
         `object`: Any? = null,
         idsToDisable: Array<Int>? = null
@@ -200,7 +199,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         var isGrid: Boolean = isGrid; private set
         var autoExpand: Boolean = autoExpand; private set
         var menuItems: MutableList<MenuItem> = menuItems; private set
-        var shareIntent: Intent? = shareIntent; private set
         var listener: BottomSheetListener? = listener; private set
         var `object`: Any? = `object`; private set
         var closeTitle: String? = closeTitle; private set
