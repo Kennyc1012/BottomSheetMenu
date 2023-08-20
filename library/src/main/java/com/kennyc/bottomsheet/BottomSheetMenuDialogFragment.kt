@@ -1,7 +1,6 @@
 package com.kennyc.bottomsheet
 
 import android.app.Dialog
-import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -18,11 +17,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.kennyc.bottomsheet.adapters.AppAdapter
 import com.kennyc.bottomsheet.adapters.GridAdapter
 import com.kennyc.bottomsheet.menu.BottomSheetMenu
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
-import com.kennyc.bottomsheet.model.AppInfo
 import java.util.*
 
 class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
@@ -41,7 +38,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
 
     private var listener: BottomSheetListener? = null
 
-    private lateinit var adapter: BaseAdapter
+    private lateinit var adapter: GridAdapter
 
     private var dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
 
@@ -96,25 +93,14 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         val closeTitle = closeContainer.findViewById<TextView>(R.id.bottom_sheet_close_title)
         initUi(title, closeTitle, gridView)
 
-        adapter = when {
-            builder.menuItems.isNotEmpty() -> {
-                GridAdapter(
-                    ContextThemeWrapper(requireActivity(), builder.style),
-                    builder.menuItems,
-                    builder.isGrid
-                )
-            }
+        require(builder.menuItems.isNotEmpty()) { "No items were passed to the builder" }
 
-            builder.apps.isNotEmpty() -> {
-                AppAdapter(
-                    ContextThemeWrapper(requireActivity(), builder.style),
-                    builder.apps,
-                    builder.isGrid
-                )
-            }
+        adapter = GridAdapter(
+            ContextThemeWrapper(requireActivity(), builder.style),
+            builder.menuItems,
+            builder.isGrid
+        )
 
-            else -> throw IllegalStateException("No items were passed to the builder")
-        }
         gridView.onItemClickListener = this
         gridView.adapter = adapter
         listener?.onSheetShown(this, builder.`object`)
@@ -180,18 +166,10 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         dismissEvent = BottomSheetListener.DISMISS_EVENT_ITEM_SELECTED
 
-        if (adapter is GridAdapter) {
-            if (listener != null) {
-                val item = (adapter as GridAdapter).getItem(position)
-                listener?.onSheetItemSelected(this, item, builder.`object`)
-                dismiss()
-            }
-        } else if (adapter is AppAdapter) {
-            val appInfo = (adapter as AppAdapter).getItem(position)
-            val intent = Intent(builder.shareIntent)
-            intent.component = ComponentName(appInfo.packageName, appInfo.name)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            requireContext().startActivity(intent)
+        if (listener != null) {
+            val item = adapter.getItem(position)
+            listener?.onSheetItemSelected(this, item, builder.`object`)
+            dismiss()
         }
     }
 
@@ -207,7 +185,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         isGrid: Boolean = false,
         autoExpand: Boolean = false,
         menuItems: MutableList<MenuItem> = mutableListOf(),
-        apps: MutableList<AppInfo> = mutableListOf(),
         title: String? = null,
         closeTitle: String? = null,
         shareIntent: Intent? = null,
@@ -223,7 +200,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         var isGrid: Boolean = isGrid; private set
         var autoExpand: Boolean = autoExpand; private set
         var menuItems: MutableList<MenuItem> = menuItems; private set
-        var apps: MutableList<AppInfo> = apps; private set
         var shareIntent: Intent? = shareIntent; private set
         var listener: BottomSheetListener? = listener; private set
         var `object`: Any? = `object`; private set
@@ -442,23 +418,6 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
          */
         fun setCloseTitle(@StringRes closeTitle: Int): Builder {
             return setCloseTitle(context.getString(closeTitle))
-        }
-
-        /**
-         * Sets the apps to be used for a share intent. This is not a public facing method.
-         *
-         *
-         * See [BottomSheetMenuDialogFragment.createShareBottomSheet] for creating a share intent [BottomSheetMenuDialogFragment]
-         *
-         * @param apps   List of apps to use in the share intent
-         * @param intent The [Intent] used for creating the share intent
-         * @return
-         */
-        private fun setApps(apps: List<AppInfo>, intent: Intent): Builder {
-            this.apps.clear()
-            this.apps.addAll(apps)
-            shareIntent = intent
-            return this
         }
 
         /**
