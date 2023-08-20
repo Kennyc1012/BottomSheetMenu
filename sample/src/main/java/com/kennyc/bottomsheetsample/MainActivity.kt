@@ -94,6 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, BottomSheetListe
                         applicationContext,
                         i,
                         "Item $i",
+                        enabled = i % 2 == 0
                     ) .build()
                     items.add(menuItem)
                 }

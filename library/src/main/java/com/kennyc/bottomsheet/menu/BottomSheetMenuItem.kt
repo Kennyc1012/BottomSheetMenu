@@ -65,46 +65,14 @@ internal class BottomSheetMenuItem
      * Creates a MenuItem
      *
      * @param context Context of the MenuItem
-     * @param title   Title of the MenuItem
-     * @param icon    Drawable resource of the MenuItem
-     */
-    constructor(context: Context, title: CharSequence, @DrawableRes icon: Int) : this(context, 0, 0, 0, 0, title) {
-        setIcon(icon)
-    }
-
-    /**
-     * Creates a MenuItem
-     *
-     * @param context Context of the MenuItem
-     * @param title   Title of the MenuItem
-     * @param icon    Drawable of the MenuItem
-     */
-    constructor(context: Context, title: CharSequence, icon: Drawable?) : this(context, 0, 0, 0, 0, title) {
-        setIcon(icon)
-    }
-
-    /**
-     * Creates a MenuItem
-     *
-     * @param context Context of the MenuItem
      * @param id      Id of the MenuItem
      * @param title   Title of the MenuItem
-     * @param icon    Drawable resource of the MenuItem
-     */
-    constructor(context: Context, id: Int, title: CharSequence, @DrawableRes icon: Int) : this(context, 0, id, 0, 0, title) {
-        setIcon(icon)
-    }
-
-    /**
-     * Creates a MenuItem
-     *
-     * @param context Context of the MenuItem
-     * @param id      Id of the MenuItem
-     * @param title   Title of the MenuItem
+     * @param enabled If the item is enabled
      * @param icon    Drawable of the MenuItem
      */
-    constructor(context: Context, id: Int, title: CharSequence, icon: Drawable?) : this(context, 0, id, 0, 0, title) {
+    constructor(context: Context, id: Int, title: CharSequence, enabled: Boolean, icon: Drawable?) : this(context, 0, id, 0, 0, title) {
         setIcon(icon)
+        isEnabled = enabled
     }
 
     override fun getAlphabeticShortcut(): Char {

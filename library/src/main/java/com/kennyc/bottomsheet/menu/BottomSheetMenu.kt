@@ -52,9 +52,11 @@ class BottomSheetMenu(private val context: Context) : Menu {
         return item
     }
 
-    override fun addIntentOptions(groupId: Int, itemId: Int, order: Int,
-                                  caller: ComponentName, specifics: Array<Intent>, intent: Intent, flags: Int,
-                                  outSpecificItems: Array<MenuItem>?): Int {
+    override fun addIntentOptions(
+        groupId: Int, itemId: Int, order: Int,
+        caller: ComponentName, specifics: Array<Intent>, intent: Intent, flags: Int,
+        outSpecificItems: Array<MenuItem>?
+    ): Int {
         val pm = context.packageManager
         val lri = pm.queryIntentActivityOptions(caller, specifics, intent, 0)
         val size = lri.size
@@ -66,13 +68,15 @@ class BottomSheetMenu(private val context: Context) : Menu {
         for (i in 0 until size) {
             val ri = lri[i]
             val rintent = Intent(
-                    if (ri.specificIndex < 0) intent else specifics[ri.specificIndex])
+                if (ri.specificIndex < 0) intent else specifics[ri.specificIndex]
+            )
             rintent.component = ComponentName(
-                    ri.activityInfo.applicationInfo.packageName,
-                    ri.activityInfo.name)
+                ri.activityInfo.applicationInfo.packageName,
+                ri.activityInfo.name
+            )
             val item = add(groupId, itemId, order, ri.loadLabel(pm))
-                    .setIcon(ri.loadIcon(pm))
-                    .setIntent(rintent)
+                .setIcon(ri.loadIcon(pm))
+                .setIntent(rintent)
             if (outSpecificItems != null && ri.specificIndex >= 0) {
                 outSpecificItems[ri.specificIndex] = item
             }
@@ -89,8 +93,10 @@ class BottomSheetMenu(private val context: Context) : Menu {
         throw UnsupportedOperationException("Not Supported")
     }
 
-    override fun addSubMenu(groupId: Int, itemId: Int, order: Int,
-                            title: CharSequence): SubMenu? {
+    override fun addSubMenu(
+        groupId: Int, itemId: Int, order: Int,
+        title: CharSequence
+    ): SubMenu? {
         throw UnsupportedOperationException("Not Supported")
     }
 
@@ -188,8 +194,10 @@ class BottomSheetMenu(private val context: Context) : Menu {
         items.removeAt(findItemIndex(id))
     }
 
-    override fun setGroupCheckable(group: Int, checkable: Boolean,
-                                   exclusive: Boolean) {
+    override fun setGroupCheckable(
+        group: Int, checkable: Boolean,
+        exclusive: Boolean
+    ) {
         val itemCount = items.size
 
         for (i in 0 until itemCount) {
@@ -231,14 +239,18 @@ class BottomSheetMenu(private val context: Context) : Menu {
         return items.size
     }
 
-    class MenuItemBuilder(private val context: Context,
-                          id: Int,
-                          title: String = "NULL",
-                          icon: Drawable? = null) {
+    class MenuItemBuilder(
+        private val context: Context,
+        id: Int,
+        title: String = "NULL",
+        icon: Drawable? = null,
+        enabled: Boolean = true
+    ) {
 
         var title: String = title; private set
         var icon: Drawable? = icon; private set
         var id: Int = id; private set
+        var enabled: Boolean = enabled; private set
 
         fun setTitle(@StringRes title: Int): MenuItemBuilder = setTitle(context.getString(title))
 
@@ -252,8 +264,14 @@ class BottomSheetMenu(private val context: Context) : Menu {
             return this
         }
 
-        fun setIcon(@DrawableRes icon: Int): MenuItemBuilder = setIcon(ResourcesCompat.getDrawable(context.resources, icon, context.theme))
+        fun setIcon(@DrawableRes icon: Int): MenuItemBuilder =
+            setIcon(ResourcesCompat.getDrawable(context.resources, icon, context.theme))
 
-        fun build(): MenuItem = BottomSheetMenuItem(context, id, title, icon)
+        fun setEnabled(enabled:Boolean): MenuItemBuilder {
+            this.enabled = enabled
+            return this
+        }
+
+        fun build(): MenuItem = BottomSheetMenuItem(context, id, title, enabled, icon)
     }
 }
