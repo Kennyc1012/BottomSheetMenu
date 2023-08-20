@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdk sdk_version
-    flavorDimensions "default"
     namespace "com.kennyc.bottomsheet"
 
     defaultConfig {
