@@ -5,6 +5,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.text.TextUtils
 import android.view.*
 import android.widget.*
@@ -22,12 +25,14 @@ import com.kennyc.bottomsheet.menu.BottomSheetMenu
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
 import java.util.*
 
+private const val EXTRA_LISTENER_MESSAGE = "BottomSheetMenuDialogFragment.EXTRA_LISTENER_MESSAGE"
+private const val LISTENER = 111
+
 class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     AdapterView.OnItemClickListener {
 
     private constructor(builder: Builder) : this() {
-        this.builder = builder
-        this.listener = builder.listener
+        setBuilder(builder)
     }
 
     private lateinit var builder: Builder
@@ -42,8 +47,19 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
 
     private var dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
 
+    private val listenerHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var listenerMessage: Message
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        retainInstance = true
+        savedInstanceState?.getParcelable<Message>(EXTRA_LISTENER_MESSAGE)
+            ?.let {
+                val obj = it.obj
+                if (obj is Builder) {
+                    setBuilder(obj)
+                }
+            }
+
         return BottomSheetDialog(requireActivity(), builder.style).apply {
             setOnShowListener(DialogInterface.OnShowListener {
 
@@ -156,6 +172,17 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
             // Regular phone, one column
             else -> 1
         }
+    }
+
+    private fun setBuilder(builder: Builder) {
+        listenerMessage = listenerHandler.obtainMessage(LISTENER, builder)
+        this.builder = builder
+        this.listener = builder.listener
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(EXTRA_LISTENER_MESSAGE, listenerMessage)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
