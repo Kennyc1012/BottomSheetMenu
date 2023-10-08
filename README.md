@@ -11,7 +11,6 @@
 - Material3 Theme support
 - XML style support
 - Tablet support
-- Share Intent Picker
 - API 21+
 - Kotlin support
 
@@ -131,21 +130,6 @@ BottomSheetMenuDialogFragment.Builder(context = this,
         .show(supportFragmentManager)
 ```
 
-# Share Intents
-## NOTE ## These methods are being removed in a future release and should no longer be used.
-BottomSheetMenu can also be used to create a Share Intent Picker that will be styled like the ones found in Android 5.x+. To create one, simply call one of the static  ```createShareBottomSheet``` methods.
-```kotlin
-Intent(Intent.ACTION_SEND).apply {
-    type = "text/*"
-    putExtra(Intent.EXTRA_TEXT, "My text to share")
-    // Make sure to check that the createBottomSheet method does not return null!! 
-    // If the device can not handle the intent, null will be returned
-    BottomSheetMenuDialogFragment.createShareBottomSheet(context, this, "My Title")?.show(supportFragmentManager, null)
-}
-```
-For further customization of the share intent including which apps will be either be shown or not shown, see the full signature of [createBottomSheet](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetMenuDialogFragment.kt#L50)
-
-
 # Callbacks
 BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/BottomSheetMenu/blob/master/library/src/main/java/com/kennyc/bottomsheet/BottomSheetListener.kt) for callbacks
 ```kotlin
@@ -178,6 +162,11 @@ BottomSheetMenu uses the [BottomSheetListener](https://github.com/Kennyc1012/Bot
      */
     fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, @DismissEvent dismissEvent: Int)
 ```
+
+# Upgrading to 5.X
+- Removed various `createShareBottomSheet` methods
+- Targeting Android SDK 34
+- Targeting Kotlin 1.8.22
 
 # Upgrading to 4.X
 - Styles now extend Theme.Material3.* themes
@@ -218,7 +207,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-     implementation "com.github.Kennyc1012:BottomSheetMenu:4.3.2"
+     implementation "com.github.Kennyc1012:BottomSheetMenu:5.0"
 ```
 
 # Contribution
