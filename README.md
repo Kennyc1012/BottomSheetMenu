@@ -207,7 +207,7 @@ allprojects {
 ## Add dependency
 ```groovy
 dependencies {
-     implementation "com.github.Kennyc1012:BottomSheetMenu:5.0"
+     implementation "com.github.Kennyc1012:BottomSheetMenu:5.1"
 ```
 
 # Contribution
