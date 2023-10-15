@@ -3,12 +3,9 @@ package com.kennyc.bottomsheet
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.text.TextUtils
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.annotation.IntegerRes
@@ -17,50 +14,50 @@ import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kennyc.bottomsheet.adapters.GridAdapter
 import com.kennyc.bottomsheet.menu.BottomSheetMenu
 import com.kennyc.bottomsheet.menu.BottomSheetMenuItem
+import com.kennyc.bottomsheet.menu.BottomSheetViewModel
 import java.util.*
 
-private const val EXTRA_LISTENER_MESSAGE = "BottomSheetMenuDialogFragment.EXTRA_LISTENER_MESSAGE"
-private const val LISTENER = 111
+private const val TAG = "BottomSheetMenu"
 
 class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     AdapterView.OnItemClickListener {
 
     private constructor(builder: Builder) : this() {
-        setBuilder(builder)
+        setTempBuilder(builder)
     }
 
-    private lateinit var builder: Builder
+    private var tempBuilder: Builder? = null
 
     private lateinit var container: LinearLayout
 
     private lateinit var closeContainer: LinearLayout
 
-    private var listener: BottomSheetListener? = null
-
     private lateinit var adapter: GridAdapter
 
     private var dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
 
-    private val listenerHandler = Handler(Looper.getMainLooper())
+    private lateinit var viewModel: BottomSheetViewModel
 
-    private lateinit var listenerMessage: Message
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this)[BottomSheetViewModel::class.java].apply {
+            if (builder == null) {
+                builder = tempBuilder
+            }
+        }
+
+        tempBuilder = null
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        savedInstanceState?.getParcelable<Message>(EXTRA_LISTENER_MESSAGE)
-            ?.let {
-                val obj = it.obj
-                if (obj is Builder) {
-                    setBuilder(obj)
-                }
-            }
-
-        return BottomSheetDialog(requireActivity(), builder.style).apply {
+        return BottomSheetDialog(requireActivity(), viewModel.style).apply {
             setOnShowListener(DialogInterface.OnShowListener {
 
                 if (container.parent == null) return@OnShowListener
@@ -70,7 +67,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
 
                 // Should always be the case
                 if (behavior is BottomSheetBehavior<*>) {
-                    if (builder.autoExpand) behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                    if (viewModel.autoExpand) behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
                     behavior.addBottomSheetCallback(object :
                         BottomSheetBehavior.BottomSheetCallback() {
@@ -101,7 +98,12 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Objects.requireNonNull(builder)
+        if (viewModel.builder == null) {
+            Log.e(TAG, "Builder object is null, dismissing dialog.")
+            dismiss()
+            return
+        }
+
         container = view.findViewById(R.id.bottom_sheet_container)
         val title = container.findViewById<TextView>(R.id.bottom_sheet_title)
         val gridView = container.findViewById<GridView>(R.id.bottom_sheet_grid)
@@ -109,18 +111,18 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         val closeTitle = closeContainer.findViewById<TextView>(R.id.bottom_sheet_close_title)
         initUi(title, closeTitle, gridView)
 
-        require(builder.menuItems.isNotEmpty()) { "No items were passed to the builder" }
+        require(viewModel.menuItems.isNotEmpty()) { "No items were passed to the builder" }
 
         adapter = GridAdapter(
-            ContextThemeWrapper(requireActivity(), builder.style),
-            builder.menuItems,
-            builder.isGrid
+            ContextThemeWrapper(requireActivity(), viewModel.style),
+            viewModel.menuItems,
+            viewModel.isGrid
         )
 
         gridView.onItemClickListener = this
         gridView.adapter = adapter
-        listener?.onSheetShown(this, builder.`object`)
-        this.isCancelable = builder.cancelable
+        viewModel.listener?.onSheetShown(this, viewModel.`object`)
+        this.isCancelable = viewModel.cancelable
 
         closeContainer.findViewById<ImageButton>(R.id.bottom_sheet_close).setOnClickListener {
             dismissEvent = BottomSheetListener.DISMISS_EVENT_MANUAL
@@ -129,21 +131,21 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     }
 
     private fun initUi(title: TextView, closeTitle: TextView, gridView: GridView) {
-        val hasTitle = !TextUtils.isEmpty(builder.title)
+        val hasTitle = !TextUtils.isEmpty(viewModel.title)
 
         if (hasTitle) {
-            title.text = builder.title
+            title.text = viewModel.title
         } else {
             title.visibility = View.GONE
         }
 
-        if (!builder.isGrid) {
+        if (!viewModel.isGrid) {
             val padding = resources.getDimensionPixelSize(R.dimen.bottom_sheet_menu_list_padding)
             gridView.setPadding(0, if (hasTitle) 0 else padding, 0, padding)
         }
 
-        if (!TextUtils.isEmpty(builder.closeTitle)) {
-            closeTitle.text = builder.closeTitle
+        if (!TextUtils.isEmpty(viewModel.closeTitle)) {
+            closeTitle.text = viewModel.closeTitle
         } else {
             closeTitle.visibility = View.GONE
         }
@@ -152,12 +154,12 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
     }
 
     private fun getNumberColumns(): Int {
-        if (builder.columnCount > 0) return builder.columnCount
+        if (viewModel.columnCount > 0) return viewModel.columnCount
         val isTablet = resources.getBoolean(R.bool.bottom_sheet_menu_it_tablet)
 
-        val numItems = builder.menuItems.size
+        val numItems = viewModel.menuItems.size
 
-        if (builder.isGrid) {
+        if (viewModel.isGrid) {
             // Show 4 columns if a tablet and the number of its is 4 or >=7
             return if ((numItems >= 7 || numItems == GRID_MAX_COLUMN) && isTablet) {
                 GRID_MAX_COLUMN
@@ -174,28 +176,21 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         }
     }
 
-    private fun setBuilder(builder: Builder) {
-        listenerMessage = listenerHandler.obtainMessage(LISTENER, builder)
-        this.builder = builder
-        this.listener = builder.listener
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable(EXTRA_LISTENER_MESSAGE, listenerMessage)
+    private fun setTempBuilder(builder: Builder) {
+        this.tempBuilder = builder
     }
 
     override fun onDismiss(dialog: DialogInterface) {
-        listener?.onSheetDismissed(this, builder.`object`, dismissEvent)
+        viewModel.listener?.onSheetDismissed(this, viewModel.`object`, dismissEvent)
         super.onDismiss(dialog)
     }
 
     override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         dismissEvent = BottomSheetListener.DISMISS_EVENT_ITEM_SELECTED
 
-        if (listener != null) {
+        viewModel.listener?.let {
             val item = adapter.getItem(position)
-            listener?.onSheetItemSelected(this, item, builder.`object`)
+            it.onSheetItemSelected(this, item, viewModel.`object`)
             dismiss()
         }
     }
@@ -219,6 +214,7 @@ class BottomSheetMenuDialogFragment() : BottomSheetDialogFragment(),
         idsToDisable: Array<Int>? = null
     ) {
 
+        @StyleRes
         var style: Int = style; private set
         var columnCount: Int = columnCount; private set
         var title: String? = title; private set
