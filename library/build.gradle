@@ -8,8 +8,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion sdk_version
-        versionCode 39
-        versionName "5.1"
     }
 
     lintOptions {
